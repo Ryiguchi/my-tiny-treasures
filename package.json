@@ -1,0 +1,24 @@
+{
+  "name": "my-green",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:server": "npm start --prefix server",
+    "start:client": "npm run dev --prefix client",
+    "start": "concurrently npm:start:*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/multer": "^1.4.7",
+    "@types/node": "^18.16.3",
+    "@types/sharp": "^0.32.0"
+  },
+  "dependencies": {
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.32.1"
+  }
+}
