@@ -1,5 +1,7 @@
 'use strict';
 
+import { Point } from '../utils/interfaces';
+
 function getRandomTitle() {
   const titles = [
     'Free Kids Clothes: Cute and Comfy!',
@@ -110,6 +112,11 @@ const createPostost = (id: number) => ({
   createdAt: getRandomDate(),
   images: [],
   id: id,
+  user: '64500ae2032e065dc8b21180',
+  location: {
+    type: Point.Point,
+    coordinates: [59, 17],
+  },
 });
 
 export const posts = Array(40)

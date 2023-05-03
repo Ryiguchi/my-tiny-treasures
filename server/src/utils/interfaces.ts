@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { PostDocument } from '../models/postModel';
 
 export interface StringObject {
   [key: string]: string;
@@ -41,4 +42,9 @@ export interface LocationData {
   type: Point;
   coordinates: [number, number];
   city?: string;
+}
+
+export interface PostsWithData {
+  posts: PostDocument[];
+  nextPage: number;
 }

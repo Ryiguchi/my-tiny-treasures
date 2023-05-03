@@ -1,7 +1,14 @@
 import { NextFunction, Response } from 'express';
 import Post, { PostDocument } from '../models/postModel';
 import { catchAsync } from '../utils/catchAsync';
-import { distanceFrom, filter, search, sort } from '../utils/apiFeatures';
+import {
+  distanceFrom,
+  filter,
+  search,
+  sort,
+  paginate,
+  countAndPaginate,
+} from '../utils/apiFeatures';
 import { CustomRequest } from '../utils/expressInterfaces';
 import AppError from '../utils/appError';
 import { LocationData, NumberObject, StringObject } from '../utils/interfaces';
@@ -62,11 +69,10 @@ export const resizePhoto = catchAsync(
     if (!req.files) return next();
 
     // set filename for next middleware if only in buffer
-    req.files.filenames = [];
-    console.log(11111111111111);
+    req.filenames = [];
     req.files.forEach(async (file, i) => {
       const filename = `user-${req.user.id}-${Date.now() + i}.jpeg`;
-      req.files.filenames.push(filename);
+      req.filenames.push(filename);
 
       await sharp(file.buffer)
         .resize({ width: 1000 })
@@ -79,7 +85,7 @@ export const resizePhoto = catchAsync(
       status: 'success',
     });
 
-    // next();
+    next();
   }
 );
 
@@ -95,18 +101,26 @@ export const getAllPosts = catchAsync(
       search(query),
       filter(query),
       sort(query),
+      // count(query),
+      ...countAndPaginate(query),
     ];
 
     if (req.user?.location) {
       pipeline.unshift(distanceFrom(req.user.location));
     }
+
     const posts: PostDocument[] = await Post.aggregate(pipeline);
+
+    // const postsWithData: PostsWithData = {
+    //   posts: posts,
+    //   nextPage: req.query.page ? parseInt(req.query.page) + 1 : 0,
+    // };
 
     res.status(200).json({
       status: 'success',
       results: posts.length,
       data: {
-        posts,
+        data: posts,
       },
     });
   }

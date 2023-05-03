@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// import * as fs from 'fs';
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const postData_1 = require("./postData");
@@ -46,4 +47,4 @@ if (process.argv[2] === '--import') {
 else if (process.argv[2] === '--delete') {
     deleteData();
 }
-//  node .\dev\import-dev-data.js --import
+//  node build\dev\import-dev-data.js --import

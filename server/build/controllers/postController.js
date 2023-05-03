@@ -60,11 +60,10 @@ exports.resizePhoto = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter
     if (!req.files)
         return next();
     // set filename for next middleware if only in buffer
-    req.files.filenames = [];
-    console.log(11111111111111);
+    req.filenames = [];
     req.files.forEach((file, i) => __awaiter(void 0, void 0, void 0, function* () {
         const filename = `user-${req.user.id}-${Date.now() + i}.jpeg`;
-        req.files.filenames.push(filename);
+        req.filenames.push(filename);
         yield (0, sharp_1.default)(file.buffer)
             .resize({ width: 1000 })
             .toFormat('jpeg')
@@ -74,7 +73,7 @@ exports.resizePhoto = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter
     res.status(200).json({
         status: 'success',
     });
-    // next();
+    next();
 }));
 exports.getAllPosts = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -83,16 +82,22 @@ exports.getAllPosts = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter
         (0, apiFeatures_1.search)(query),
         (0, apiFeatures_1.filter)(query),
         (0, apiFeatures_1.sort)(query),
+        // count(query),
+        ...(0, apiFeatures_1.countAndPaginate)(query),
     ];
     if ((_a = req.user) === null || _a === void 0 ? void 0 : _a.location) {
         pipeline.unshift((0, apiFeatures_1.distanceFrom)(req.user.location));
     }
     const posts = yield postModel_1.default.aggregate(pipeline);
+    // const postsWithData: PostsWithData = {
+    //   posts: posts,
+    //   nextPage: req.query.page ? parseInt(req.query.page) + 1 : 0,
+    // };
     res.status(200).json({
         status: 'success',
         results: posts.length,
         data: {
-            posts,
+            data: posts,
         },
     });
 }));

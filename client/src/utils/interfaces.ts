@@ -1,9 +1,10 @@
-interface ChatNewMsg {
+// CHAT
+interface NumberObject {
   [key: string]: number;
 }
 
 export interface Chat {
-  newMsg: [ChatNewMsg, ChatNewMsg];
+  newMsg: [NumberObject, NumberObject];
   messages: MsgData[];
   users: string[];
   _id: string;
@@ -17,7 +18,13 @@ export interface ChatMessage {
   user: string;
   _id: string;
 }
+export interface ChatData {
+  chatId: string;
+  newMsgs: number;
+  latestMsg: ChatMessage;
+}
 
+// MSGDATA
 export interface MsgData {
   room: string;
   text: string;
@@ -30,12 +37,7 @@ export interface UserMsgData {
   chatData: ChatData[];
 }
 
-export interface ChatData {
-  chatId: string;
-  newMsgs: number;
-  latestMsg: ChatMessage;
-}
-
+// STATE
 export interface User {
   email: string;
   id: string;
@@ -46,12 +48,6 @@ export interface User {
     type: string;
   };
 }
-
-export interface SignInCredentials {
-  email: string;
-  password: string;
-}
-
 export interface Post {
   categories: string[];
   condition: string;
@@ -70,8 +66,26 @@ export interface Post {
   _id: string;
 }
 
+// REACT QUERY
 export interface QueryClientResults<T> {
   data: {
     data: T;
   };
+}
+
+// export interface SignInCredentials {
+//   email: string;
+//   password: string;
+// }
+
+interface Metadata {
+  nextPage: number;
+  totalPages: number;
+  totalResults: number;
+  _id: null;
+}
+
+export interface PostQueryResult {
+  metadata: Metadata;
+  posts: Post[];
 }

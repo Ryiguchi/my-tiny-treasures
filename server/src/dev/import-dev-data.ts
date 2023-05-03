@@ -1,4 +1,4 @@
-import * as fs from 'node:fs';
+// import * as fs from 'fs';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { posts } from './postData';
@@ -36,4 +36,4 @@ if (process.argv[2] === '--import') {
   deleteData();
 }
 
-//  node .\dev\import-dev-data.js --import
+//  node build\dev\import-dev-data.js --import

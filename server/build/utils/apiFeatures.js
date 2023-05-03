@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sort = exports.filter = exports.search = exports.distanceFrom = void 0;
+exports.paginate = exports.countAndPaginate = exports.sort = exports.filter = exports.search = exports.distanceFrom = void 0;
 const distanceFrom = (userLocation) => {
     return {
         $geoNear: {
@@ -50,10 +50,67 @@ const sort = (queryString) => {
     return { $sort: sortObj };
 };
 exports.sort = sort;
-// paginate() {
-//   const page = +this.queryString.page || 1;
-//   const limit = +this.queryString.limit || 100;
+const countAndPaginate = (queryString) => {
+    const page = parseInt(queryString.page) || 1;
+    const limit = parseInt(queryString.limit) || 20;
+    const skip = (page - 1) * limit;
+    return [
+        {
+            $facet: {
+                metadata: [
+                    {
+                        $group: {
+                            _id: null,
+                            totalResults: { $sum: 1 },
+                        },
+                    },
+                    {
+                        $addFields: {
+                            totalPages: { $ceil: { $divide: ['$totalResults', limit] } },
+                            nextPage: page + 1,
+                        },
+                    },
+                ],
+                posts: [
+                    {
+                        $skip: skip,
+                    },
+                    {
+                        $limit: limit,
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: '$metadata',
+        },
+    ];
+};
+exports.countAndPaginate = countAndPaginate;
+const paginate = (queryString) => {
+    return [];
+};
+exports.paginate = paginate;
+// export const count = (queryString: StringObject): PipelineStage.Group => {
+//   return {
+//     $group: {
+//       _id: null,
+//       total: { $sum: 1 },
+//       page: { $sum: queryString.page },
+//       posts: { $push: '$$ROOT' },
+//     },
+//   };
+// };
+// export const paginate = (queryString: StringObject): PipelineStage[] => {
+//   const page: number = parseInt(queryString.page) || 1;
+//   const limit: number = parseInt(queryString.limit) || 20;
 //   const skip = (page - 1) * limit;
-//   this.query = this.query.skip(skip).limit(limit);
-//   return this;
-// }
+//   return [
+//     {
+//       $skip: skip,
+//     },
+//     {
+//       $limit: limit,
+//     },
+//   ];
+// };

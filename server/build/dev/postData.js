@@ -1,6 +1,7 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.posts = void 0;
+const interfaces_1 = require("../utils/interfaces");
 function getRandomTitle() {
     const titles = [
         'Free Kids Clothes: Cute and Comfy!',
@@ -94,6 +95,11 @@ const createPostost = (id) => ({
     createdAt: getRandomDate(),
     images: [],
     id: id,
+    user: '64500ae2032e065dc8b21180',
+    location: {
+        type: interfaces_1.Point.Point,
+        coordinates: [59, 17],
+    },
 });
 exports.posts = Array(40)
     .fill(null)

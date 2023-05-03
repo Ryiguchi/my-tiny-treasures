@@ -53,11 +53,71 @@ export const sort = (queryString: StringObject): PipelineStage.Sort => {
   return { $sort: sortObj };
 };
 
-// paginate() {
-//   const page = +this.queryString.page || 1;
-//   const limit = +this.queryString.limit || 100;
+export const countAndPaginate = (
+  queryString: StringObject
+): PipelineStage[] => {
+  const page: number = parseInt(queryString.page) || 1;
+  const limit: number = parseInt(queryString.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  return [
+    {
+      $facet: {
+        metadata: [
+          {
+            $group: {
+              _id: null,
+              totalResults: { $sum: 1 },
+            },
+          },
+          {
+            $addFields: {
+              totalPages: { $ceil: { $divide: ['$totalResults', limit] } },
+              nextPage: page + 1,
+            },
+          },
+        ],
+        posts: [
+          {
+            $skip: skip,
+          },
+          {
+            $limit: limit,
+          },
+        ],
+      },
+    },
+    {
+      $unwind: '$metadata',
+    },
+  ];
+};
+
+export const paginate = (queryString: StringObject): PipelineStage[] => {
+  return [];
+};
+// export const count = (queryString: StringObject): PipelineStage.Group => {
+//   return {
+//     $group: {
+//       _id: null,
+//       total: { $sum: 1 },
+//       page: { $sum: queryString.page },
+//       posts: { $push: '$$ROOT' },
+//     },
+//   };
+// };
+
+// export const paginate = (queryString: StringObject): PipelineStage[] => {
+//   const page: number = parseInt(queryString.page) || 1;
+//   const limit: number = parseInt(queryString.limit) || 20;
 //   const skip = (page - 1) * limit;
 
-//   this.query = this.query.skip(skip).limit(limit);
-//   return this;
-// }
+//   return [
+//     {
+//       $skip: skip,
+//     },
+//     {
+//       $limit: limit,
+//     },
+//   ];
+// };

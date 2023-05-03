@@ -15,4 +15,6 @@ export interface CustomRequest extends Request {
   query: QueryString;
   userId?: string;
   file?: any;
+  files?: Express.Multer.File[];
+  filenames: string[];
 }
