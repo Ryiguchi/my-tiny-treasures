@@ -18,7 +18,7 @@ const chatModel_1 = __importDefault(require("../models/chatModel"));
 const appError_1 = __importDefault(require("../utils/appError"));
 exports.getMyChat = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const roomId = req.params.roomId;
-    const chat = yield chatModel_1.default.findById(roomId);
+    const chat = yield chatModel_1.default.findById(roomId).populate('post');
     if (!chat) {
         return next(new appError_1.default('No chat found!', 400));
     }

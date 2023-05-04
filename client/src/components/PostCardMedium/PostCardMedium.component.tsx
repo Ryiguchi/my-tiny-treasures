@@ -1,14 +1,14 @@
 import { Post } from '../../utils/interfaces';
 
-import * as S from './PostCardMed.styles';
+import * as S from './PostCardMedium.styles';
 
-interface PostCardMedProps {
+interface PostCardMediumProps {
   post: Post;
   goToChat: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   goToPost: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-const PostCardMed: React.FC<PostCardMedProps> = ({
+const PostCardMedium: React.FC<PostCardMediumProps> = ({
   post,
   goToChat,
   goToPost,
@@ -16,6 +16,7 @@ const PostCardMed: React.FC<PostCardMedProps> = ({
   return (
     <S.PostContainer>
       <div>USER: {post.user}</div>
+      <h2>{post.title}</h2>
       <p>{post.description}</p>
       <button onClick={goToPost} data-item={post._id}>
         View Post
@@ -27,4 +28,4 @@ const PostCardMed: React.FC<PostCardMedProps> = ({
   );
 };
 
-export default PostCardMed;
+export default PostCardMedium;

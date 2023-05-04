@@ -15,6 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const userModel_1 = __importDefault(require("./userModel"));
 const chatSchema = new mongoose_1.default.Schema({
+    post: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: 'post',
+        required: true,
+    },
     messages: [
         {
             user: mongoose_1.default.Schema.Types.ObjectId,

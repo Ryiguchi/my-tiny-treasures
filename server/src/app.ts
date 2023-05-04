@@ -5,9 +5,10 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-import userRouter from './routes/userRoute';
-import postRouter from './routes/postRouter';
-import webRouter from './routes/web.router';
+import userRouter from './routes/userRoutes';
+import postRouter from './routes/postRoutes';
+import webRouter from './routes/webRoutes';
+import geocodeRouter from './routes/geocodeRoutes';
 import chatRouter from './routes/chatRoutes';
 import AppError from './utils/appError';
 import { globalErrorHandler } from './controllers/errorController';
@@ -39,6 +40,7 @@ app.use(cookieParser());
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/chats', chatRouter);
+app.use('/geocode', geocodeRouter);
 app.use('/', webRouter);
 
 app.all('*', (req, res, next) => {

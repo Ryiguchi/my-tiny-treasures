@@ -6,7 +6,8 @@ interface NewMsg {
   [key: string]: number;
 }
 
-export interface ChatDocument {
+export interface ChatDocument extends mongoose.Document {
+  post: mongoose.Schema.Types.ObjectId;
   messages: ChatMessage[];
   id: mongoose.Schema.Types.ObjectId;
   users: [mongoose.Schema.Types.ObjectId, mongoose.Schema.Types.ObjectId];
@@ -15,6 +16,11 @@ export interface ChatDocument {
 
 const chatSchema = new mongoose.Schema<ChatDocument>(
   {
+    post: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'post',
+      required: true,
+    },
     messages: [
       {
         user: mongoose.Schema.Types.ObjectId,

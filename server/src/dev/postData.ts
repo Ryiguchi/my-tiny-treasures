@@ -1,6 +1,71 @@
 'use strict';
 
+import { Sizes } from '../models/postModel';
 import { Point } from '../utils/interfaces';
+
+enum MainCategories {
+  A = 'Other',
+  B = 'Clothes',
+  C = 'Toys',
+}
+
+enum Clothes {
+  A = 'One Piece',
+  B = 'Knitted',
+  C = 'T-Shirts',
+  D = 'Sweaters',
+  E = 'Shirts',
+  F = 'Dresses',
+  G = 'Trousers',
+  H = 'Jeans',
+  I = 'Leggings',
+  J = 'Shorts',
+}
+
+enum Toys {
+  A = 'Soft Toys',
+  B = 'Baby Toys',
+  C = 'Indoor Toys',
+  D = 'Outdoor Toys',
+  E = 'Educational',
+  F = 'Creative',
+  G = 'Arts and Crafts',
+  H = 'Sports',
+  I = 'Games',
+}
+
+enum Other {
+  A = 'Bikes',
+  B = 'Strollers',
+  C = 'Car Seats',
+}
+
+function getRandomMainAndSubCategories() {
+  const mainCategories = Object.values(MainCategories);
+  const randomMainCategory =
+    mainCategories[Math.floor(Math.random() * mainCategories.length)];
+
+  let subCategories: string[];
+  switch (randomMainCategory) {
+    case MainCategories.A:
+      subCategories = Object.values(Other);
+      break;
+    case MainCategories.B:
+      subCategories = Object.values(Clothes);
+      break;
+    case MainCategories.C:
+      subCategories = Object.values(Toys);
+      break;
+    default:
+      subCategories = [];
+      break;
+  }
+
+  const randomSubCategory =
+    subCategories[Math.floor(Math.random() * subCategories.length)];
+
+  return [randomMainCategory, randomSubCategory];
+}
 
 function getRandomTitle() {
   const titles = [
@@ -49,15 +114,26 @@ function getRandomDescription() {
 }
 
 function getRandomNumber() {
-  return Math.floor(Math.random() * 20) + 1;
+  return Math.floor(Math.random() * 10) + 1;
 }
 
-function getRandomSize() {
-  const minSize = 44;
-  const sizeIncrement = 6;
-  const sizeRange = Math.floor((170 - minSize) / sizeIncrement) + 1;
+function getRandomSize(): string {
+  const sizes = Object.values(Sizes); // Get an array of all the size values
+  const randomIndex = Math.floor(Math.random() * sizes.length); // Get a random index in the array
+  return sizes[randomIndex]; // Return the size at the random index
+}
 
-  return minSize + Math.floor(Math.random() * sizeRange) * sizeIncrement;
+function getRandomUser(): string {
+  const users = [
+    '644acb016a4541fb49c4c2ad',
+    '644acb0c6a4541fb49c4c2af',
+    '644acb186a4541fb49c4c2b1',
+    '644acb2c6a4541fb49c4c2b3',
+    '644acb376a4541fb49c4c2b5',
+    '64500ae2032e065dc8b21180',
+  ];
+  const randomIndex = Math.floor(Math.random() * users.length); // Get a random index in the array
+  return users[randomIndex]; // Return the size at the random index
 }
 
 function getRandomCategories() {
@@ -102,23 +178,42 @@ function getRandomDate() {
   return randomDate;
 }
 
-const createPostost = (id: number) => ({
-  title: getRandomTitle(),
-  description: getRandomDescription(),
-  itemCount: getRandomNumber(),
-  sizes: getRandomSize(),
-  categories: getRandomCategories(),
-  condition: getRandomCondition(),
-  createdAt: getRandomDate(),
-  images: [],
-  id: id,
-  user: '64500ae2032e065dc8b21180',
-  location: {
-    type: Point.Point,
-    coordinates: [59, 17],
-  },
-});
+function getRandomCoordinatesInSweden(): [number, number] {
+  // Define the bounds of the area we want to generate coordinates in
+  const latMin = 55.2371;
+  const latMax = 69.0605;
+  const lonMin = 10.5986;
+  const lonMax = 24.1935;
 
-export const posts = Array(40)
+  // Generate random latitude and longitude within the bounds
+  const lat = Math.random() * (latMax - latMin) + latMin;
+  const lon = Math.random() * (lonMax - lonMin) + lonMin;
+
+  // Return the coordinates as an array with longitude first
+  return [lon, lat];
+}
+
+const createPostost = (id: number) => {
+  const item = getRandomMainAndSubCategories();
+  return {
+    title: id,
+    // title: getRandomTitle(),
+    description: getRandomDescription(),
+    itemCount: getRandomNumber(),
+    size: getRandomSize(),
+    mainCategory: item[0],
+    subCategories: item[1],
+    condition: getRandomCondition(),
+    createdAt: getRandomDate(),
+    images: [],
+    user: getRandomUser(),
+    location: {
+      type: Point.Point,
+      coordinates: getRandomCoordinatesInSweden(),
+    },
+  };
+};
+
+export const posts = Array(100)
   .fill(null)
   .map((_, i) => createPostost(i));

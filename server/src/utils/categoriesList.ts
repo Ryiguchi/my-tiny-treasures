@@ -1,4 +1,7 @@
 export const itemCategories = [
+  'clothes',
+  'toys',
+  'other',
   't-shirt',
   'shorts',
   'pants',

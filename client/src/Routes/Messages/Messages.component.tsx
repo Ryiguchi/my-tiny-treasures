@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import * as S from './Messages.styles';
+import * as S from './messages.styles';
 import { useMsgData } from '../../utils/hooks';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/features/user/user.selectors';

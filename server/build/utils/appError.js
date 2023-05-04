@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const defaultMessage = 'An error occurred';
 class AppError extends Error {
-    constructor(message, statusCode) {
+    constructor(message = defaultMessage, statusCode) {
         super(message);
         this.message = message;
         this.statusCode = statusCode;

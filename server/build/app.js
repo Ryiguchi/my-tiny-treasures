@@ -9,9 +9,10 @@ const morgan_1 = __importDefault(require("morgan"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
-const userRoute_1 = __importDefault(require("./routes/userRoute"));
-const postRouter_1 = __importDefault(require("./routes/postRouter"));
-const web_router_1 = __importDefault(require("./routes/web.router"));
+const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const postRoutes_1 = __importDefault(require("./routes/postRoutes"));
+const webRoutes_1 = __importDefault(require("./routes/webRoutes"));
+const geocodeRoutes_1 = __importDefault(require("./routes/geocodeRoutes"));
 const chatRoutes_1 = __importDefault(require("./routes/chatRoutes"));
 const appError_1 = __importDefault(require("./utils/appError"));
 const errorController_1 = require("./controllers/errorController");
@@ -33,10 +34,11 @@ app.options('*', (0, cors_1.default)());
 app.use(express_1.default.json({ limit: '10kb' }));
 app.use((0, cookie_parser_1.default)());
 // ROUTES
-app.use('/api/v1/users', userRoute_1.default);
-app.use('/api/v1/posts', postRouter_1.default);
+app.use('/api/v1/users', userRoutes_1.default);
+app.use('/api/v1/posts', postRoutes_1.default);
 app.use('/api/v1/chats', chatRoutes_1.default);
-app.use('/', web_router_1.default);
+app.use('/geocode', geocodeRoutes_1.default);
+app.use('/', webRoutes_1.default);
 app.all('*', (req, res, next) => {
     next(new appError_1.default(`Can not find ${req.originalUrl} on this server!`, 404));
 });

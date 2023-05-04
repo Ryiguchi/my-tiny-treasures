@@ -161,7 +161,6 @@ const decodeToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.decodeToken = decodeToken;
 exports.protect = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
     const token = (0, exports.getToken)(req);
     if (!token) {
         return next(new appError_1.default('You are not logged in!  Please log in to get access!', 401));

@@ -213,7 +213,6 @@ export const protect = catchAsync(
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    console.log(req.body);
     const token = getToken(req);
 
     if (!token) {

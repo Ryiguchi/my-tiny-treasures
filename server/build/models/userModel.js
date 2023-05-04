@@ -117,20 +117,6 @@ const userSchema = new mongoose_1.Schema({
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
 });
-// DON'T NEED ANYMORE
-// userSchema.virtual('newMessages').get(function () {
-//   let count = 0;
-//   if (this.chatData) {
-//     this.chatData.forEach(chat => {
-//       if (chat.newMsgs > 0) count++;
-//     });
-//   }
-//   return count;
-// });
-// userSchema.pre(/^find/, function (next) {
-//   this.populate('chats');
-//   next();
-// });
 userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!this.isNew)

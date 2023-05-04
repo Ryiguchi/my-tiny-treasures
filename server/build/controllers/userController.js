@@ -88,9 +88,7 @@ exports.getBasicUserData = (0, catchAsync_1.catchAsync)((req, res, next) => __aw
     });
 }));
 exports.getMsgData = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.user.id);
     const userWithChats = yield userModel_1.default.findById(req.user.id).populate('chats');
-    console.log(11111111111111111);
     if (!userWithChats) {
         return next(new appError_1.default('There was a problem fetching your data!', 400));
     }
@@ -106,7 +104,6 @@ exports.getFavorites = (0, catchAsync_1.catchAsync)((req, res, next) => __awaite
     const favorites = yield userModel_1.default.findById(req.user.id)
         .populate('favorites')
         .select('favorites');
-    console.log(favorites);
     if (!favorites) {
         return next(new appError_1.default('There was a problem getting your favorites!', 400));
     }

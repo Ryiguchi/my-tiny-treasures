@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/features/user/user.selectors';
 
-import * as S from './Header.styles';
+import * as S from './header.styles';
 import Nav, { NavItem } from './nav/Nav.component';
 import { useMsgData } from '../../utils/hooks';
 

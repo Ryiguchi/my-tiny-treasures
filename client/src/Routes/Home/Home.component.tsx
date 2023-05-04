@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/features/user/user.selectors';
 import { socket } from '../../socket';
 import { useInfinitePosts } from '../../utils/hooks';
-import PostCardMed from '../../components/PostCardMed/PostCardMed.component';
-import * as S from './Home.styles';
+import PostCardMedium from '../../components/PostCardMedium/PostCardMedium.component';
+import * as S from './home.styles';
 import { useEffect, useRef } from 'react';
 
 const Home: React.FC = () => {
@@ -15,19 +15,18 @@ const Home: React.FC = () => {
   const user = useSelector(selectUser);
   const {
     data,
+    isError,
     error,
+    isLoading,
     fetchNextPage,
     hasNextPage,
-    isFetching,
     isFetchingNextPage,
-    status,
   } = useInfinitePosts();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting) {
-          console.log('OBSERVED');
           fetchNextPage();
         }
       },
@@ -62,36 +61,31 @@ const Home: React.FC = () => {
       <button onClick={() => navigate('/signin')}>LogIn</button>
       {/* <button onClick={getPosts}>Get</button> */}
       <button onClick={() => navigate('/messages')}>Messages</button>
-      {<h1>{status}</h1>}
       <S.PostListContainer>
-        {status === 'loading' ? (
-          <p>...loading</p>
-        ) : status === 'error' ? (
-          <p>Error</p>
-        ) : (
+        {data &&
           data.pages.map(data => {
             return data.posts.map((post, i, arr) => (
               <div key={post._id}>
-                <PostCardMed
+                <PostCardMedium
                   post={post}
                   goToPost={goToPost}
                   goToChat={goToChat}
                 />
               </div>
             ));
-          })
-        )}
+          })}
         <button
           ref={LoadMoreButton}
           onClick={() => fetchNextPage()}
           disabled={!hasNextPage || isFetchingNextPage}
         >
-          {isFetchingNextPage
+          {isFetchingNextPage || isLoading
             ? 'Loading more...'
-            : hasNextPage
-            ? 'Load More Results'
+            : isError
+            ? 'Error!'
             : 'No more posts!'}
         </button>
+        {error instanceof Error && <p> error.message</p>}
       </S.PostListContainer>
     </>
   );

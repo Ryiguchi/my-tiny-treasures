@@ -4,7 +4,6 @@ import { CustomRequest, FilterObj } from '../utils/expressInterfaces';
 import User, { UserDocument, modifyMsgData } from '../models/userModel';
 import AppError from '../utils/appError';
 import { decodeToken, getToken } from './authController';
-import { PostDocument } from '../models/postModel';
 
 // HELPERS
 const filterObj = (obj: FilterObj, ...allowedFields: string[]) => {
@@ -85,11 +84,9 @@ export const getBasicUserData = catchAsync(
 
 export const getMsgData = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
-    console.log(req.user.id);
     const userWithChats: UserDocument | null = await User.findById(
       req.user.id
     ).populate('chats');
-    console.log(11111111111111111);
 
     if (!userWithChats) {
       return next(new AppError('There was a problem fetching your data!', 400));
@@ -110,8 +107,6 @@ export const getFavorites = catchAsync(
     const favorites: UserDocument | null = await User.findById(req.user.id)
       .populate('favorites')
       .select('favorites');
-
-    console.log(favorites);
 
     if (!favorites) {
       return next(

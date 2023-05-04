@@ -36,6 +36,11 @@ export interface UserMsgData {
   newMessages: number;
   chatData: ChatData[];
 }
+export interface GeoLocation {
+  coordinates: [number, number];
+  type: string;
+  city?: string;
+}
 
 // STATE
 export interface User {
@@ -43,10 +48,7 @@ export interface User {
   id: string;
   name: string;
   newMessages: number;
-  location?: {
-    coordinates: [number, number];
-    type: string;
-  };
+  location?: GeoLocation;
 }
 export interface Post {
   categories: string[];

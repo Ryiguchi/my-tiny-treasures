@@ -85,7 +85,7 @@ export const useInfinitePosts = () => {
       const nextPage = lastPage.metadata.nextPage;
       const totalPages = lastPage.metadata.totalPages;
 
-      return nextPage <= totalPages ? nextPage : null;
+      return nextPage <= totalPages ? nextPage : undefined;
     },
     staleTime: 3 * 60 * 1000,
   });

@@ -2,6 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemCategories = exports.itemCategories = void 0;
 exports.itemCategories = [
+    'clothes',
+    'toys',
+    'other',
     't-shirt',
     'shorts',
     'pants',

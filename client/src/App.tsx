@@ -17,6 +17,7 @@ import { Chat, MsgData, QueryClientResults } from './utils/interfaces';
 import Post from './Routes/Post/Post.component';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Account from './Routes/Account/Account.component';
+import Give from './Routes/Give/Give.component';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -106,6 +107,7 @@ function App() {
         <Route path="posts/:postId" element={<Post />} />
         <Route path="messages" element={<Messages />} />
         <Route path="account" element={<Account />} />
+        <Route path="give" element={<Give />} />
       </Routes>
     </>
   );

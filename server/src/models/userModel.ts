@@ -110,22 +110,6 @@ const userSchema = new Schema<UserDocument>(
   }
 );
 
-// DON'T NEED ANYMORE
-// userSchema.virtual('newMessages').get(function () {
-//   let count = 0;
-//   if (this.chatData) {
-//     this.chatData.forEach(chat => {
-//       if (chat.newMsgs > 0) count++;
-//     });
-//   }
-//   return count;
-// });
-
-// userSchema.pre(/^find/, function (next) {
-//   this.populate('chats');
-//   next();
-// });
-
 userSchema.pre('save', async function (next) {
   if (!this.isNew) return next();
 

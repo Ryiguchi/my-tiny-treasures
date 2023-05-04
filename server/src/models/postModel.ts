@@ -1,19 +1,37 @@
 import mongoose from 'mongoose';
-import { ItemCategories, itemCategories } from '../utils/categoriesList';
+import User from './userModel';
+import AppError from '../utils/appError';
+import { EnumDocument } from './enumsModel';
 
-enum Condition {
+export enum Condition {
   Used = 'used',
   Fair = 'fair',
   Good = 'good',
   New = 'new',
 }
 
-export interface PostDocument {
+export enum Sizes {
+  A = '44',
+  B = '50/56',
+  C = '62/68',
+  D = '74/80',
+  E = '86/92',
+  F = '98/104',
+  G = '110/116',
+  H = '122/128',
+  I = '134/140',
+  J = '146/152',
+  K = '158/164',
+  L = '170',
+}
+
+export interface PostDocumentWithoutEnum extends mongoose.Document {
   title: string;
   description: string;
   itemCount: number;
-  sizes: number[];
-  categories: ItemCategories[];
+  size: Sizes;
+  mainCategory: string;
+  subCategory: string;
   condition: Condition;
   createdAt: Date;
   images: string[];
@@ -22,6 +40,15 @@ export interface PostDocument {
     type: string;
     coordinates: [number, number];
   };
+  enumsAreValid: (post: PostDocumentWithEnums) => boolean;
+}
+
+export interface PostDocument extends PostDocumentWithoutEnum {
+  enums: mongoose.Schema.Types.ObjectId;
+}
+
+export interface PostDocumentWithEnums extends PostDocumentWithoutEnum {
+  enums: EnumDocument;
 }
 
 const postSchema = new mongoose.Schema<PostDocument>(
@@ -37,22 +64,23 @@ const postSchema = new mongoose.Schema<PostDocument>(
     itemCount: {
       type: Number,
       min: [1, 'ItemCount must be more that 1!'],
-      max: [20, 'You can not have more than 20 articles in 1 post!'],
+      max: [10, 'You can not have more than 10 articles in 1 post!'],
       required: [true, 'Please provide the number of articles.'],
     },
-    sizes: {
-      type: [Number],
-      min: [44, 'Size must be at least 44'],
-      max: [170, 'sIZE CAN NOT BE MORE THAN 170'],
+    enums: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Enum',
+      default: '6452654bfc9f011ef64dd9e1',
     },
-    categories: {
-      type: [String],
-      enum: itemCategories,
-      required: [true, 'At least 1 category is required.'],
+    mainCategory: String,
+    subCategory: String,
+    size: {
+      type: String,
+      enum: Sizes,
     },
     condition: {
       type: String,
-      enum: ['used', 'fair', 'good', 'new'],
+      enum: Condition,
       required: [true, 'Please provide a condition.'],
     },
     createdAt: {
@@ -73,7 +101,6 @@ const postSchema = new mongoose.Schema<PostDocument>(
       },
       coordinates: [Number],
     },
-    // Location virtual property populated from user
   },
   {
     toJSON: { virtuals: true },
@@ -83,19 +110,25 @@ const postSchema = new mongoose.Schema<PostDocument>(
 
 postSchema.index({ location: '2dsphere' });
 
-// postSchema.pre('save', async function () {});
-// postSchema.virtual('location').get(async function () {
-//   return await User.findById(this.user);
-// });
+postSchema.pre('save', async function (next) {
+  const user = await User.findById(this.user);
+  if (!user) {
+    return next(new AppError('there was a problem saving your post.', 400));
+  }
+  this.location = user.location;
 
-// postSchema.pre(/^find/, function (next) {
+  next();
+});
 
-//   this.populate({
-//     path: 'user',
-//     select: 'location name',
-//   });
-//   next();
-// });
+postSchema.methods.enumsAreValid = function (post: PostDocumentWithEnums) {
+  const { mainCategory, subCategory } = post;
+  const { main } = post.enums;
+
+  return (
+    main.includes(mainCategory) &&
+    post.enums[mainCategory].includes(subCategory)
+  );
+};
 
 const Post = mongoose.model<PostDocument>('Post', postSchema);
 export default Post;

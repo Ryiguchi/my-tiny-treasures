@@ -1,12 +1,11 @@
 import { NextFunction, Response } from 'express';
-import Post, { PostDocument } from '../models/postModel';
+import Post, { PostDocument, PostDocumentWithEnums } from '../models/postModel';
 import { catchAsync } from '../utils/catchAsync';
 import {
   distanceFrom,
   filter,
   search,
   sort,
-  paginate,
   countAndPaginate,
 } from '../utils/apiFeatures';
 import { CustomRequest } from '../utils/expressInterfaces';
@@ -15,6 +14,7 @@ import { LocationData, NumberObject, StringObject } from '../utils/interfaces';
 import mongoose, { PipelineStage } from 'mongoose';
 import multer from 'multer';
 import sharp from 'sharp';
+import '../models/enumsModel';
 
 // multer adds a body to the request object with the values of the form field.  If not using default FF, must create new form and all values on client side.
 // req.file will hold the file, req.body will hold the text fields
@@ -81,10 +81,6 @@ export const resizePhoto = catchAsync(
         .toFile(`public/photos/posts/${filename}`);
     });
 
-    res.status(200).json({
-      status: 'success',
-    });
-
     next();
   }
 );
@@ -101,7 +97,6 @@ export const getAllPosts = catchAsync(
       search(query),
       filter(query),
       sort(query),
-      // count(query),
       ...countAndPaginate(query),
     ];
 
@@ -110,11 +105,6 @@ export const getAllPosts = catchAsync(
     }
 
     const posts: PostDocument[] = await Post.aggregate(pipeline);
-
-    // const postsWithData: PostsWithData = {
-    //   posts: posts,
-    //   nextPage: req.query.page ? parseInt(req.query.page) + 1 : 0,
-    // };
 
     res.status(200).json({
       status: 'success',
@@ -164,17 +154,44 @@ export const createPost = catchAsync(
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    if (!req.body.user) {
-      req.body.user = req.user.id;
-      req.body.location = JSON.parse(JSON.stringify(req.user.location));
+    const images = req.filenames
+      ? [...req.filenames].map(fileName => `/photos/posts/${fileName}`)
+      : [];
+
+    const itemCount = req.body.itemCount && parseInt(req.body.itemCount);
+
+    const postData = {
+      title: req.body.title,
+      description: req.body.description,
+      itemCount,
+      size: req.body.size,
+      mainCategory: req.body.mainCategory,
+      subCategory: req.body.subCategory,
+      enums: req.body.enums,
+      condition: req.body.condition,
+      images,
+      user: req.user.id,
+    };
+    const x = await new Post(postData).populate('enums');
+
+    const post: PostDocumentWithEnums = await new Post(postData).populate(
+      'enums'
+    );
+
+    if (!post) {
+      return next(new AppError('Unable to create post!', 400));
     }
 
-    const newPost: PostDocument = await Post.create(req.body);
+    if (post.enumsAreValid(post)) {
+      return next(new AppError('Invalid categories!', 400));
+    }
+
+    post.save();
 
     res.status(200).json({
       status: 'success',
       data: {
-        data: newPost,
+        data: post,
       },
     });
   }

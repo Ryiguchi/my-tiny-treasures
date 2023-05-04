@@ -17,7 +17,7 @@ export const getMyChat = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const roomId = req.params.roomId;
 
-    const chat = await Chat.findById(roomId);
+    const chat = await Chat.findById(roomId).populate('post');
 
     if (!chat) {
       return next(new AppError('No chat found!', 400));

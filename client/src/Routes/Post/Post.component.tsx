@@ -1,18 +1,20 @@
 import { useParams } from 'react-router-dom';
 import { usePost } from '../../utils/hooks';
+import PostCardLarge from '../../components/PostCardLarge/PostCardLarge.component';
 
-const Post = () => {
+const Post: React.FC = () => {
   const postId = useParams().postId;
-  const { status, data, error, isFetching } = usePost(postId);
-  const post = data?.data.post;
+  const { data, isError, error, isLoading } = usePost(postId);
 
   return (
     <div>
-      <h1>TITLE: {post?.title}</h1>
-      <h2>DESC: {post?.description}</h2>
-      <h2>COUNT: {post?.itemCount}</h2>
-      <h1>USER: {post?.user}</h1>
-      <h1>ID: {post?.id}</h1>
+      {isLoading ? (
+        <p>loading spinner</p>
+      ) : isError ? (
+        <p>error message: ${error instanceof Error && error.message}</p>
+      ) : (
+        data && <PostCardLarge post={data.data.post} />
+      )}
     </div>
   );
 };

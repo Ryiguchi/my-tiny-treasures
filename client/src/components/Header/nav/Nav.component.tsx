@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import * as S from './Nav.styles';
+import * as S from './nav.styles';
 import { useNavigate } from 'react-router-dom';
 
 export interface NavItem {
