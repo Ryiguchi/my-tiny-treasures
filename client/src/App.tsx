@@ -4,20 +4,20 @@ import { useNavigate } from 'react-router-dom';
 import { socket } from './socket';
 
 import { GlobalStyles } from './styles/GlobalStyles';
-import SignIn from './Routes/SignIn/SignIn.component';
-import Home from './Routes/Home/Home.component';
-import ChatPage from './Routes/Chat/Chat.component';
+import SignIn from './Routes/SignIn/SignIn.pages';
+import Home from './Routes/Home/Home.pages';
+import ChatPage from './Routes/Chat/Chat.pages';
 import { useSelector } from 'react-redux';
 import { setIsConnected } from './store/features/user/userSlice';
 import { selectUser } from './store/features/user/user.selectors';
 import Header from './components/Header/Header.component';
-import Messages from './Routes/Messages/Messages.component';
+import Messages from './Routes/Messages/Messages.pages';
 import { useAppDispatch, useChat, useMsgData } from './utils/hooks';
 import { Chat, MsgData, QueryClientResults } from './utils/interfaces';
-import Post from './Routes/Post/Post.component';
+import Post from './Routes/Post/Post.pages';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import Account from './Routes/Account/Account.component';
-import Give from './Routes/Give/Give.component';
+import Account from './Routes/Account/Account.pages';
+import Give from './Routes/Give/Give.pages';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -105,6 +105,7 @@ function App() {
         <Route path="signin" element={<SignIn />} />
         <Route path="chats/:chatId" element={<ChatPage />} />
         <Route path="posts/:postId" element={<Post />} />
+        <Route path="search/:startQuery" element={<Home />} />
         <Route path="messages" element={<Messages />} />
         <Route path="account" element={<Account />} />
         <Route path="give" element={<Give />} />

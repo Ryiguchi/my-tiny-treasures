@@ -20,11 +20,11 @@ const postModel_1 = __importDefault(require("../models/postModel"));
 dotenv_1.default.config({ path: './config.env' });
 const DB = process.env.DB.replace('<password>', process.env.DB_PASSWORD);
 mongoose_1.default.connect(DB).then(() => console.log('DB connection succesful'));
-function sortById(arr) {
-    return arr.sort((a, b) => a.title - b.title);
-}
+// function sortById(arr: { title: number }[]): { title: number }[] {
+//   return arr.sort((a, b) => a.title - b.title);
+// }
 const importData = () => __awaiter(void 0, void 0, void 0, function* () {
-    sortById(postData_1.posts);
+    // sortById(posts);
     try {
         yield postModel_1.default.create(postData_1.posts);
         console.log('Data successfully loaded');

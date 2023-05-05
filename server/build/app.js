@@ -9,6 +9,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
+const path_1 = __importDefault(require("path"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const postRoutes_1 = __importDefault(require("./routes/postRoutes"));
 const webRoutes_1 = __importDefault(require("./routes/webRoutes"));
@@ -31,6 +32,7 @@ app.use((0, cors_1.default)({
     credentials: true,
 }));
 app.options('*', (0, cors_1.default)());
+app.use(express_1.default.static(path_1.default.join(__dirname, '../public')));
 app.use(express_1.default.json({ limit: '10kb' }));
 app.use((0, cookie_parser_1.default)());
 // ROUTES

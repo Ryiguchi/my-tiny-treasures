@@ -76,16 +76,14 @@ exports.resizePhoto = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter
 exports.getAllPosts = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const query = req.query;
-    const pipeline = [
-        (0, apiFeatures_1.search)(query),
-        (0, apiFeatures_1.filter)(query),
-        (0, apiFeatures_1.sort)(query),
-        ...(0, apiFeatures_1.countAndPaginate)(query),
-    ];
-    if ((_a = req.user) === null || _a === void 0 ? void 0 : _a.location) {
-        pipeline.unshift((0, apiFeatures_1.distanceFrom)(req.user.location));
-    }
-    const posts = yield postModel_1.default.aggregate(pipeline);
+    const pipeline = new apiFeatures_1.PostFeatures(query, (_a = req.user) === null || _a === void 0 ? void 0 : _a.location)
+        .distanceFrom()
+        .filter()
+        .search()
+        .sort()
+        .limitFields()
+        .countAndPaginate();
+    const posts = yield postModel_1.default.aggregate(pipeline.stages);
     res.status(200).json({
         status: 'success',
         results: posts.length,
@@ -102,8 +100,7 @@ exports.getPost = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(voi
             $match: { _id: new mongoose_1.default.Types.ObjectId(postId) },
         },
     ];
-    if (location)
-        pipeline.unshift((0, apiFeatures_1.distanceFrom)(location));
+    // if (location) pipeline.unshift(distanceFrom(location));
     const post = yield postModel_1.default.aggregate(pipeline);
     if (!post) {
         return next(new appError_1.default('No post found!', 400));

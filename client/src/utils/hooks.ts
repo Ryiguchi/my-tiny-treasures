@@ -67,29 +67,39 @@ export const usePost = (postId: string | undefined) => {
   });
 };
 
-const getPosts = async ({ pageParam = 1 }): Promise<PostQueryResult> => {
+type getPostParams = {
+  pageParam: number;
+  query: string | undefined;
+};
+
+export const getPosts = async ({
+  pageParam = 1,
+  query = '',
+}: getPostParams): Promise<PostQueryResult> => {
   const limit = 20;
   const data: AxiosResponse<ResponseWithData<PostQueryResult[]>> =
-    await axios.get(`${baseUrl}/posts/?page=${pageParam}&limit=${limit}`);
+    await axios.get(
+      `${baseUrl}/posts/?page=${pageParam}&limit=${limit}&${query}`
+    );
   // console.log(data);
   checkForError(data.data);
   // console.log(data.data.data.data[0]);
   return data.data.data.data[0];
 };
 
-export const useInfinitePosts = () => {
-  return useInfiniteQuery({
-    queryKey: ['posts'],
-    queryFn: getPosts,
-    getNextPageParam: (lastPage, pages) => {
-      const nextPage = lastPage.metadata.nextPage;
-      const totalPages = lastPage.metadata.totalPages;
+// export const useInfinitePosts = ({ query = '' } = {}) => {
+//   return useInfiniteQuery({
+//     queryKey: ['posts', query],
+//     queryFn: ({ pageParam }) => getPosts({ pageParam, query }),
+//     getNextPageParam: (lastPage, pages) => {
+//       const nextPage = lastPage.metadata.nextPage;
+//       const totalPages = lastPage.metadata.totalPages;
 
-      return nextPage <= totalPages ? nextPage : undefined;
-    },
-    staleTime: 3 * 60 * 1000,
-  });
-};
+//       return nextPage <= totalPages ? nextPage : undefined;
+//     },
+//     staleTime: 3 * 60 * 1000,
+//   });
+// };
 
 // TODO: only fetch when called
 export const useMsgData = (user: User | null) => {

@@ -6,3 +6,7 @@ export const PostListContainer = styled.ul`
   align-items: center;
   gap: 2rem;
 `;
+
+export const MainImg = styled.img`
+  width: 100%;
+`;

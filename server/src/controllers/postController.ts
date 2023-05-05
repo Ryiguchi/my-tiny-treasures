@@ -1,13 +1,7 @@
 import { NextFunction, Response } from 'express';
 import Post, { PostDocument, PostDocumentWithEnums } from '../models/postModel';
 import { catchAsync } from '../utils/catchAsync';
-import {
-  distanceFrom,
-  filter,
-  search,
-  sort,
-  countAndPaginate,
-} from '../utils/apiFeatures';
+import { PostFeatures } from '../utils/apiFeatures';
 import { CustomRequest } from '../utils/expressInterfaces';
 import AppError from '../utils/appError';
 import { LocationData, NumberObject, StringObject } from '../utils/interfaces';
@@ -93,18 +87,15 @@ export const getAllPosts = catchAsync(
   ): Promise<void> => {
     const query: StringObject = req.query;
 
-    const pipeline: PipelineStage[] = [
-      search(query),
-      filter(query),
-      sort(query),
-      ...countAndPaginate(query),
-    ];
+    const pipeline = new PostFeatures(query, req.user?.location)
+      .distanceFrom()
+      .filter()
+      .search()
+      .sort()
+      .limitFields()
+      .countAndPaginate();
 
-    if (req.user?.location) {
-      pipeline.unshift(distanceFrom(req.user.location));
-    }
-
-    const posts: PostDocument[] = await Post.aggregate(pipeline);
+    const posts: PostDocument[] = await Post.aggregate(pipeline.stages);
 
     res.status(200).json({
       status: 'success',
@@ -131,7 +122,7 @@ export const getPost = catchAsync(
       },
     ];
 
-    if (location) pipeline.unshift(distanceFrom(location));
+    // if (location) pipeline.unshift(distanceFrom(location));
 
     const post = await Post.aggregate(pipeline);
 

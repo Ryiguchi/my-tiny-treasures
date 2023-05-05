@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import { theme } from './themes';
 
 export const GlobalStyles = createGlobalStyle`
 
@@ -37,5 +38,12 @@ a {
 button {
   cursor: pointer;
   border: none;
+  border-radius: ${theme.radius.button};
+  box-shadow: ${theme.shadow};
+  transition: ${theme.button.transition};
+  width: fit-content;
+  height: ${theme.button.height1};
+  color: #fff;
+  padding: ${theme.button.padding};
 }
 `;

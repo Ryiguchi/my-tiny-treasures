@@ -1,6 +1,14 @@
 import { FormEvent, useRef, useState } from 'react';
 import { useCreateNewPost } from '../../utils/hooks';
-import * as S from './Give.styles';
+import * as S from './give.styles';
+import {
+  ages,
+  clothes,
+  mainCategories,
+  other,
+  sizes,
+  toys,
+} from '../../utils/enums';
 
 const Give = () => {
   const [title, setTitle] = useState('');
@@ -59,11 +67,65 @@ const Give = () => {
         <label htmlFor="categories">Category:</label>
         <select onChange={e => setCategory(e.target.value)} name="categories">
           <option value="">Choose an option...</option>
-          <option value="clothes">Clothes</option>
-          <option value="toys">Toys</option>
-          <option value="other">Other</option>
+          {mainCategories.map(cat => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
         </select>
-        {category === 'clothes' && (
+        {category === 'Clothes' && (
+          <>
+            <label htmlFor="clothes">type:</label>
+            <select
+              onChange={e => setSize(e.target.value)}
+              name="clothes"
+              required
+            >
+              <option value="">Choose an option...</option>
+              {clothes.map(type => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
+        {category === 'Toys' && (
+          <>
+            <label htmlFor="toys">type:</label>
+            <select
+              onChange={e => setSize(e.target.value)}
+              name="toys"
+              required
+            >
+              <option value="">Choose an option...</option>
+              {toys.map(type => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
+        {category === 'Other' && (
+          <>
+            <label htmlFor="other">type:</label>
+            <select
+              onChange={e => setSize(e.target.value)}
+              name="other"
+              required
+            >
+              <option value="">Choose an option...</option>
+              {other.map(type => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
+
+        {category === 'Clothes' && (
           <>
             <label htmlFor="size">Size:</label>
             <select
@@ -72,37 +134,28 @@ const Give = () => {
               required
             >
               <option value="">Choose an option...</option>
-
-              <option value="1">44</option>
-              <option value="2">50/56</option>
-              <option value="3">62/68</option>
-              <option value="4">74/80</option>
-              <option value="5">86/92</option>
-              <option value="6">98/104</option>
-              <option value="7">110/116</option>
-              <option value="8">122/128</option>
-              <option value="9">134/140</option>
-              <option value="10">146/152</option>
+              {sizes.map(type => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
             </select>
           </>
         )}
-        {category === 'toys' ||
-          (category === 'other' && (
-            <>
-              <label htmlFor="size">Age:</label>
-              <select
-                onChange={e => setSize(e.target.value)}
-                name="size"
-                required
-              >
-                <option value="">Choose an option...</option>
+        {category !== 'Clothes' && (
+          <>
+            <label htmlFor="age">Age:</label>
+            <select onChange={e => setSize(e.target.value)} name="age" required>
+              <option value="">Choose an option...</option>
 
-                <option value="1">0-3</option>
-                <option value="2">4-7</option>
-                <option value="3">8-11</option>
-              </select>
-            </>
-          ))}
+              {ages.map(type => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
         <label htmlFor="condition">Condition:</label>
         <select onChange={e => setCondition(e.target.value)} name="condition">
           <option value="">Choose an option...</option>

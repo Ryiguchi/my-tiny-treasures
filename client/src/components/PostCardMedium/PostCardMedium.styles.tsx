@@ -1,14 +1,33 @@
 import styled from 'styled-components';
+import Box from '../common/Box/Box.component';
 
-export const PostContainer = styled.li`
-  width: 30rem;
-  padding: 2rem;
+export const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
 
-  button {
-    font-size: 1.6rem;
-    padding: 1rem;
-    color: #fff;
-    background-color: blue;
-    margin-right: 1rem;
+export const ImageBox = styled.div`
+  object-fit: contain;
+
+  img {
+    width: 100%;
+  }
+`;
+
+export const BoxWithChildren = styled(Box)`
+  h2 {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  p {
+    /* white-space: normal; */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 4rem;
   }
 `;

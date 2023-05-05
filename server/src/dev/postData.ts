@@ -193,19 +193,27 @@ function getRandomCoordinatesInSweden(): [number, number] {
   return [lon, lat];
 }
 
+const images = [
+  'http://localhost:8000/photos/posts/user-644acb016a4541fb49c4c2ad-1683236062245.jpeg',
+  'http://localhost:8000/photos/posts/user-644acb016a4541fb49c4c2ad-1683236062248.jpeg',
+  'http://localhost:8000/photos/posts/user-644acb016a4541fb49c4c2ad-1683236062249.jpeg',
+  'http://localhost:8000/photos/posts/user-644acb016a4541fb49c4c2ad-1683236062251.jpeg',
+  'http://localhost:8000/photos/posts/user-644acb016a4541fb49c4c2ad-1683236062253.jpeg',
+];
+
 const createPostost = (id: number) => {
   const item = getRandomMainAndSubCategories();
   return {
-    title: id,
-    // title: getRandomTitle(),
+    // title: id,
+    title: getRandomTitle(),
     description: getRandomDescription(),
     itemCount: getRandomNumber(),
     size: getRandomSize(),
     mainCategory: item[0],
-    subCategories: item[1],
+    subCategory: item[1],
     condition: getRandomCondition(),
     createdAt: getRandomDate(),
-    images: [],
+    images,
     user: getRandomUser(),
     location: {
       type: Point.Point,
@@ -214,6 +222,6 @@ const createPostost = (id: number) => {
   };
 };
 
-export const posts = Array(100)
+export const posts = Array(10)
   .fill(null)
   .map((_, i) => createPostost(i));

@@ -35,9 +35,13 @@ var Sizes;
     Sizes["H"] = "122/128";
     Sizes["I"] = "134/140";
     Sizes["J"] = "146/152";
-    Sizes["K"] = "158/164";
-    Sizes["L"] = "170";
 })(Sizes = exports.Sizes || (exports.Sizes = {}));
+var Ages;
+(function (Ages) {
+    Ages["A"] = "0-3";
+    Ages["B"] = "4-7";
+    Ages["C"] = "8-11";
+})(Ages || (Ages = {}));
 const postSchema = new mongoose_1.default.Schema({
     title: String,
     description: {
@@ -63,6 +67,10 @@ const postSchema = new mongoose_1.default.Schema({
     size: {
         type: String,
         enum: Sizes,
+    },
+    age: {
+        type: String,
+        enum: Ages,
     },
     condition: {
         type: String,
@@ -91,6 +99,7 @@ const postSchema = new mongoose_1.default.Schema({
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
 });
+postSchema.index({ mainCategory: 1, age: 1 });
 postSchema.index({ location: '2dsphere' });
 postSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -101,6 +110,31 @@ postSchema.pre('save', function (next) {
         this.location = user.location;
         next();
     });
+});
+postSchema.pre('save', function (next) {
+    if (!this.isModified('size') || this.mainCategory !== 'Clothes')
+        return next();
+    switch (this.size) {
+        case Sizes.A:
+        case Sizes.B:
+        case Sizes.C:
+        case Sizes.D:
+        case Sizes.E:
+        case Sizes.F:
+            this.age = Ages.A;
+            break;
+        case Sizes.G:
+        case Sizes.H:
+            this.age = Ages.B;
+            break;
+        case Sizes.I:
+        case Sizes.J:
+            this.age = Ages.C;
+            break;
+        default:
+            break;
+    }
+    next();
 });
 postSchema.methods.enumsAreValid = function (post) {
     const { mainCategory, subCategory } = post;

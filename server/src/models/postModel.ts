@@ -21,15 +21,20 @@ export enum Sizes {
   H = '122/128',
   I = '134/140',
   J = '146/152',
-  K = '158/164',
-  L = '170',
+}
+
+enum Ages {
+  A = '0-3',
+  B = '4-7',
+  C = '8-11',
 }
 
 export interface PostDocumentWithoutEnum extends mongoose.Document {
   title: string;
   description: string;
   itemCount: number;
-  size: Sizes;
+  size?: Sizes;
+  age: Ages;
   mainCategory: string;
   subCategory: string;
   condition: Condition;
@@ -78,6 +83,10 @@ const postSchema = new mongoose.Schema<PostDocument>(
       type: String,
       enum: Sizes,
     },
+    age: {
+      type: String,
+      enum: Ages,
+    },
     condition: {
       type: String,
       enum: Condition,
@@ -108,6 +117,8 @@ const postSchema = new mongoose.Schema<PostDocument>(
   }
 );
 
+postSchema.index({ mainCategory: 1, age: 1 });
+
 postSchema.index({ location: '2dsphere' });
 
 postSchema.pre('save', async function (next) {
@@ -116,6 +127,34 @@ postSchema.pre('save', async function (next) {
     return next(new AppError('there was a problem saving your post.', 400));
   }
   this.location = user.location;
+
+  next();
+});
+
+postSchema.pre('save', function (next) {
+  if (!this.isModified('size') || this.mainCategory !== 'Clothes')
+    return next();
+
+  switch (this.size) {
+    case Sizes.A:
+    case Sizes.B:
+    case Sizes.C:
+    case Sizes.D:
+    case Sizes.E:
+    case Sizes.F:
+      this.age = Ages.A;
+      break;
+    case Sizes.G:
+    case Sizes.H:
+      this.age = Ages.B;
+      break;
+    case Sizes.I:
+    case Sizes.J:
+      this.age = Ages.C;
+      break;
+    default:
+      break;
+  }
 
   next();
 });

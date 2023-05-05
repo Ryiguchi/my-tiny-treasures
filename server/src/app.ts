@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import path from 'path';
 
 import userRouter from './routes/userRoutes';
 import postRouter from './routes/postRoutes';
@@ -33,10 +34,12 @@ app.use(
 );
 app.options('*', cors());
 
+app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 
 // ROUTES
+
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/chats', chatRouter);
