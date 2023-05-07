@@ -41,6 +41,7 @@ const validator_1 = __importDefault(require("validator"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const appError_1 = __importDefault(require("../utils/appError"));
 const userSchema = new mongoose_1.Schema({
+    id: String,
     name: {
         type: String,
         required: [true, 'Please provide a name.'],
@@ -52,15 +53,20 @@ const userSchema = new mongoose_1.Schema({
         validate: [validator_1.default.isEmail, 'Please provide a valid email address.'],
         lowercase: true,
     },
+    method: {
+        type: String,
+        default: 'password',
+    },
+    googleId: String,
     password: {
         type: String,
-        required: [true, 'Please provide a password.'],
+        // required: [true, 'Please provide a password.'],
         minLength: [8, 'Passwords must have at least 8 characters'],
         select: false,
     },
     passwordConfirm: {
         type: String,
-        required: [true, 'Please confirm your password.'],
+        // required: [true, 'Please confirm your password.'],
         minLength: [8, 'Passwords must have at least 8 characters'],
         select: false,
     },
@@ -116,6 +122,10 @@ const userSchema = new mongoose_1.Schema({
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+});
+userSchema.pre('save', function (next) {
+    this.id = this._id.toString();
+    next();
 });
 userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {

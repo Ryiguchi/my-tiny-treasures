@@ -11,6 +11,7 @@ import postRouter from './routes/postRoutes';
 import webRouter from './routes/webRoutes';
 import geocodeRouter from './routes/geocodeRoutes';
 import chatRouter from './routes/chatRoutes';
+import enumRouter from './routes/enumRoutes';
 import AppError from './utils/appError';
 import { globalErrorHandler } from './controllers/errorController';
 import { passportConfig } from './utils/passportConfig';
@@ -43,6 +44,7 @@ app.use(cookieParser());
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/chats', chatRouter);
+app.use('/api/v1/enums', enumRouter);
 app.use('/geocode', geocodeRouter);
 app.use('/', webRouter);
 

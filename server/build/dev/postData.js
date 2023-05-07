@@ -194,6 +194,6 @@ const createPostost = (id) => {
         },
     };
 };
-exports.posts = Array(10)
+exports.posts = Array(200)
     .fill(null)
     .map((_, i) => createPostost(i));

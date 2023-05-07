@@ -51,9 +51,10 @@ export interface User {
   location?: GeoLocation;
 }
 export interface Post {
-  categories: string[];
+  mainCategory: string;
+  subCategory: string;
   condition: string;
-  createdAt: Date;
+  createdAt: string;
   description: string;
   id: string;
   images: string[];
@@ -62,10 +63,12 @@ export interface Post {
     coordinates: [number, number];
     type: string;
   };
-  sizes: number[];
+  size?: number;
+  age: string;
   title: string;
   user: string;
   _id: string;
+  distance?: number;
 }
 
 // REACT QUERY
@@ -75,10 +78,10 @@ export interface QueryClientResults<T> {
   };
 }
 
-// export interface SignInCredentials {
-//   email: string;
-//   password: string;
-// }
+export interface SignInCredentials {
+  email: string;
+  password: string;
+}
 
 interface Metadata {
   nextPage: number;
@@ -90,4 +93,13 @@ interface Metadata {
 export interface PostQueryResult {
   metadata: Metadata;
   posts: Post[];
+}
+
+export interface Enum {
+  [key: string]: string[];
+  sizes: string[];
+  clothes: string[];
+  main: string[];
+  toys: string[];
+  other: string[];
 }

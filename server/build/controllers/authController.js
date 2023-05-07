@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.protect = exports.decodeToken = exports.getToken = exports.verifyPassword = exports.updateEmail = exports.updatePassword = exports.logout = exports.googleAuthCallback = exports.signIn = exports.signUp = void 0;
+exports.protect = exports.decodeToken = exports.getToken = exports.verifyPassword = exports.updateEmail = exports.updatePassword = exports.signOut = exports.googleAuthCallback = exports.signIn = exports.signUp = void 0;
 const catchAsync_1 = require("../utils/catchAsync");
 const appError_1 = __importDefault(require("../utils/appError"));
 const userModel_1 = __importStar(require("../models/userModel"));
@@ -67,7 +67,7 @@ const createAndSendJWT = (user, statusCode, req, res, next, redirect = false) =>
         user.password = undefined;
     // redirect if logged in from google
     if (redirect) {
-        res.redirect('/profile');
+        res.redirect('http://localhost:5173/home');
     }
     else {
         res.status(statusCode).json({
@@ -93,14 +93,14 @@ exports.signIn = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void
 exports.googleAuthCallback = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     createAndSendJWT(req.user, 200, req, res, next, true);
 }));
-const logout = (req, res, next) => {
+const signOut = (req, res, next) => {
     res.cookie('jwt', 'loggedout', {
         expires: new Date(Date.now() + 10 * 1000),
         httpOnly: true,
     });
     res.status(200).json({ status: 'success' });
 };
-exports.logout = logout;
+exports.signOut = signOut;
 exports.updatePassword = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { passwordNew, passwordConfirm } = req.body;
     if (!passwordNew || !passwordConfirm) {

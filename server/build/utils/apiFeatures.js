@@ -6,23 +6,10 @@ class PostFeatures {
         this.queryString = queryString;
         this.userLocation = userLocation;
         this.stages = [];
-        this.sort = () => {
-            if (!this.queryString.sort)
-                return this;
-            const sortBy = this.queryString.sort.split(',');
-            const sortObj = {};
-            sortBy.forEach((field) => {
-                const sortOrder = field.startsWith('-') ? -1 : 1;
-                const fieldName = field.replace(/^-/, '');
-                sortObj[fieldName] = sortOrder;
-            });
-            const sortStage = { $sort: sortObj };
-            this.stages.push(sortStage);
-            return this;
-        };
     }
     distanceFrom() {
-        if (!this.userLocation)
+        var _a;
+        if (!((_a = this.userLocation) === null || _a === void 0 ? void 0 : _a.coordinates.length))
             return this;
         const geoNearStage = {
             $geoNear: {
@@ -41,7 +28,7 @@ class PostFeatures {
         excludedFields.forEach(field => delete queryObj[field]);
         let matchStage = { $match: {} };
         Object.entries(queryObj).forEach(([key, value]) => {
-            matchStage.$match[key] = key === 'itemCount' ? Number(value) : value;
+            matchStage.$match.id = value;
         });
         this.stages.push(matchStage);
         return this;
@@ -75,6 +62,22 @@ class PostFeatures {
             },
         };
         this.stages.push(matchStage);
+        return this;
+    }
+    sort() {
+        if (!this.queryString.sort) {
+            this.stages.push({ $sort: { createdAt: -1 } });
+            return this;
+        }
+        const sortBy = this.queryString.sort.split(',');
+        const sortObj = {};
+        sortBy.forEach((field) => {
+            const sortOrder = field.startsWith('-') ? -1 : 1;
+            const fieldName = field.replace(/^-/, '');
+            sortObj[fieldName] = sortOrder;
+        });
+        const sortStage = { $sort: sortObj };
+        this.stages.push(sortStage);
         return this;
     }
     countAndPaginate() {

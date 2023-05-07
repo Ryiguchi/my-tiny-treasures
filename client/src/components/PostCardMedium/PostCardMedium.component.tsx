@@ -3,6 +3,7 @@ import { Post } from '../../utils/interfaces';
 import Box from '../common/Box/Box.component';
 import * as S from './postCardMedium.styles';
 import { theme } from '../../styles/themes';
+import { getDate } from '../../utils/helpers';
 
 interface PostCardMediumProps {
   post: Post;
@@ -26,6 +27,7 @@ const PostCardMedium: React.FC<PostCardMediumProps> = ({ post }) => {
       padding=".8rem"
       borderRadius={theme.radius.image}
       boxShadow={theme.shadow}
+      data-item={post._id}
     >
       <Box display="grid" gridTemplateColumns={gridTempCol} gap=".3rem">
         {post.images.map((img, i) => {
@@ -37,8 +39,12 @@ const PostCardMedium: React.FC<PostCardMediumProps> = ({ post }) => {
             );
         })}
       </Box>
-      <h2>{post.title}</h2>
-      <p>{post.description}</p>
+      <h2>{post.mainCategory}</h2>
+      <p>{post.subCategory}</p>
+      <p>{post.size}</p>
+      <p>{post.age}</p>
+      <p>{getDate(post.createdAt)}</p>
+      <p>{post.distance}</p>
     </S.BoxWithChildren>
   );
 };

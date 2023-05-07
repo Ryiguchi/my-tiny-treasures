@@ -5,7 +5,6 @@ import { PostFeatures } from '../utils/apiFeatures';
 import { CustomRequest } from '../utils/expressInterfaces';
 import AppError from '../utils/appError';
 import { LocationData, NumberObject, StringObject } from '../utils/interfaces';
-import mongoose, { PipelineStage } from 'mongoose';
 import multer from 'multer';
 import sharp from 'sharp';
 import '../models/enumsModel';
@@ -114,17 +113,14 @@ export const getPost = catchAsync(
     next: NextFunction
   ): Promise<void> => {
     const { postId } = req.params;
-    const location: LocationData | null = req.user.location;
+    const location: LocationData | null = req.user?.location;
+    const query = {
+      id: postId,
+    };
 
-    const pipeline: PipelineStage[] = [
-      {
-        $match: { _id: new mongoose.Types.ObjectId(postId) },
-      },
-    ];
+    const pipeline = new PostFeatures(query, location).distanceFrom().filter();
 
-    // if (location) pipeline.unshift(distanceFrom(location));
-
-    const post = await Post.aggregate(pipeline);
+    const post = await Post.aggregate(pipeline.stages);
 
     if (!post) {
       return next(new AppError('No post found!', 400));

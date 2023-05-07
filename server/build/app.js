@@ -15,6 +15,7 @@ const postRoutes_1 = __importDefault(require("./routes/postRoutes"));
 const webRoutes_1 = __importDefault(require("./routes/webRoutes"));
 const geocodeRoutes_1 = __importDefault(require("./routes/geocodeRoutes"));
 const chatRoutes_1 = __importDefault(require("./routes/chatRoutes"));
+const enumRoutes_1 = __importDefault(require("./routes/enumRoutes"));
 const appError_1 = __importDefault(require("./utils/appError"));
 const errorController_1 = require("./controllers/errorController");
 const passportConfig_1 = require("./utils/passportConfig");
@@ -39,6 +40,7 @@ app.use((0, cookie_parser_1.default)());
 app.use('/api/v1/users', userRoutes_1.default);
 app.use('/api/v1/posts', postRoutes_1.default);
 app.use('/api/v1/chats', chatRoutes_1.default);
+app.use('/api/v1/enums', enumRoutes_1.default);
 app.use('/geocode', geocodeRoutes_1.default);
 app.use('/', webRoutes_1.default);
 app.all('*', (req, res, next) => {

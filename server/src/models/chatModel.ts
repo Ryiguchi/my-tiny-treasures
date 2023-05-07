@@ -9,13 +9,14 @@ interface NewMsg {
 export interface ChatDocument extends mongoose.Document {
   post: mongoose.Schema.Types.ObjectId;
   messages: ChatMessage[];
-  id: mongoose.Schema.Types.ObjectId;
+  id: string;
   users: [mongoose.Schema.Types.ObjectId, mongoose.Schema.Types.ObjectId];
   newMsg: [NewMsg, NewMsg];
 }
 
 const chatSchema = new mongoose.Schema<ChatDocument>(
   {
+    id: String,
     post: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'post',
@@ -63,6 +64,11 @@ chatSchema.virtual('newMsg').get(function () {
   const newMsg = [{ [user1Id]: new1, [user2Id]: new2 }];
 
   return newMsg;
+});
+
+chatSchema.pre('save', function (next) {
+  this.id = this._id.toString();
+  next();
 });
 
 // After creatin a post, add id to Users

@@ -4,25 +4,31 @@ import { useNavigate } from 'react-router-dom';
 import { socket } from './socket';
 
 import { GlobalStyles } from './styles/GlobalStyles';
-import SignIn from './Routes/SignIn/SignIn.pages';
-import Home from './Routes/Home/Home.pages';
-import ChatPage from './Routes/Chat/Chat.pages';
+import SignIn from './Routes/SignIn/SignIn.route';
+import ChatPage from './Routes/Chat/Chat.route';
 import { useSelector } from 'react-redux';
-import { setIsConnected } from './store/features/user/userSlice';
+import {
+  checkForLoggedInUser,
+  setIsConnected,
+} from './store/features/user/userSlice';
 import { selectUser } from './store/features/user/user.selectors';
 import Header from './components/Header/Header.component';
-import Messages from './Routes/Messages/Messages.pages';
-import { useAppDispatch, useChat, useMsgData } from './utils/hooks';
+import Messages from './Routes/Messages/Messages.route';
+import { useAppDispatch, useChat, useEnums, useMsgData } from './utils/hooks';
 import { Chat, MsgData, QueryClientResults } from './utils/interfaces';
-import Post from './Routes/Post/Post.pages';
+import Post from './Routes/Post/Post.route';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import Account from './Routes/Account/Account.pages';
-import Give from './Routes/Give/Give.pages';
+import Account from './Routes/Account/Account.route';
+import Give from './Routes/Give/Give.route';
+import Category from './Routes/Category/Category.route';
+import Home from './Routes/Home/Home.route';
+import SignUp from './Routes/SignUp/SignUp.route';
 
 function App() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  useEnums();
 
   const user = useSelector(selectUser);
   useChat(undefined);
@@ -52,9 +58,9 @@ function App() {
   });
 
   useEffect(() => {
-    // if (!user) {
-    //   dispatch(checkForLoggedInUser());
-    // }
+    if (!user) {
+      dispatch(checkForLoggedInUser());
+    }
 
     const onConnect = (): void => {
       dispatch(setIsConnected(true));
@@ -101,11 +107,12 @@ function App() {
 
       <Header />
       <Routes>
-        <Route index element={<Home />} />
         <Route path="signin" element={<SignIn />} />
+        <Route path="signup" element={<SignUp />} />
+        <Route path="home" element={<Home />} />
         <Route path="chats/:chatId" element={<ChatPage />} />
         <Route path="posts/:postId" element={<Post />} />
-        <Route path="search/:startQuery" element={<Home />} />
+        <Route path="category/:category" element={<Category />} />
         <Route path="messages" element={<Messages />} />
         <Route path="account" element={<Account />} />
         <Route path="give" element={<Give />} />

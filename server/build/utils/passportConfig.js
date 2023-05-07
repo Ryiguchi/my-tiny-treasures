@@ -37,6 +37,7 @@ const passportConfig = (passport) => {
             return done(null, newUser);
         }
         catch (error) {
+            console.log('💥💥', error);
             return done(error, false);
         }
     })));

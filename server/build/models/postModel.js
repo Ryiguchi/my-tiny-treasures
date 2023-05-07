@@ -43,6 +43,7 @@ var Ages;
     Ages["C"] = "8-11";
 })(Ages || (Ages = {}));
 const postSchema = new mongoose_1.default.Schema({
+    id: String,
     title: String,
     description: {
         type: String,
@@ -110,6 +111,10 @@ postSchema.pre('save', function (next) {
         this.location = user.location;
         next();
     });
+});
+postSchema.pre('save', function (next) {
+    this.id = this._id.toString();
+    next();
 });
 postSchema.pre('save', function (next) {
     if (!this.isModified('size') || this.mainCategory !== 'Clothes')

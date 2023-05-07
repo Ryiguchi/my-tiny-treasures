@@ -3,12 +3,19 @@ import type { TypedUseSelectorHook } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import axios, { AxiosResponse } from 'axios';
-import { Chat, Post, PostQueryResult, User, UserMsgData } from './interfaces';
+import {
+  Chat,
+  Enum,
+  Post,
+  PostQueryResult,
+  User,
+  UserMsgData,
+} from './interfaces';
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-interface ResponseWithData<T> {
+export interface ResponseWithData<T> {
   status: string;
   results?: number;
   data: {
@@ -27,7 +34,9 @@ const baseUrl = 'http://localhost:8000/api/v1';
 
 export const checkForError = (
   data:
-    | ResponseWithData<Post[] | Post | UserMsgData | Chat | PostQueryResult[]>
+    | ResponseWithData<
+        Post[] | Post | UserMsgData | Chat | PostQueryResult[] | Enum[]
+      >
     | ResponseWithError
 ): void => {
   if (data.status === 'error' || data.status === 'fail') {
@@ -139,6 +148,19 @@ export const useCreateNewPost = () => {
   return useMutation({
     mutationFn: async (data: FormData) => {
       await axios.post(`${baseUrl}/posts`, data);
+    },
+  });
+};
+
+export const useEnums = () => {
+  return useQuery({
+    queryKey: ['enums'],
+    queryFn: async () => {
+      const data: AxiosResponse<ResponseWithData<Enum[]>> = await axios.get(
+        `${baseUrl}/enums`
+      );
+      checkForError(data.data);
+      return data.data;
     },
   });
 };

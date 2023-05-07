@@ -48,7 +48,7 @@ const createAndSendJWT = (
 
   // redirect if logged in from google
   if (redirect) {
-    res.redirect('/profile');
+    res.redirect('http://localhost:5173/home');
   } else {
     res.status(statusCode).json({
       status: 'success',
@@ -68,7 +68,6 @@ export const signUp = catchAsync(
     next: NextFunction
   ): Promise<void> => {
     if (req.body.method) delete req.body.method;
-
     const newUser: UserDocument = await User.create(req.body);
 
     createAndSendJWT(modifyBasicUserData(newUser), 200, req, res, next);
@@ -96,7 +95,7 @@ export const googleAuthCallback = catchAsync(
   }
 );
 
-export const logout: RequestHandler = (req, res, next): void => {
+export const signOut: RequestHandler = (req, res, next): void => {
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,

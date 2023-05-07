@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const userModel_1 = __importDefault(require("./userModel"));
 const chatSchema = new mongoose_1.default.Schema({
+    id: String,
     post: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'post',
@@ -59,6 +60,10 @@ chatSchema.virtual('newMsg').get(function () {
     }
     const newMsg = [{ [user1Id]: new1, [user2Id]: new2 }];
     return newMsg;
+});
+chatSchema.pre('save', function (next) {
+    this.id = this._id.toString();
+    next();
 });
 // After creatin a post, add id to Users
 chatSchema.post('save', function (doc, next) {

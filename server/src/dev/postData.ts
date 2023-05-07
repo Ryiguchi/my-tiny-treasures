@@ -222,6 +222,6 @@ const createPostost = (id: number) => {
   };
 };
 
-export const posts = Array(10)
+export const posts = Array(200)
   .fill(null)
   .map((_, i) => createPostost(i));

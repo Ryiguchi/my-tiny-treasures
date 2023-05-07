@@ -32,7 +32,7 @@ const userController = __importStar(require("../controllers/userController"));
 const router = express_1.default.Router();
 router.post('/signup', authController.signUp);
 router.post('/signin', authController.verifyPassword, authController.signIn);
-router.post('/logout', authController.logout);
+router.post('/signout', authController.signOut);
 router.use(authController.protect);
 router.get('/checkLoggedIn', authController.protect, userController.getBasicUserData);
 router.get('/getMsgData', userController.getMsgData);

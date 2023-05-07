@@ -9,6 +9,7 @@ export enum ButtonType {
   Pending = 'pending',
   Completed = 'completed',
   Filter = 'filter',
+  Google = 'google',
 }
 
 interface Buttons {
@@ -23,21 +24,35 @@ interface Buttons {
     activeBackground: string;
     activeColor?: string; //  default: #fff
     activeBorder?: string; //  default: none
+    fontSize?: string; // default:  2rem
+    fontWeight?: number; // default:  700
   };
 }
 
 export const buttons: Buttons = {
   primary: {
+    color: theme.color.textGray,
     background: theme.color.primary,
-    width: theme.button.width,
+    width: '100%',
     hoverBackground: theme.color.primaryDark,
     activeBackground: theme.color.primaryLight2,
   },
   secondary: {
     color: theme.color.text,
+    fontWeight: 400,
     background: theme.color.textGray,
     width: theme.button.width,
     border: `1px solid ${theme.color.gray}`,
+    hoverBackground: theme.color.grayLight1,
+    activeBackground: theme.color.grayLight2,
+    activeBorder: ` 1px solid ${theme.color.primary}`,
+  },
+  google: {
+    color: theme.color.text,
+    fontWeight: 400,
+    background: '#fff',
+    width: theme.button.width,
+    // border: `1px solid ${theme.color.gray}`,
     hoverBackground: theme.color.grayLight1,
     activeBackground: theme.color.grayLight2,
     activeBorder: ` 1px solid ${theme.color.primary}`,

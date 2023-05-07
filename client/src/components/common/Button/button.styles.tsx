@@ -6,6 +6,8 @@ export const StyledButton = styled.button<{ buttonType: ButtonType }>`
   background: ${({ buttonType }) => buttons[buttonType].background};
   width: ${({ buttonType }) => buttons[buttonType].width || 'fit-content'};
   border: ${({ buttonType }) => buttons[buttonType].border || 'none'};
+  font-size: ${({ buttonType }) => buttons[buttonType].fontSize || '2rem'};
+  font-weight: ${({ buttonType }) => buttons[buttonType].fontWeight || 700};
 
   &:hover {
     color: ${({ buttonType }) => buttons[buttonType].hoverColor || '#fff'};
@@ -18,23 +20,8 @@ export const StyledButton = styled.button<{ buttonType: ButtonType }>`
     border: ${({ buttonType }) =>
       buttons[buttonType].activeBackground || 'none'};
   }
+  img {
+    height: 3rem;
+    width: 3rem;
+  }
 `;
-
-// ${({ buttonType }) => {
-//     return `
-//     color: ${buttons[buttonType].color || '#fff'};
-//     background: ${buttons[buttonType].background};
-//     width: ${buttons[buttonType].width || 'fit-content'};
-//     border: ${buttons[buttonType].border || 'none'}
-//     &:hover {
-//       color:  ${buttons[buttonType].hoverColor || '#fff'};
-//       background: ${buttons[buttonType].hoverBackground};
-//     }
-//     &:active {
-//       color: ${buttons[buttonType].activeColor || '#fff'};
-//       background: ${buttons[buttonType].activeBackground};
-//       border: ${buttons[buttonType].activeBackground || 'none'}
-//     }
-
-//    `;
-//   }}

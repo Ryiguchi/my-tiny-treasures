@@ -21,10 +21,9 @@ html {
 
 body {
 
-  padding-bottom: 3rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-  Arial, sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 1.4rem;
+  background-color: ${theme.color.textGray}
 }
 
 li {

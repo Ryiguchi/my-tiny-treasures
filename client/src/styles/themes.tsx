@@ -63,4 +63,20 @@ export const theme = {
     },
     secondary: {},
   },
+
+  spacing: {
+    sp1: '.2rem',
+    sp2: '.4rem',
+    sp3: '.8rem',
+    sp4: '1.2rem',
+    sp5: '1.6rem',
+    sp6: '2.4rem',
+    sp7: '3.2rem',
+    sp8: '4.8rem',
+    sp9: '6.4rem',
+    sp10: '8rem',
+    sp11: '9.6rem',
+    sp12: '12.8rem',
+    sp13: '15.2rem',
+  },
 };

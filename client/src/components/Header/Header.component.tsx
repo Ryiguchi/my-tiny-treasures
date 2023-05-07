@@ -8,7 +8,7 @@ import { useMsgData } from '../../utils/hooks';
 const navList: NavItem[] = [
   {
     name: 'Home',
-    href: '/',
+    href: '/home',
   },
   {
     name: 'Search',

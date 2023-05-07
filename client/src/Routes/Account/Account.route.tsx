@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { GeoLocation } from '../../utils/interfaces';
+import Button from '../../components/common/Button/Button.component';
+import { ButtonType } from '../../components/common/Button/button.types';
+import { signOutUserAsync } from '../../store/features/user/userSlice';
+import { useAppDispatch } from '../../utils/hooks';
 
 const Account = () => {
+  const dispatch = useAppDispatch();
   const [addressValue, setAddressValue] = useState('');
   const [locationData, setLocationData] = useState({});
   // TODO: HANDLE AXIOS ERRORS
@@ -40,6 +45,10 @@ const Account = () => {
       // Error message that browser doesn't support
     }
   };
+
+  const signOutUser = () => {
+    dispatch(signOutUserAsync());
+  };
   return (
     <div>
       <label htmlFor="location">Enter your address...</label>
@@ -55,6 +64,10 @@ const Account = () => {
       <button type="button" onClick={submitAddress}>
         Submit Your Address
       </button>
+      <Button onClick={signOutUser} buttonType={ButtonType.Trade}>
+        {' '}
+        Sign Out
+      </Button>
     </div>
   );
 };

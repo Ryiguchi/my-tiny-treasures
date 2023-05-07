@@ -40,11 +40,19 @@ type BoxProps = {
   cursor?: string; // FIXME:
   objectFit?: string; // FIXME:
   overflow?: string; // FIXME:
+  overflowX?: string;
+  whiteSpace?: string;
   objectPosition?: string; // FIXME:
   position?: string; // FIXME:
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  zIndex?: number;
   backgroundColor?: string;
   borderRadius?: string;
   boxShadow?: string;
+  ref?: React.RefObject<HTMLDivElement>;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 };
 

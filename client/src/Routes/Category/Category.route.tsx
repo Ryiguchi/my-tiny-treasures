@@ -1,27 +1,38 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { selectUser } from '../../store/features/user/user.selectors';
-import { getPosts } from '../../utils/hooks';
-import * as S from './home.styles';
+import { ResponseWithData, getPosts } from '../../utils/hooks';
+import * as S from './category.styles';
 import { useEffect, useRef } from 'react';
 import Button from '../../components/common/Button/Button.component';
 import { ButtonType } from '../../components/common/Button/button.types';
 import Box from '../../components/common/Box/Box.component';
 import { fileRefs } from '../../utils/fileRefs';
 import PostList from '../../components/common/PostList/PostList.component';
-import SelectInput from '../../components/common/select-input/SelectInput.component';
-import { clothes } from '../../utils/enums';
 import { theme } from '../../styles/themes';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import FilterPopup from './FilterPopup/FilterPopup.component';
+import { queryClient } from '../../main';
+import { Enum } from '../../utils/interfaces';
+import {
+  selectQuery,
+  selectQueryData,
+} from '../../store/features/query/query.selectors';
+import { setQuery } from '../../store/features/query/querySlice';
 
-const Home: React.FC = () => {
-  const { startQuery } = useParams();
-  const navigate = useNavigate();
+const Category: React.FC = () => {
+  const dispatch = useDispatch();
+  const { category } = useParams();
   const LoadMoreButton = useRef<HTMLDivElement>(null);
-  const user = useSelector(selectUser);
-  const [query, setQuery] = useState(startQuery);
+
+  const [isFitlerPopupOpen, setIsFilterPopupOpen] = useState<boolean>(false);
+  const queryData = useSelector(selectQueryData);
+  const query = useSelector(selectQuery);
+
+  const enumsData: ResponseWithData<Enum[]> | undefined =
+    queryClient.getQueryData(['enums']);
+
   const {
     data,
     isError,
@@ -34,6 +45,7 @@ const Home: React.FC = () => {
     queryKey: ['posts', query],
     queryFn: ({ pageParam }) => getPosts({ pageParam, query }),
     getNextPageParam: (lastPage, pages) => {
+      if (!lastPage) return undefined;
       const nextPage = lastPage.metadata.nextPage;
       const totalPages = lastPage.metadata.totalPages;
 
@@ -42,6 +54,10 @@ const Home: React.FC = () => {
     staleTime: 3 * 60 * 1000,
     enabled: !!query,
   });
+
+  // useEffect(() => {
+  //   getFilterResults();
+  // }, [category]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -60,16 +76,36 @@ const Home: React.FC = () => {
     return () => observer.disconnect();
   }, [LoadMoreButton.current]);
 
-  // const goToChat = (e: React.MouseEvent<HTMLButtonElement>): void => {
-  //   if (!user) return;
+  const getFilterResults = () => {
+    const categoriesString = queryData.Categories.join(',');
+    const sizesString = queryData.Sizes.join(',');
+    const ageString = queryData.Age.join(',');
+    const sortString =
+      queryData.Sort[0] === 'Most Recent'
+        ? '-createdAt'
+        : queryData.Sort[0] === 'Distance'
+        ? 'distance'
+        : '';
 
-  //   const receiver = e.currentTarget.dataset.user;
-  //   socket.emit('join', [user.id, receiver]);
-  // };
+    let newQuery = `mainCategory=${category}`;
 
-  const buildQuery = (key: string, option: string): void => {
-    setQuery(prev => `${startQuery}&${key}=${option}`);
-    console.log(query);
+    if (categoriesString.length) {
+      newQuery += `&subCategory=${categoriesString}`;
+    }
+
+    if (sizesString.length) {
+      newQuery += `&size=${sizesString}`;
+    }
+
+    if (ageString.length) {
+      newQuery += `&age=${ageString}`;
+    }
+    if (sortString.length) {
+      newQuery += `&sort=${sortString}`;
+    }
+
+    dispatch(setQuery(newQuery));
+    setIsFilterPopupOpen(false);
   };
 
   const buttonType =
@@ -80,7 +116,13 @@ const Home: React.FC = () => {
       : ButtonType.Message;
 
   return (
-    <Box width="100%" gap="2rem" backgroundColor={theme.color.backgroundMain}>
+    <Box
+      width="100%"
+      minHeight="100vh"
+      height="100%"
+      gap="2rem"
+      backgroundColor={theme.color.backgroundMain}
+    >
       <Box
         width="100%"
         objectFit="contain"
@@ -97,22 +139,25 @@ const Home: React.FC = () => {
         alignItems="center"
         padding="0 2rem"
       >
-        <SelectInput
-          optionsArray={clothes}
-          initialValue="All"
-          label="Category"
-          handleSelect={option => buildQuery('subCategory', option)}
-        />
-        <SelectInput
-          optionsArray={clothes}
-          initialValue="All"
-          label="Sort by"
-          handleSelect={(option: string) => {
-            console.log(option);
-          }}
-        />
+        <Box width="100%" alignItems="flex-end">
+          <Button
+            onClick={() => setIsFilterPopupOpen(true)}
+            buttonType={ButtonType.Message}
+          >
+            Filter
+          </Button>
+        </Box>
+        {category && enumsData && isFitlerPopupOpen && (
+          <FilterPopup
+            categoryName={category}
+            subCategories={enumsData.data.data[0][category.toLowerCase()]}
+            onClick={() => setIsFilterPopupOpen(false)}
+            getFilterResults={getFilterResults}
+          />
+        )}
       </Box>
       {data &&
+        data.pages[0] &&
         data.pages.map((data, i) => <PostList key={i} posts={data.posts} />)}
 
       <Box alignItems="center">
@@ -131,4 +176,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Category;

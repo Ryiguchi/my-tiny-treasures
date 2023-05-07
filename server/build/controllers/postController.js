@@ -17,7 +17,6 @@ const postModel_1 = __importDefault(require("../models/postModel"));
 const catchAsync_1 = require("../utils/catchAsync");
 const apiFeatures_1 = require("../utils/apiFeatures");
 const appError_1 = __importDefault(require("../utils/appError"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const multer_1 = __importDefault(require("multer"));
 const sharp_1 = __importDefault(require("sharp"));
 require("../models/enumsModel");
@@ -93,15 +92,14 @@ exports.getAllPosts = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter
     });
 }));
 exports.getPost = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
     const { postId } = req.params;
-    const location = req.user.location;
-    const pipeline = [
-        {
-            $match: { _id: new mongoose_1.default.Types.ObjectId(postId) },
-        },
-    ];
-    // if (location) pipeline.unshift(distanceFrom(location));
-    const post = yield postModel_1.default.aggregate(pipeline);
+    const location = (_b = req.user) === null || _b === void 0 ? void 0 : _b.location;
+    const query = {
+        id: postId,
+    };
+    const pipeline = new apiFeatures_1.PostFeatures(query, location).distanceFrom().filter();
+    const post = yield postModel_1.default.aggregate(pipeline.stages);
     if (!post) {
         return next(new appError_1.default('No post found!', 400));
     }

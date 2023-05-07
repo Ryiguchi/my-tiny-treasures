@@ -1,4 +1,4 @@
-import { PipelineStage } from 'mongoose';
+import mongoose, { PipelineStage } from 'mongoose';
 import { LocationData, StringObject } from './interfaces';
 
 interface ProjectStage {
@@ -15,7 +15,7 @@ export class PostFeatures {
   ) {}
 
   distanceFrom(): this {
-    if (!this.userLocation) return this;
+    if (!this.userLocation?.coordinates.length) return this;
     const geoNearStage: PipelineStage.GeoNear = {
       $geoNear: {
         near: this.userLocation,
@@ -35,7 +35,7 @@ export class PostFeatures {
 
     let matchStage: PipelineStage.Match = { $match: {} };
     Object.entries(queryObj).forEach(([key, value]) => {
-      matchStage.$match[key] = key === 'itemCount' ? Number(value) : value;
+      matchStage.$match.id = value;
     });
     this.stages.push(matchStage);
     return this;
@@ -78,8 +78,11 @@ export class PostFeatures {
     return this;
   }
 
-  sort = (): this => {
-    if (!this.queryString.sort) return this;
+  sort(): this {
+    if (!this.queryString.sort) {
+      this.stages.push({ $sort: { createdAt: -1 } });
+      return this;
+    }
 
     const sortBy = this.queryString.sort.split(',');
     const sortObj: Record<string, 1 | -1> = {};
@@ -91,7 +94,7 @@ export class PostFeatures {
     const sortStage = { $sort: sortObj };
     this.stages.push(sortStage);
     return this;
-  };
+  }
 
   countAndPaginate(): this {
     const page: number = parseInt(this.queryString.page) || 1;

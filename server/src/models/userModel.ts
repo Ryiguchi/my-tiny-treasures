@@ -16,6 +16,8 @@ export interface UserDocument extends Document {
   id: string;
   name: string;
   email: string;
+  method: 'google' | 'password';
+  googleId: string;
   password: string | undefined;
   passwordConfirm: string | undefined;
   createdAt: Date;
@@ -31,6 +33,7 @@ export interface UserDocument extends Document {
 
 const userSchema = new Schema<UserDocument>(
   {
+    id: String,
     name: {
       type: String,
       required: [true, 'Please provide a name.'],
@@ -42,15 +45,20 @@ const userSchema = new Schema<UserDocument>(
       validate: [validator.isEmail, 'Please provide a valid email address.'],
       lowercase: true,
     },
+    method: {
+      type: String,
+      default: 'password',
+    },
+    googleId: String,
     password: {
       type: String,
-      required: [true, 'Please provide a password.'],
+      // required: [true, 'Please provide a password.'],
       minLength: [8, 'Passwords must have at least 8 characters'],
       select: false,
     },
     passwordConfirm: {
       type: String,
-      required: [true, 'Please confirm your password.'],
+      // required: [true, 'Please confirm your password.'],
       minLength: [8, 'Passwords must have at least 8 characters'],
       select: false,
     },
@@ -109,6 +117,11 @@ const userSchema = new Schema<UserDocument>(
     toObject: { virtuals: true },
   }
 );
+
+userSchema.pre('save', function (next) {
+  this.id = this._id.toString();
+  next();
+});
 
 userSchema.pre('save', async function (next) {
   if (!this.isNew) return next();

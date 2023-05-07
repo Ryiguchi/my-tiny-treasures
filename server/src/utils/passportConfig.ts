@@ -36,6 +36,7 @@ export const passportConfig = (passport: passport.PassportStatic) => {
           await newUser.save();
           return done(null, newUser);
         } catch (error) {
+          console.log('💥💥', error);
           return done(error, false);
         }
       }
