@@ -6,4 +6,5 @@ export const serverRoute = {
   signout: `${apiUrl}/users/signout`,
   signUp: `${apiUrl}/users/signup`,
   checkSignedIn: `${apiUrl}/users/checkLoggedIn`,
+  updateMe: `${apiUrl}/users/updateMe`,
 };

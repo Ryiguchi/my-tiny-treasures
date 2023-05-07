@@ -14,6 +14,7 @@ export interface BasicUserData {
   name: string;
   email: string;
   location: LocationData;
+  saved: PostDocument[];
 }
 
 export interface ChatMessage {

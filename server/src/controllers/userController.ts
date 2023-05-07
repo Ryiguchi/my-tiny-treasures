@@ -44,7 +44,7 @@ export const updateMe = catchAsync(
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    const filteredBody = filterObj(req.body, 'name', 'location');
+    const filteredBody = filterObj(req.body, 'name', 'location', 'saved');
 
     const updatedUser: UserDocument | null = await User.findByIdAndUpdate(
       req.user.id,
@@ -67,7 +67,7 @@ export const getBasicUserData = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
     const basicUserData: UserDocument | null = await User.findById(
       req.user.id
-    ).select('id name email');
+    ).select('id name email location saved');
 
     if (!basicUserData) {
       return next(new AppError('No user found', 400));
@@ -104,11 +104,11 @@ export const getMsgData = catchAsync(
 
 export const getFavorites = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
-    const favorites: UserDocument | null = await User.findById(req.user.id)
-      .populate('favorites')
-      .select('favorites');
+    const saved: UserDocument | null = await User.findById(req.user.id)
+      .populate('saved')
+      .select('saved');
 
-    if (!favorites) {
+    if (!saved) {
       return next(
         new AppError('There was a problem getting your favorites!', 400)
       );
@@ -117,7 +117,7 @@ export const getFavorites = catchAsync(
     res.status(200).json({
       status: 'success',
       data: {
-        data: favorites,
+        data: saved,
       },
     });
   }

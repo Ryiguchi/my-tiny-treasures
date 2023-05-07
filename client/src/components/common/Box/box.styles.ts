@@ -28,6 +28,8 @@ type DivProps = {
   gridTemplateColumns?: string;
   padding?: string;
   margin?: string;
+  marginTop?: string;
+  marginBottom?: string;
   width?: string;
   height?: string;
   maxWidth?: string;
@@ -49,6 +51,7 @@ type DivProps = {
   backgroundColor?: string;
   borderRadius?: string;
   boxShadow?: string;
+  transform?: string;
 };
 
 export const Div = styled.div<DivProps>`
@@ -65,6 +68,8 @@ export const Div = styled.div<DivProps>`
   grid-template-columns: ${({ gridTemplateColumns }) =>
     gridTemplateColumns || 'auto'};
   margin: ${({ margin }) => margin || '0'};
+  margin-top: ${({ marginTop }) => marginTop || '0'};
+  margin-bottom: ${({ marginBottom }) => marginBottom || '0'};
   padding: ${({ padding }) => padding || '0'};
   width: ${({ width }) => width || 'auto'};
   height: ${({ height }) => height || 'auto'};
@@ -87,4 +92,5 @@ export const Div = styled.div<DivProps>`
   background-color: ${({ backgroundColor }) => backgroundColor || ''};
   border-radius: ${({ borderRadius }) => borderRadius || 'none'};
   box-shadow: ${({ boxShadow }) => boxShadow || 'none'};
+  transform: ${({ transform }) => transform || 'none'};
 `;

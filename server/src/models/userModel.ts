@@ -24,7 +24,7 @@ export interface UserDocument extends Document {
   location: LocationData;
   // posts: mongoose.Schema.Types.ObjectId[];
   credits: number;
-  favorites: PostDocument[];
+  saved: PostDocument[];
   chats: ChatDocument[];
   newMessages: number;
 
@@ -75,7 +75,7 @@ const userSchema = new Schema<UserDocument>(
       coordinates: [Number],
       city: String,
     },
-    favorites: [
+    saved: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post',
@@ -155,6 +155,7 @@ export const modifyBasicUserData = (userDoc: UserDocument): BasicUserData => {
     name: userDoc.name,
     email: userDoc.email,
     location: userDoc.location,
+    saved: userDoc.saved,
   };
 };
 

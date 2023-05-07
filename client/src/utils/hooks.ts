@@ -62,7 +62,7 @@ export const usePost = (postId: string | undefined) => {
     queryKey: ['post', postId],
     queryFn: async () => {
       if (postId) {
-        const data: AxiosResponse<ResponseWithData<Post>> = await axios.get(
+        const data: AxiosResponse<ResponseWithData<Post[]>> = await axios.get(
           `${baseUrl}/posts/${postId}`
         );
         checkForError(data.data);

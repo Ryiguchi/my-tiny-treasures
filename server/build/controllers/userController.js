@@ -64,7 +64,7 @@ exports.getMe = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 
     });
 }));
 exports.updateMe = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const filteredBody = filterObj(req.body, 'name', 'location');
+    const filteredBody = filterObj(req.body, 'name', 'location', 'saved');
     const updatedUser = yield userModel_1.default.findByIdAndUpdate(req.user.id, filteredBody, {
         new: true,
     });
@@ -76,7 +76,7 @@ exports.updateMe = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(vo
     });
 }));
 exports.getBasicUserData = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const basicUserData = yield userModel_1.default.findById(req.user.id).select('id name email');
+    const basicUserData = yield userModel_1.default.findById(req.user.id).select('id name email location saved');
     if (!basicUserData) {
         return next(new appError_1.default('No user found', 400));
     }
@@ -101,16 +101,16 @@ exports.getMsgData = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(
     });
 }));
 exports.getFavorites = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const favorites = yield userModel_1.default.findById(req.user.id)
-        .populate('favorites')
-        .select('favorites');
-    if (!favorites) {
+    const saved = yield userModel_1.default.findById(req.user.id)
+        .populate('saved')
+        .select('saved');
+    if (!saved) {
         return next(new appError_1.default('There was a problem getting your favorites!', 400));
     }
     res.status(200).json({
         status: 'success',
         data: {
-            data: favorites,
+            data: saved,
         },
     });
 }));

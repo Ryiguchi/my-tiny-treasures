@@ -49,6 +49,7 @@ export interface User {
   name: string;
   newMessages: number;
   location?: GeoLocation;
+  saved: string[];
 }
 export interface Post {
   mainCategory: string;
@@ -62,6 +63,7 @@ export interface Post {
   location: {
     coordinates: [number, number];
     type: string;
+    city?: string;
   };
   size?: number;
   age: string;

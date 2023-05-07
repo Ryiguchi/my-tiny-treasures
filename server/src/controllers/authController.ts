@@ -25,6 +25,7 @@ const createAndSendJWT = (
   next: NextFunction,
   redirect: boolean = false
 ): void => {
+  console.log(user);
   // create new token
   const token = signToken(user.id);
   if (!token) {

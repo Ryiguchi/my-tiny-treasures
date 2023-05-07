@@ -28,7 +28,12 @@ class PostFeatures {
         excludedFields.forEach(field => delete queryObj[field]);
         let matchStage = { $match: {} };
         Object.entries(queryObj).forEach(([key, value]) => {
-            matchStage.$match.id = value;
+            if (key === '_id' || key === 'id') {
+                matchStage.$match.id = value;
+            }
+            else {
+                matchStage.$match[key] = { $in: value.split(',') };
+            }
         });
         this.stages.push(matchStage);
         return this;

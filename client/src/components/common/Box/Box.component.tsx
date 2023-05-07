@@ -31,6 +31,8 @@ type BoxProps = {
   flex?: string;
   padding?: string;
   margin?: string;
+  marginTop?: string;
+  marginBottom?: string;
   width?: string;
   height?: string;
   maxWidth?: string;
@@ -49,6 +51,7 @@ type BoxProps = {
   left?: string;
   right?: string;
   zIndex?: number;
+  transform?: string;
   backgroundColor?: string;
   borderRadius?: string;
   boxShadow?: string;

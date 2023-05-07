@@ -3,6 +3,7 @@ import axios from 'axios';
 import { socket } from '../../../socket';
 import { SignInCredentials, User } from '../../../utils/interfaces';
 import { serverRoute } from '../../../utils/serverUrls';
+import { RootState } from '../../store';
 //TODO: find better place for this
 axios.defaults.withCredentials = true;
 
@@ -58,7 +59,6 @@ export const signUpUser = createAsyncThunk(
   'user/signUpUser',
   async (userData: SignUpUserData) => {
     const user: User = await axiosSignUpUser(userData);
-    console.log(user);
     if (!user) return;
     socket.emit('sign in', user.id);
     return user;
@@ -98,6 +98,22 @@ export const signOutUserAsync = createAsyncThunk(
   }
 );
 
+interface UpdateData {
+  [key: string]: string | number | string[];
+  field: string;
+}
+
+export const updateUserAsync = createAsyncThunk(
+  'user/updateUser',
+  async ({ newData, field }: UpdateData) => {
+    const res = await axios.patch(serverRoute.updateMe, {
+      [field]: newData,
+    });
+    const user: User = res.data.data.data;
+    return user;
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -128,6 +144,9 @@ const userSlice = createSlice({
     builder.addCase(signOutUserAsync.fulfilled, state => {
       state.user = null;
       state.isLoggedIn = false;
+    });
+    builder.addCase(updateUserAsync.fulfilled, (state, { payload }) => {
+      state.user = payload;
     });
   },
 });

@@ -83,7 +83,7 @@ const userSchema = new mongoose_1.Schema({
         coordinates: [Number],
         city: String,
     },
-    favorites: [
+    saved: [
         {
             type: mongoose_1.default.Schema.Types.ObjectId,
             ref: 'Post',
@@ -158,6 +158,7 @@ const modifyBasicUserData = (userDoc) => {
         name: userDoc.name,
         email: userDoc.email,
         location: userDoc.location,
+        saved: userDoc.saved,
     };
 };
 exports.modifyBasicUserData = modifyBasicUserData;
