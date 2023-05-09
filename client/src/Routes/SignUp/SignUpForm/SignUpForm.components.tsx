@@ -8,7 +8,7 @@ import {
   signUpUser,
 } from '../../../store/features/user/userSlice';
 import { Wrapper } from './signUpForm.styles';
-import { useAppDispatch } from '../../../utils/hooks';
+import { useAppDispatch } from '../../../utils/hooks/reduxHooks';
 import { useNavigate } from 'react-router-dom';
 
 const SignUpForm: FC = () => {

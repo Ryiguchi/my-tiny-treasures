@@ -10,6 +10,7 @@ export enum ButtonType {
   Completed = 'completed',
   Filter = 'filter',
   Google = 'google',
+  LogIn = 'logIn',
 }
 
 interface Buttons {
@@ -28,6 +29,12 @@ interface Buttons {
     fontWeight?: number; // default:  700
   };
 }
+
+const greenButton = {
+  background: theme.gradient.tradePrimary,
+  hoverBackground: theme.gradient.tradeDark,
+  activeBackground: theme.gradient.tradeLight1,
+};
 
 export const buttons: Buttons = {
   primary: {
@@ -65,9 +72,7 @@ export const buttons: Buttons = {
     activeBorder: ` 1px solid ${theme.color.primary}`,
   },
   trade: {
-    background: theme.gradient.tradePrimary,
-    hoverBackground: theme.gradient.tradeDark,
-    activeBackground: theme.gradient.tradeLight1,
+    ...greenButton,
   },
   disabled: {
     color: theme.color.gray,
@@ -92,5 +97,10 @@ export const buttons: Buttons = {
     color: theme.color.text,
     hoverBackground: theme.color.grayDark,
     activeBackground: theme.color.grayLight1,
+  },
+  logIn: {
+    ...greenButton,
+    color: theme.color.text,
+    width: '100%',
   },
 };

@@ -1,6 +1,5 @@
 import { theme } from '../../styles/themes';
 import { getDate } from '../../utils/helpers';
-import { Post } from '../../utils/interfaces';
 import Box from '../common/Box/Box.component';
 import Button from '../common/Button/Button.component';
 import { ButtonType } from '../common/Button/button.types';
@@ -9,9 +8,11 @@ import { IoIosHeartEmpty, IoIosHeart } from 'react-icons/io';
 import * as S from './postCardLarge.styles';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/features/user/user.selectors';
-import { useAppDispatch } from '../../utils/hooks';
+import { useAppDispatch } from '../../utils/hooks/reduxHooks';
 import { updateUserAsync } from '../../store/features/user/userSlice';
-import { socket } from '../../utils/socket';
+import { socket } from '../../utils/socket/socket';
+import { Post } from '../../utils/types/interfaces/state.interface';
+import { ChatDataEmitJoin } from '../../utils/types/interfaces/chat.interface';
 
 interface PostCardLargeProps {
   post: Post;
@@ -30,26 +31,41 @@ const PostCardLarge: React.FC<PostCardLargeProps> = ({ post }) => {
   } = post;
   const user = useSelector(selectUser);
 
-  const toggleSavedPost = () => {
-    if (!user) return;
-    const newSaved = [...user.saved];
-    const index = newSaved.indexOf(id);
-    if (index === -1) {
-      newSaved.push(id);
-    } else {
-      newSaved.splice(index, 1);
-    }
-    dispatch(updateUserAsync({ newData: newSaved, field: 'saved' }));
+  const toggleSavedPost = (): void => {
+    const updatedSavedPosts = updateSavedPosts();
+    if (!updatedSavedPosts) return;
+    dispatch(updateUserAsync({ newData: updatedSavedPosts, field: 'saved' }));
   };
 
-  const goToChat = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    if (!user) return;
+  const goToChat = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void => {
+    const chatData = getChatData(e);
+    socket.emit('join', chatData);
+  };
+
+  // HELPERS
+  const getChatData = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): ChatDataEmitJoin | null => {
     const recieverId = e.currentTarget.dataset.user;
-    const chatData = {
+    if (!user || !recieverId) return null;
+    return {
       users: [user.id, recieverId],
       post: id,
     };
-    socket.emit('join', chatData);
+  };
+
+  const updateSavedPosts = (): string[] | null => {
+    if (!user) return null;
+    const newSavedPosts = [...user.saved];
+    const index = newSavedPosts.indexOf(id);
+    if (index === -1) {
+      newSavedPosts.push(id);
+    } else {
+      newSavedPosts.splice(index, 1);
+    }
+    return newSavedPosts;
   };
 
   return (

@@ -4,7 +4,7 @@ import { theme } from '../../../styles/themes';
 import Message from '../Message/Message.component';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../store/features/user/user.selectors';
-import { ChatMessage } from '../../../utils/interfaces';
+import { ChatMessage } from '../../../utils/types/interfaces/chat.interface';
 
 interface Messages {
   messages: ChatMessage[];

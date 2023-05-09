@@ -3,7 +3,7 @@ import { selectUser } from '../../store/features/user/user.selectors';
 
 import * as S from './header.styles';
 import Nav, { NavItem } from './nav/Nav.component';
-import { useMsgData } from '../../utils/hooks';
+import { useMsgData } from '../../utils/hooks/reactQueryHooks';
 
 const navList: NavItem[] = [
   {

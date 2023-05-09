@@ -9,7 +9,7 @@ export const Wrapper = styled(Box)`
   }
 
   span {
-    font-size: 1.6;
+    font-size: 1.6rem;
     text-align: center;
   }
 `;

@@ -1,5 +1,6 @@
 export const baseUrl = 'http://localhost:8000';
-const apiUrl = `${baseUrl}/api/v1`;
+export const homeUrl = `${baseUrl}/photos/home`;
+export const apiUrl = `${baseUrl}/api/v1`;
 
 export const serverRoute = {
   signIn: `${apiUrl}/users/signin`,
@@ -7,4 +8,5 @@ export const serverRoute = {
   signUp: `${apiUrl}/users/signup`,
   checkSignedIn: `${apiUrl}/users/checkLoggedIn`,
   updateMe: `${apiUrl}/users/updateMe`,
+  googleCallbackUrl: `${baseUrl}/auth/google`,
 };

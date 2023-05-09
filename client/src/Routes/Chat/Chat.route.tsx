@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
-import { socket } from '../../utils/socket';
+import { socket } from '../../utils/socket/socket';
 import { useParams } from 'react-router-dom';
-import { Chat } from '../../utils/interfaces';
-import { useChat } from '../../utils/hooks';
 import GoBackNav from '../../components/common/GoBackNav/GoBackNav.component';
 import MessagesBox from './MessagesBox/MessagesBox.component';
 import Box from '../../components/common/Box/Box.component';
 import MessageForm from './MessageForm/MessageForm.component';
 import { queryClient } from '../../main';
+import { useChat } from '../../utils/hooks/reactQueryHooks';
+import { Chat } from '../../utils/types/interfaces/chat.interface';
 
 const ChatPage: React.FC = () => {
   const room = useParams().chatId;

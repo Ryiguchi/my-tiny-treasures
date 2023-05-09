@@ -1,16 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import * as S from './messages.styles';
-import { useMsgData } from '../../utils/hooks';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/features/user/user.selectors';
-import { socket } from '../../utils/socket';
-import { ChatData } from '../../utils/interfaces';
+import { socket } from '../../utils/socket/socket';
 import { queryClient } from '../../main';
+import { useMsgData } from '../../utils/hooks/reactQueryHooks';
+import { ChatData } from '../../utils/types/interfaces/chat.interface';
 
 const Messages: React.FC = () => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
-  const { status, data, error, isFetching } = useMsgData();
+  const { status, data, error, isFetching } = useMsgData(user);
   const chatData = data?.data.msgData.chatData;
 
   const goToChat = async (chat: ChatData) => {
@@ -27,7 +27,7 @@ const Messages: React.FC = () => {
     <S.MessagesContainer>
       {chatData && (
         <ul>
-          {chatData.map(chat => {
+          {chatData.map((chat: any) => {
             console.log(chat);
             return (
               <li key={chat.chatId} onClick={() => goToChat(chat)}>

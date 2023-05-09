@@ -2,24 +2,25 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { ResponseWithData, getPosts } from '../../utils/hooks';
 import * as S from './category.styles';
 import { useEffect, useRef } from 'react';
 import Button from '../../components/common/Button/Button.component';
 import { ButtonType } from '../../components/common/Button/button.types';
 import Box from '../../components/common/Box/Box.component';
-import { fileRefs } from '../../utils/fileRefs';
 import PostList from '../../components/common/PostList/PostList.component';
 import { theme } from '../../styles/themes';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import FilterPopup from './FilterPopup/FilterPopup.component';
 import { queryClient } from '../../main';
-import { Enum } from '../../utils/interfaces';
 import {
   selectQuery,
   selectQueryData,
 } from '../../store/features/query/query.selectors';
 import { setQuery } from '../../store/features/query/querySlice';
+import { ResponseWithData, getPosts } from '../../utils/hooks/reactQueryHooks';
+import { Enum } from '../../utils/types/interfaces/enums.interface';
+import { imgUrls } from '../../utils/urls/imgUrls';
+import { PostQueryResult } from '../../utils/types/interfaces/post.interface';
 
 const Category: React.FC = () => {
   const dispatch = useDispatch();
@@ -130,7 +131,7 @@ const Category: React.FC = () => {
         overflow="hidden"
         justifyContent="center"
       >
-        <S.MainImg src={fileRefs.clothesMain} alt="Clothes" />
+        <S.MainImg src={imgUrls.clothesMain} alt="Clothes" />
       </Box>
       <Box
         flexDirection="row"

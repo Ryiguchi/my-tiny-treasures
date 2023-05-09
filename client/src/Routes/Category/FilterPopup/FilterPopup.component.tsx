@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import Box from '../../../components/common/Box/Box.component';
 import CheckboxList from '../../../components/common/CheckboxList/CheckboxList.component';
-import { ages, sizes } from '../../../utils/enums';
+import { ages, sizes } from '../../../utils/types/enums/enums';
 import Button from '../../../components/common/Button/Button.component';
 import { ButtonType } from '../../../components/common/Button/button.types';
 import { useDispatch, useSelector } from 'react-redux';

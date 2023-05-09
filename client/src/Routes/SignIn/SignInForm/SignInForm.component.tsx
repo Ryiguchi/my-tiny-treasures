@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import Box from '../../../components/common/Box/Box.component';
-import { useAppDispatch } from '../../../utils/hooks';
+import { useAppDispatch } from '../../../utils/hooks/reduxHooks';
 import { signInUser } from '../../../store/features/user/userSlice';
 import Input from '../../../components/common/Input/Input.component';
 import Button from '../../../components/common/Button/Button.component';
@@ -25,32 +25,31 @@ const SignInForm: FC = () => {
   return (
     <Wrapper>
       <form onSubmit={signIn}>
-        <Box gap="6.4rem">
-          <Box gap="1.2rem">
-            <Box gap="2.4rem" alignItems="center">
-              <h2>Log In</h2>
-              <Input
-                label="Email"
-                type="email"
-                onChange={e => setEmail(e.target.value)}
-              />
-              <Input
-                label="Password"
-                onChange={e => setPassword(e.target.value)}
-                type="password"
-              />
-            </Box>
-            <span id="forgot-text">Forgot your password?</span>
-          </Box>
-          <Box>
-            <Button type="submit" buttonType={ButtonType.Primary}>
-              Sign In
-            </Button>
-          </Box>
+        <Box gap="2.4rem" alignItems="center">
+          <h2>Log In</h2>
+          <Input
+            label="Email"
+            type="email"
+            onChange={e => setEmail(e.target.value)}
+          />
+          <Input
+            label="Password"
+            onChange={e => setPassword(e.target.value)}
+            type="password"
+          />
+          <span id="forgot-text">Forgot your password?</span>
+
+          <Button type="submit" buttonType={ButtonType.LogIn}>
+            Log In
+          </Button>
+          <Button
+            onClick={() => navigate('/signup')}
+            type="button"
+            buttonType={ButtonType.Primary}
+          >
+            Sign Up
+          </Button>
         </Box>
-        <a onClick={() => navigate('/signup')}>
-          Don't have an account?&nbsp;<span>Sign Up</span>
-        </a>
       </form>
     </Wrapper>
   );

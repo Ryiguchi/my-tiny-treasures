@@ -1,8 +1,8 @@
 import { FC, useState } from 'react';
 import Box from '../Box/Box.component';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import * as S from './lightBox.styles';
 import { theme } from '../../../styles/themes';
+import { getIndex } from './lightBox.helpers';
 
 interface LightBoxProps {
   images: string[];
@@ -12,13 +12,8 @@ const LightBox: FC<LightBoxProps> = ({ images }) => {
   const [currentImg, setCurrentImg] = useState<number>(0);
 
   const getImgIndex = (direction: string): number => {
-    if (direction === 'back' && currentImg === 0) {
-      return images.length - 1;
-    } else if (direction === 'back' && currentImg !== 0) {
-      return currentImg - 1;
-    } else if (direction === 'forward' && currentImg === images.length - 1) {
-      return 0;
-    } else return currentImg + 1;
+    const lastIndex = images.length - 1;
+    return getIndex(direction, currentImg, lastIndex);
   };
 
   return (

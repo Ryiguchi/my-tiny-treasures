@@ -1,9 +1,10 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { socket } from '../../../utils/socket';
-import { SignInCredentials, User } from '../../../utils/interfaces';
-import { serverRoute } from '../../../utils/serverUrls';
-import { RootState } from '../../store';
+import { socket } from '../../../utils/socket/socket';
+import { SignInCredentials } from '../../../utils/types/interfaces/general.interfaces';
+import { serverRoute } from '../../../utils/urls/serverUrls';
+import { User } from '../../../utils/types/interfaces/state.interface';
+import { queryClient } from '../../../main';
 //TODO: find better place for this
 axios.defaults.withCredentials = true;
 
@@ -94,6 +95,7 @@ export const signOutUserAsync = createAsyncThunk(
   'user/signOutUserAsync',
   async () => {
     await axios.post(serverRoute.signout);
+    queryClient.removeQueries(['msgData']);
     return;
   }
 );

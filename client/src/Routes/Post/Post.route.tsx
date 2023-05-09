@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
-import { usePost } from '../../utils/hooks';
 import PostCardLarge from '../../components/PostCardLarge/PostCardLarge.component';
 import GoBackNav from '../../components/common/GoBackNav/GoBackNav.component';
 import Box from '../../components/common/Box/Box.component';
+import { usePost } from '../../utils/hooks/reactQueryHooks';
 
 const Post: React.FC = () => {
   const postId = useParams().postId;

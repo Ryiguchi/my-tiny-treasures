@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-type DivProps = {
+interface DivProps {
   display?: 'grid' | 'flex' | 'block' | 'inline-block' | 'none';
   flexDirection?: 'row';
   gap?: string;
@@ -52,7 +52,7 @@ type DivProps = {
   borderRadius?: string;
   boxShadow?: string;
   transform?: string;
-};
+}
 
 export const Div = styled.div<DivProps>`
   display: ${({ display }) => display || 'flex'};

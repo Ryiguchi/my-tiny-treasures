@@ -1,12 +1,14 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { Chat, MsgData } from '../../../utils/interfaces';
-import { socket } from '../../../utils/socket';
+import {} from '../../../utils/types/interfaces/general.interfaces';
+import { socket } from '../../../utils/socket/socket';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../store/features/user/user.selectors';
 import { FaPaperclip } from 'react-icons/fa';
 import Box from '../../../components/common/Box/Box.component';
-import { fileRefs } from '../../../utils/fileRefs';
 import { Wrapper } from './messageForm.styles';
+import { Chat } from '../../../utils/types/interfaces/chat.interface';
+import { MsgData } from '../../../utils/types/interfaces/message.interface';
+import { imgUrls } from '../../../utils/urls/imgUrls';
 
 interface MessageFormProps {
   chat: Chat;
@@ -66,7 +68,7 @@ const MessageForm: FC<MessageFormProps> = ({ chat }) => {
         </form>
         <Box width="4rem" height="4rem">
           <img
-            src={fileRefs.sendMessage}
+            src={imgUrls.icons.sendMessage}
             alt="Send Message"
             onClick={sendMessage}
           />

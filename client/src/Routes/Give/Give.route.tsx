@@ -1,5 +1,4 @@
 import { FormEvent, useRef, useState } from 'react';
-import { useCreateNewPost } from '../../utils/hooks';
 import * as S from './give.styles';
 import {
   ages,
@@ -8,7 +7,8 @@ import {
   other,
   sizes,
   toys,
-} from '../../utils/enums';
+} from '../../utils/types/enums/enums';
+import { useCreateNewPost } from '../../utils/hooks/reactQueryHooks';
 
 const Give = () => {
   const [title, setTitle] = useState('');

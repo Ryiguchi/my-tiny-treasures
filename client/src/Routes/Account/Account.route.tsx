@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { GeoLocation } from '../../utils/interfaces';
+import { GeoLocation } from '../../utils/types/interfaces/general.interfaces';
 import Button from '../../components/common/Button/Button.component';
 import { ButtonType } from '../../components/common/Button/button.types';
 import { signOutUserAsync } from '../../store/features/user/userSlice';
-import { useAppDispatch } from '../../utils/hooks';
+import { useAppDispatch } from '../../utils/hooks/reduxHooks';
 
 const Account = () => {
   const dispatch = useAppDispatch();

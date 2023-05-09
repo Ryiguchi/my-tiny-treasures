@@ -12,19 +12,19 @@ interface CategoryCardProps {
 const CategoryCard: FC<CategoryCardProps> = ({ image, age, onClick }) => {
   return (
     <Box
-      width="22.3rem"
-      minWidth="22.3rem"
-      height="18.6rem"
+      width="10.6rem"
+      height="16rem"
       borderRadius={theme.radius.image}
       cursor="pointer"
       backgroundColor="#fff"
       margin="1rem 0"
       onClick={() => onClick(age)}
+      boxShadow="2px 4px 14px rgba(0, 0, 0, 0.2)"
     >
+      <S.ImageBox url={image}></S.ImageBox>
       <Box alignItems="center" justifyContent="center" height="30%">
         {age} years
       </Box>
-      <S.ImageBox url={image}></S.ImageBox>
     </Box>
   );
 };

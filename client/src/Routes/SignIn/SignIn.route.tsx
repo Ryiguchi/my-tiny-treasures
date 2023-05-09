@@ -1,37 +1,34 @@
 import Box from '../../components/common/Box/Box.component';
-import { fileRefs, googleCallbackUrl } from '../../utils/fileRefs';
 import * as S from './signIn.styles';
 import Button from '../../components/common/Button/Button.component';
 import { ButtonType } from '../../components/common/Button/button.types';
 import Footer from '../../components/common/Footer/Footer.component';
 import SignInForm from './SignInForm/SignInForm.component';
-import { useNavigate } from 'react-router-dom';
+import { imgUrls } from '../../utils/urls/imgUrls';
+import { serverRoute } from '../../utils/urls/serverUrls';
 
 const SignIn: React.FC = () => {
-  const navigate = useNavigate();
   return (
     <S.Wrapper>
       <Box padding="2.4rem 3.2rem">
-        <Box margin="0 0 3.2rem 0" gap="3.2rem">
-          <Box width="100%" objectFit="cover">
-            <img src={fileRefs.logoBig} alt="Logo" />
-          </Box>
-          <p>Log in or create an account to exchange items for free.</p>
+        <Box width="100%" objectFit="cover" marginBottom="3.2rem">
+          <img src={imgUrls.icons.logoBig} alt="Logo" />
         </Box>
-        <SignInForm />
-        <Box margin="3.2rem 0 0 0" gap="3.2rem">
-          <span>Or</span>
-          <a href={googleCallbackUrl}>
-            <Button
-              buttonType={ButtonType.Google}
-              iconLeft={fileRefs.google}
-              type="button"
-            >
-              Continue with Google
-            </Button>
-          </a>
-
-          <Footer />
+        <Box gap="2.4rem">
+          <p>Log in or create an account to exchange items for free.</p>
+          <SignInForm />
+          <Box margin="3.2rem 0 0 0" gap="3.2rem">
+            <span>Or</span>
+            <a href={serverRoute.googleCallbackUrl}>
+              <Button
+                buttonType={ButtonType.Google}
+                iconLeft={imgUrls.icons.google}
+                type="button"
+              >
+                Continue with Google
+              </Button>
+            </a>
+          </Box>
         </Box>
       </Box>
     </S.Wrapper>

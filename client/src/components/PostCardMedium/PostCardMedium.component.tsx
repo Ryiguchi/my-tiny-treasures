@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { Post } from '../../utils/interfaces';
 import Box from '../common/Box/Box.component';
 import * as S from './postCardMedium.styles';
 import { theme } from '../../styles/themes';
 import { getDate } from '../../utils/helpers';
+import { Post } from '../../utils/types/interfaces/state.interface';
 
 interface PostCardMediumProps {
   post: Post;
@@ -12,12 +12,14 @@ interface PostCardMediumProps {
 const PostCardMedium: React.FC<PostCardMediumProps> = ({ post }) => {
   const navigate = useNavigate();
 
-  const gridTempCol = post.images.length === 1 ? '1fr' : '1fr 1fr';
-
   const goToPost = (e: React.MouseEvent<HTMLDivElement>): void => {
     const itemId = e.currentTarget.dataset.item;
     navigate(`/posts/${itemId}`);
   };
+
+  // HELPERS
+
+  const getGridTempCol = () => (post.images.length === 1 ? '1fr' : '1fr 1fr');
 
   return (
     <S.BoxWithChildren
@@ -29,8 +31,8 @@ const PostCardMedium: React.FC<PostCardMediumProps> = ({ post }) => {
       boxShadow={theme.shadow}
       data-item={post._id}
     >
-      <Box display="grid" gridTemplateColumns={gridTempCol} gap=".3rem">
-        {post.images.map((img, i) => {
+      <Box display="grid" gridTemplateColumns={getGridTempCol()} gap=".3rem">
+        {post.images.map((img: string, i: number) => {
           if (i < 4)
             return (
               <S.ImageBox key={img}>
