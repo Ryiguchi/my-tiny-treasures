@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:8000';
+export const baseUrl = 'http://localhost:8000';
 const apiUrl = `${baseUrl}/api/v1`;
 
 export const serverRoute = {

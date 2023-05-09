@@ -48,7 +48,6 @@ const signToken = (id) => {
     });
 };
 const createAndSendJWT = (user, statusCode, req, res, next, redirect = false) => {
-    console.log(user);
     // create new token
     const token = signToken(user.id);
     if (!token) {

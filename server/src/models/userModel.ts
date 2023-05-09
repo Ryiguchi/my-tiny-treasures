@@ -17,7 +17,7 @@ export interface UserDocument extends Document {
   name: string;
   email: string;
   method: 'google' | 'password';
-  googleId: string;
+  googleId?: string;
   password: string | undefined;
   passwordConfirm: string | undefined;
   createdAt: Date;
@@ -178,6 +178,8 @@ export const modifyMsgData = (userDoc: UserDocument): UserMsgData => {
       chatId: chat.id.toString(),
       newMsgs,
       latestMsg: chat.messages[chat.messages.length - 1],
+      users: chat.users.map(user => user.toString()),
+      post: chat.post.toString(),
     };
 
     chatData.push(data);

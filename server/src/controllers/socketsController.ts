@@ -1,7 +1,12 @@
 import { Server } from 'socket.io';
-import { getChatFromUserIds, updateChatWithMsg } from './chatController';
+import {
+  getChatFromUserIds,
+  markAsSeen,
+  updateChatWithMsg,
+} from './chatController';
 import { getUserById } from './userController';
 import { modifyMsgData } from '../models/userModel';
+import { OnJoinData } from '../utils/interfaces';
 
 export interface MsgData {
   room: string;
@@ -15,22 +20,26 @@ export const listen = (io: Server): void => {
 
   io.on('connection', socket => {
     let room: string;
+    let userId: string;
+    let socketId: string;
 
     // SIGN IN AND REGISTER ID
     socket.on('sign in', async (id: string) => {
+      socketId = socket.id;
+      userId = id;
+
       connectedUsers[id] = socket.id;
     });
 
     // JOIN ROOM
-    socket.on('join', async (ids: [string, string]) => {
-      const chat = await getChatFromUserIds(ids);
-
+    socket.on('join', async (chatData: OnJoinData) => {
+      const chat = await getChatFromUserIds(chatData);
       if (chat instanceof Error) {
         emitError(chat);
         return;
       }
 
-      const room = chat.id.toString();
+      room = chat.id.toString();
       socket.join(room);
       socket.emit('room', room);
     });
@@ -45,12 +54,17 @@ export const listen = (io: Server): void => {
     socket.on('message out', async (msg: MsgData) => {
       const recipientSocketId = connectedUsers[msg.recipientId];
 
-      io.to([recipientSocketId, socket.id]).emit('message in', msg);
-
       const chat = await updateChatWithMsg(msg);
+
+      io.to([recipientSocketId, socketId]).emit('message in', msg);
+
       if (chat instanceof Error) {
         emitError(chat);
       }
+    });
+
+    socket.on('seen', async (room: string) => {
+      await markAsSeen(room);
     });
 
     // RETRIEVE NEW MESSAGES

@@ -5,7 +5,8 @@ interface NumberObject {
 
 export interface Chat {
   newMsg: [NumberObject, NumberObject];
-  messages: MsgData[];
+  messages: ChatMessage[];
+  post: Post;
   users: string[];
   _id: string;
   id: string;
@@ -22,6 +23,8 @@ export interface ChatData {
   chatId: string;
   newMsgs: number;
   latestMsg: ChatMessage;
+  users: string[];
+  post: string;
 }
 
 // MSGDATA

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router';
 import { useNavigate } from 'react-router-dom';
-import { socket } from './socket';
+import { socket } from './utils/socket';
 
 import { GlobalStyles } from './styles/GlobalStyles';
 import SignIn from './Routes/SignIn/SignIn.route';
@@ -31,7 +31,7 @@ function App() {
   useEnums();
 
   const user = useSelector(selectUser);
-  useChat(undefined);
+  // useChat(undefined);
   const { refetch: refetchMsgData } = useMsgData(user);
 
   const mutation = useMutation({
@@ -60,6 +60,7 @@ function App() {
   useEffect(() => {
     if (!user) {
       dispatch(checkForLoggedInUser());
+      return;
     }
 
     const onConnect = (): void => {
@@ -71,15 +72,17 @@ function App() {
     };
 
     const onMessageIn = async (msg: MsgData): Promise<void> => {
+      console.log('MESSAGE IN');
       const chatData: QueryClientResults<Chat> | undefined =
         await queryClient.getQueryData(['chat', msg.room]);
+
       if (chatData && msg.room === chatData.data.data.id) {
-        // console.log('SAME ROOM');
         mutation.mutate(msg);
-      } else {
-        // console.log('NOT SAME ROOM');
-        refetchMsgData();
+        if (user.id === msg.recipientId) {
+          socket.emit('seen', msg.room);
+        }
       }
+      refetchMsgData();
     };
 
     const onRoom = (room: string): void => {
@@ -99,7 +102,7 @@ function App() {
       socket.off('message in', onMessageIn);
       socket.off('room', onRoom);
     };
-  }, []);
+  }, [user]);
 
   return (
     <>

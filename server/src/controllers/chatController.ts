@@ -5,7 +5,7 @@ import Chat, { ChatDocument } from '../models/chatModel';
 import { MsgData } from './socketsController';
 import User, { UserDocument } from '../models/userModel';
 import AppError from '../utils/appError';
-import { ChatMessage } from '../utils/interfaces';
+import { ChatMessage, OnJoinData } from '../utils/interfaces';
 
 export interface ChatPreview {
   id: string;
@@ -115,10 +115,11 @@ export const getMyChat = catchAsync(
 
 // FROM SOCKET
 
-export const getChatFromUserIds = async (ids: string[]) => {
+export const getChatFromUserIds = async (chatData: OnJoinData) => {
   let chat: ChatDocument | null;
-  const query = { users: { $all: ids } };
+  const query = { users: { $all: chatData.users } };
   const update = { $set: { 'messages.$[].seen': true } };
+  const options = { new: true };
   // TODO: GET ONLY CERTAIN NUMBER OF MESSAGES
   // const options = {
   //   new: true,
@@ -127,10 +128,13 @@ export const getChatFromUserIds = async (ids: string[]) => {
   // };
 
   try {
-    chat = await Chat.findOneAndUpdate(query, update)
+    chat = await Chat.findOneAndUpdate(query, update, options)
       .sort({ 'messages.createdAt': -1 })
       .slice('messages', -20);
-    if (!chat) chat = await Chat.create({ users: ids });
+    if (!chat) {
+      chat = await Chat.create(chatData);
+    }
+
     return chat ? chat : new Error('Chat not found!');
   } catch (error) {
     return new Error('Chat not found!');
@@ -145,6 +149,16 @@ export const updateChatWithMsg = async (msg: MsgData) => {
   try {
     const chat = await Chat.findByIdAndUpdate(msg.room, query, options);
     return chat ? chat : new Error('');
+  } catch (error) {
+    return new Error('Chat not found!');
+  }
+};
+
+export const markAsSeen = async (room: string) => {
+  console.log('MARKING');
+  const update = { $set: { 'messages.$[].seen': true } };
+  try {
+    const updatedChat = await Chat.findByIdAndUpdate(room, update);
   } catch (error) {
     return new Error('Chat not found!');
   }

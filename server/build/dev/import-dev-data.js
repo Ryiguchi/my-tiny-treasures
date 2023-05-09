@@ -16,14 +16,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const postData_1 = require("./postData");
+const userData_1 = require("./userData");
 const postModel_1 = __importDefault(require("../models/postModel"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 dotenv_1.default.config({ path: './config.env' });
 const DB = process.env.DB.replace('<password>', process.env.DB_PASSWORD);
 mongoose_1.default.connect(DB).then(() => console.log('DB connection succesful'));
 // function sortById(arr: { title: number }[]): { title: number }[] {
 //   return arr.sort((a, b) => a.title - b.title);
 // }
-const importData = () => __awaiter(void 0, void 0, void 0, function* () {
+const importPost = () => __awaiter(void 0, void 0, void 0, function* () {
     // sortById(posts);
     try {
         yield postModel_1.default.create(postData_1.posts);
@@ -35,7 +37,19 @@ const importData = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     process.exit();
 });
-const deleteData = () => __awaiter(void 0, void 0, void 0, function* () {
+const importUser = () => __awaiter(void 0, void 0, void 0, function* () {
+    // sortById(posts);
+    try {
+        yield userModel_1.default.create(userData_1.users);
+        console.log('Data successfully loaded');
+    }
+    catch (error) {
+        console.log('💥💥');
+        console.log(error);
+    }
+    process.exit();
+});
+const deletePost = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield postModel_1.default.deleteMany();
         console.log('Data successfully deleted');
@@ -45,10 +59,29 @@ const deleteData = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     process.exit();
 });
-if (process.argv[2] === '--import') {
-    importData();
+const deleteUser = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield userModel_1.default.deleteMany();
+        console.log('Data successfully deleted');
+    }
+    catch (error) {
+        console.log(error);
+    }
+    process.exit();
+});
+if (process.argv[2] === '--import-post') {
+    importPost();
 }
-else if (process.argv[2] === '--delete') {
-    deleteData();
+else if (process.argv[2] === '--delete-post') {
+    deletePost();
 }
-//  node build\dev\import-dev-data.js --import
+else if (process.argv[2] === '--import-user') {
+    importUser();
+}
+else if (process.argv[2] === '--delete-user') {
+    deleteUser();
+}
+//  node build\dev\import-dev-data.js --import-post
+//  node build\dev\import-dev-data.js --delete-post
+//  node build\dev\import-dev-data.js --import-user
+//  node build\dev\import-dev-data.js --delete-user

@@ -132,16 +132,12 @@ function getRandomSize() {
 }
 function getRandomUser() {
     const users = [
-        '6458b7591f62e7fb41ebff2d',
-        '6458b7591f62e7fb41ebff2e',
-        '6458b7591f62e7fb41ebff2f',
-        '6458b7591f62e7fb41ebff2c',
-        '6458b7591f62e7fb41ebff32',
-        '6458b7591f62e7fb41ebff33',
-        '6458b7591f62e7fb41ebff34',
-        '6458b7591f62e7fb41ebff35',
-        '6458b7591f62e7fb41ebff31',
-        '6458b7591f62e7fb41ebff30',
+        '644acb016a4541fb49c4c2ad',
+        '644acb0c6a4541fb49c4c2af',
+        '644acb186a4541fb49c4c2b1',
+        '644acb2c6a4541fb49c4c2b3',
+        '644acb376a4541fb49c4c2b5',
+        '64500ae2032e065dc8b21180',
     ];
     const randomIndex = Math.floor(Math.random() * users.length); // Get a random index in the array
     return users[randomIndex]; // Return the size at the random index
@@ -208,8 +204,8 @@ const createPostost = (id) => {
         condition: getRandomCondition(),
         createdAt: getRandomDate(),
         images,
-        user: getRandomUser(),
-        // user: '6457cd486cd32551062a6ca2',
+        // user: getRandomUser(),
+        user: '6457cd486cd32551062a6ca2',
         location: {
             type: interfaces_1.Point.Point,
             coordinates: getRandomCoordinatesInSweden(),
@@ -221,7 +217,6 @@ const createPostost = (id) => {
     else {
         post.age = item[3];
     }
-    return post;
 };
 exports.posts = Array(200)
     .fill(null)

@@ -34,7 +34,7 @@ export interface PostDocumentWithoutEnum extends mongoose.Document {
   title: string;
   description: string;
   itemCount: number;
-  size?: Sizes;
+  size?: Sizes | null;
   age: Ages;
   mainCategory: string;
   subCategory: string;
@@ -123,6 +123,9 @@ postSchema.index({ mainCategory: 1, age: 1 });
 
 postSchema.index({ location: '2dsphere' });
 
+// TODO: KEEP!!!!!!!!!!!!!!!!!!!!!!!!!!
+// Adds location data to post
+// Comment out when using import dev data
 postSchema.pre('save', async function (next) {
   const user = await User.findById(this.user);
   if (!user) {
@@ -139,7 +142,8 @@ postSchema.pre('save', function (next) {
 });
 
 postSchema.pre('save', function (next) {
-  if (!this.isModified('size') || this.mainCategory !== 'Clothes')
+  if (!this.isModified('size'))
+    // if (!this.isModified('size') || this.mainCategory !== 'Clothes')
     return next();
 
   switch (this.size) {
@@ -162,6 +166,8 @@ postSchema.pre('save', function (next) {
     default:
       break;
   }
+
+  if (this.mainCategory !== 'Clothes') this.size = null;
 
   next();
 });

@@ -18,8 +18,8 @@ const chatSchema = new mongoose_1.default.Schema({
     id: String,
     post: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'post',
-        required: true,
+        ref: 'Post',
+        // required: true,
     },
     messages: [
         {

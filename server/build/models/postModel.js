@@ -102,6 +102,9 @@ const postSchema = new mongoose_1.default.Schema({
 });
 postSchema.index({ mainCategory: 1, age: 1 });
 postSchema.index({ location: '2dsphere' });
+// TODO: KEEP!!!!!!!!!!!!!!!!!!!!!!!!!!
+// Adds location data to post
+// Comment out when using import dev data
 postSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield userModel_1.default.findById(this.user);
@@ -117,7 +120,8 @@ postSchema.pre('save', function (next) {
     next();
 });
 postSchema.pre('save', function (next) {
-    if (!this.isModified('size') || this.mainCategory !== 'Clothes')
+    if (!this.isModified('size'))
+        // if (!this.isModified('size') || this.mainCategory !== 'Clothes')
         return next();
     switch (this.size) {
         case Sizes.A:
@@ -139,6 +143,8 @@ postSchema.pre('save', function (next) {
         default:
             break;
     }
+    if (this.mainCategory !== 'Clothes')
+        this.size = null;
     next();
 });
 postSchema.methods.enumsAreValid = function (post) {

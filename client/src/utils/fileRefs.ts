@@ -8,6 +8,7 @@ export const fileRefs = {
   clothes: [`${base}/photos`],
   logoBig: `${base}/photos/logo-1.png`,
   google: `${base}/photos/google.png`,
+  sendMessage: `${base}/photos/send-message-icon.svg`,
 };
 
 interface CategoryRefs {

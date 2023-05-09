@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/features/user/user.selectors';
 import { useAppDispatch } from '../../utils/hooks';
 import { updateUserAsync } from '../../store/features/user/userSlice';
+import { socket } from '../../utils/socket';
 
 interface PostCardLargeProps {
   post: Post;
@@ -18,7 +19,15 @@ interface PostCardLargeProps {
 
 const PostCardLarge: React.FC<PostCardLargeProps> = ({ post }) => {
   const dispatch = useAppDispatch();
-  const { title, description, itemCount, age, condition, id } = post;
+  const {
+    title,
+    description,
+    itemCount,
+    age,
+    condition,
+    id,
+    user: postUser,
+  } = post;
   const user = useSelector(selectUser);
 
   const toggleSavedPost = () => {
@@ -31,6 +40,16 @@ const PostCardLarge: React.FC<PostCardLargeProps> = ({ post }) => {
       newSaved.splice(index, 1);
     }
     dispatch(updateUserAsync({ newData: newSaved, field: 'saved' }));
+  };
+
+  const goToChat = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (!user) return;
+    const recieverId = e.currentTarget.dataset.user;
+    const chatData = {
+      users: [user.id, recieverId],
+      post: id,
+    };
+    socket.emit('join', chatData);
   };
 
   return (
@@ -61,8 +80,6 @@ const PostCardLarge: React.FC<PostCardLargeProps> = ({ post }) => {
             color={theme.color.primary}
           />
         )}
-
-        {/*  */}
       </Box>
       <Box
         width="100%"
@@ -85,7 +102,13 @@ const PostCardLarge: React.FC<PostCardLargeProps> = ({ post }) => {
         </Box>
       </Box>
       <Box alignItems="center">
-        <Button buttonType={ButtonType.Message}>Message Seller</Button>
+        <Button
+          onClick={goToChat}
+          data-user={postUser}
+          buttonType={ButtonType.Message}
+        >
+          Message Seller
+        </Button>
       </Box>
     </S.Wrapper>
   );

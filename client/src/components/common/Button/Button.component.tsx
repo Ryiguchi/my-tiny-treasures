@@ -18,6 +18,7 @@ const Button: FC<ButtonProps> = ({
   children,
   type = 'button',
   iconLeft = null,
+  ...otherProps
 }) => {
   return (
     <S.StyledButton
@@ -25,6 +26,7 @@ const Button: FC<ButtonProps> = ({
       buttonType={buttonType}
       type={type}
       disabled={buttonType === ButtonType.Disabled}
+      {...otherProps}
     >
       <Box
         flexDirection="row"

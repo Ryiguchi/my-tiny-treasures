@@ -178,6 +178,8 @@ const modifyMsgData = (userDoc) => {
             chatId: chat.id.toString(),
             newMsgs,
             latestMsg: chat.messages[chat.messages.length - 1],
+            users: chat.users.map(user => user.toString()),
+            post: chat.post.toString(),
         };
         chatData.push(data);
     });

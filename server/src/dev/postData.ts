@@ -3,6 +3,24 @@
 import { Sizes } from '../models/postModel';
 import { Point } from '../utils/interfaces';
 
+interface PostData {
+  title: string;
+  description: string;
+  mainCategory: string | null;
+  subCategory: string | null;
+  itemCount: number;
+  condition: string;
+  createdAt: Date;
+  images: string[];
+  user: string;
+  location: {
+    type: string;
+    coordinates: number[];
+  };
+  size?: string | null;
+  age?: string | null;
+}
+
 enum MainCategories {
   A = 'Other',
   B = 'Clothes',
@@ -40,7 +58,22 @@ enum Other {
   C = 'Car Seats',
 }
 
+enum Ages {
+  A = '0-3',
+  B = '4-7',
+  C = '8-11',
+}
+
+function getRandomAge() {
+  const ages = Object.values(Ages);
+
+  const randomIndex = Math.floor(Math.random() * ages.length);
+  return ages[randomIndex];
+}
+
 function getRandomMainAndSubCategories() {
+  let size: string | null = null;
+  let age: string | null = null;
   const mainCategories = Object.values(MainCategories);
   const randomMainCategory =
     mainCategories[Math.floor(Math.random() * mainCategories.length)];
@@ -64,7 +97,12 @@ function getRandomMainAndSubCategories() {
   const randomSubCategory =
     subCategories[Math.floor(Math.random() * subCategories.length)];
 
-  return [randomMainCategory, randomSubCategory];
+  if (randomMainCategory === 'Clothes') {
+    size = getRandomSize();
+  } else {
+    age = getRandomAge();
+  }
+  return [randomMainCategory, randomSubCategory, size, age];
 }
 
 function getRandomTitle() {
@@ -125,12 +163,16 @@ function getRandomSize(): string {
 
 function getRandomUser(): string {
   const users = [
-    '644acb016a4541fb49c4c2ad',
-    '644acb0c6a4541fb49c4c2af',
-    '644acb186a4541fb49c4c2b1',
-    '644acb2c6a4541fb49c4c2b3',
-    '644acb376a4541fb49c4c2b5',
-    '64500ae2032e065dc8b21180',
+    '6458b7591f62e7fb41ebff2d',
+    '6458b7591f62e7fb41ebff2e',
+    '6458b7591f62e7fb41ebff2f',
+    '6458b7591f62e7fb41ebff2c',
+    '6458b7591f62e7fb41ebff32',
+    '6458b7591f62e7fb41ebff33',
+    '6458b7591f62e7fb41ebff34',
+    '6458b7591f62e7fb41ebff35',
+    '6458b7591f62e7fb41ebff31',
+    '6458b7591f62e7fb41ebff30',
   ];
   const randomIndex = Math.floor(Math.random() * users.length); // Get a random index in the array
   return users[randomIndex]; // Return the size at the random index
@@ -203,23 +245,28 @@ const images = [
 
 const createPostost = (id: number) => {
   const item = getRandomMainAndSubCategories();
-  return {
-    // title: id,
+  const post: PostData = {
     title: getRandomTitle(),
     description: getRandomDescription(),
-    itemCount: getRandomNumber(),
-    size: getRandomSize(),
     mainCategory: item[0],
     subCategory: item[1],
+    itemCount: getRandomNumber(),
     condition: getRandomCondition(),
     createdAt: getRandomDate(),
     images,
     user: getRandomUser(),
+    // user: '6457cd486cd32551062a6ca2',
     location: {
       type: Point.Point,
       coordinates: getRandomCoordinatesInSweden(),
     },
   };
+  if (item[0] === 'Clothes') {
+    post.size = item[2];
+  } else {
+    post.age = item[3];
+  }
+  return post;
 };
 
 export const posts = Array(200)

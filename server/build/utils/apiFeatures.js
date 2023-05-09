@@ -11,15 +11,22 @@ class PostFeatures {
         var _a;
         if (!((_a = this.userLocation) === null || _a === void 0 ? void 0 : _a.coordinates.length))
             return this;
-        const geoNearStage = {
-            $geoNear: {
-                near: this.userLocation,
-                distanceField: 'distance',
-                spherical: true,
-                distanceMultiplier: 0.001,
+        const geoNearStages = [
+            {
+                $geoNear: {
+                    near: this.userLocation,
+                    distanceField: 'distance',
+                    spherical: true,
+                    distanceMultiplier: 0.001,
+                },
             },
-        };
-        this.stages.push(geoNearStage);
+            {
+                $addFields: {
+                    distance: { $round: ['$distance'] },
+                },
+            },
+        ];
+        this.stages.push(...geoNearStages);
         return this;
     }
     filter() {

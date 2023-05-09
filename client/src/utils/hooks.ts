@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
-import { AppDispatch, RootState } from '../store/store';
+import store, { AppDispatch, RootState } from '../store/store';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import axios, { AxiosResponse } from 'axios';
 import {
@@ -111,19 +111,20 @@ export const getPosts = async ({
 // };
 
 // TODO: only fetch when called
-export const useMsgData = (user: User | null) => {
+export const useMsgData = (user: User) => {
   return useQuery({
-    queryKey: ['msgData', user],
+    queryKey: ['msgData'],
     queryFn: async () => {
+      console.log('MSGDATA');
       const data: AxiosResponse<ResponseWithData<UserMsgData>> =
         await axios.get(`${baseUrl}/users/getMsgData`);
       checkForError(data.data);
+      console.log(data.data.data);
       return data.data;
     },
-    enabled: !!user,
-    refetchInterval: 5 * 60 * 1000,
-    refetchIntervalInBackground: true,
+    refetchOnWindowFocus: false,
     staleTime: 5 * 1000,
+    enabled: !!user,
   });
 };
 
@@ -139,6 +140,7 @@ export const useChat = (roomId: string | undefined) => {
         return data.data;
       }
     },
+    refetchOnWindowFocus: false,
     enabled: !!roomId,
     staleTime: 1000,
   });
@@ -162,5 +164,6 @@ export const useEnums = () => {
       checkForError(data.data);
       return data.data;
     },
+    refetchOnWindowFocus: false,
   });
 };

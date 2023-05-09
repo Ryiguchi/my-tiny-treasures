@@ -19,8 +19,8 @@ const chatSchema = new mongoose.Schema<ChatDocument>(
     id: String,
     post: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'post',
-      required: true,
+      ref: 'Post',
+      // required: true,
     },
     messages: [
       {

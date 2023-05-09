@@ -16,15 +16,22 @@ export class PostFeatures {
 
   distanceFrom(): this {
     if (!this.userLocation?.coordinates.length) return this;
-    const geoNearStage: PipelineStage.GeoNear = {
-      $geoNear: {
-        near: this.userLocation,
-        distanceField: 'distance',
-        spherical: true,
-        distanceMultiplier: 0.001,
+    const geoNearStages: PipelineStage[] = [
+      {
+        $geoNear: {
+          near: this.userLocation,
+          distanceField: 'distance',
+          spherical: true,
+          distanceMultiplier: 0.001,
+        },
       },
-    };
-    this.stages.push(geoNearStage);
+      {
+        $addFields: {
+          distance: { $round: ['$distance'] },
+        },
+      },
+    ];
+    this.stages.push(...geoNearStages);
     return this;
   }
 

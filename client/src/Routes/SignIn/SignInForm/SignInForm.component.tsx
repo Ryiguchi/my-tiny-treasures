@@ -19,6 +19,7 @@ const SignInForm: FC = () => {
     e.preventDefault();
 
     await dispatch(signInUser({ email, password }));
+    navigate('/home');
   };
 
   return (

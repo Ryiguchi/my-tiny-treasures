@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { socket } from '../../../socket';
+import { socket } from '../../../utils/socket';
 import { SignInCredentials, User } from '../../../utils/interfaces';
 import { serverRoute } from '../../../utils/serverUrls';
 import { RootState } from '../../store';
@@ -32,7 +32,6 @@ const initialState: UserState = {
 
 const axiosSignUpUser = async (userData: SignUpUserData): Promise<User> => {
   const res = await axios.post(serverRoute.signUp, userData);
-  console.log(res);
   return res.data.data.data;
 };
 
@@ -83,6 +82,7 @@ export const checkForLoggedInUser = createAsyncThunk(
     try {
       const user: User = await axiosGetUserFromJwt();
       if (!user) return;
+      socket.emit('sign in', user.id);
       return user;
     } catch (error) {
       console.log(error);

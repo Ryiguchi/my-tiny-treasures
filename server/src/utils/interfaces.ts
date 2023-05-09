@@ -28,6 +28,13 @@ export interface ChatData {
   chatId: string;
   newMsgs: number;
   latestMsg: ChatMessage;
+  users: string[];
+  post: string;
+}
+
+export interface OnJoinData {
+  users: [string, string];
+  post: string;
 }
 
 export interface UserMsgData {

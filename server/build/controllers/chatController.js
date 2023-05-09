@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateChatWithMsg = exports.getChatFromUserIds = exports.getMyChat = void 0;
+exports.markAsSeen = exports.updateChatWithMsg = exports.getChatFromUserIds = exports.getMyChat = void 0;
 const catchAsync_1 = require("../utils/catchAsync");
 const chatModel_1 = __importDefault(require("../models/chatModel"));
 const appError_1 = __importDefault(require("../utils/appError"));
@@ -100,10 +100,11 @@ exports.getMyChat = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(v
 //   }
 // );
 // FROM SOCKET
-const getChatFromUserIds = (ids) => __awaiter(void 0, void 0, void 0, function* () {
+const getChatFromUserIds = (chatData) => __awaiter(void 0, void 0, void 0, function* () {
     let chat;
-    const query = { users: { $all: ids } };
+    const query = { users: { $all: chatData.users } };
     const update = { $set: { 'messages.$[].seen': true } };
+    const options = { new: true };
     // TODO: GET ONLY CERTAIN NUMBER OF MESSAGES
     // const options = {
     //   new: true,
@@ -111,11 +112,12 @@ const getChatFromUserIds = (ids) => __awaiter(void 0, void 0, void 0, function* 
     //   slice: { messages: 20 },
     // };
     try {
-        chat = yield chatModel_1.default.findOneAndUpdate(query, update)
+        chat = yield chatModel_1.default.findOneAndUpdate(query, update, options)
             .sort({ 'messages.createdAt': -1 })
             .slice('messages', -20);
-        if (!chat)
-            chat = yield chatModel_1.default.create({ users: ids });
+        if (!chat) {
+            chat = yield chatModel_1.default.create(chatData);
+        }
         return chat ? chat : new Error('Chat not found!');
     }
     catch (error) {
@@ -136,3 +138,14 @@ const updateChatWithMsg = (msg) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.updateChatWithMsg = updateChatWithMsg;
+const markAsSeen = (room) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('MARKING');
+    const update = { $set: { 'messages.$[].seen': true } };
+    try {
+        const updatedChat = yield chatModel_1.default.findByIdAndUpdate(room, update);
+    }
+    catch (error) {
+        return new Error('Chat not found!');
+    }
+});
+exports.markAsSeen = markAsSeen;

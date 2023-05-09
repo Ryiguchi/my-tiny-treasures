@@ -15,18 +15,22 @@ const listen = (io) => {
     const connectedUsers = {};
     io.on('connection', socket => {
         let room;
+        let userId;
+        let socketId;
         // SIGN IN AND REGISTER ID
         socket.on('sign in', (id) => __awaiter(void 0, void 0, void 0, function* () {
+            socketId = socket.id;
+            userId = id;
             connectedUsers[id] = socket.id;
         }));
         // JOIN ROOM
-        socket.on('join', (ids) => __awaiter(void 0, void 0, void 0, function* () {
-            const chat = yield (0, chatController_1.getChatFromUserIds)(ids);
+        socket.on('join', (chatData) => __awaiter(void 0, void 0, void 0, function* () {
+            const chat = yield (0, chatController_1.getChatFromUserIds)(chatData);
             if (chat instanceof Error) {
                 emitError(chat);
                 return;
             }
-            const room = chat.id.toString();
+            room = chat.id.toString();
             socket.join(room);
             socket.emit('room', room);
         }));
@@ -38,11 +42,14 @@ const listen = (io) => {
         // SEND MESSAGE
         socket.on('message out', (msg) => __awaiter(void 0, void 0, void 0, function* () {
             const recipientSocketId = connectedUsers[msg.recipientId];
-            io.to([recipientSocketId, socket.id]).emit('message in', msg);
             const chat = yield (0, chatController_1.updateChatWithMsg)(msg);
+            io.to([recipientSocketId, socketId]).emit('message in', msg);
             if (chat instanceof Error) {
                 emitError(chat);
             }
+        }));
+        socket.on('seen', (room) => __awaiter(void 0, void 0, void 0, function* () {
+            yield (0, chatController_1.markAsSeen)(room);
         }));
         // RETRIEVE NEW MESSAGES
         // socket.on('get new messages', async (id: string) => {
