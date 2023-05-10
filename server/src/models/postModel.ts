@@ -42,6 +42,7 @@ export interface PostDocumentWithoutEnum extends mongoose.Document {
   createdAt: Date;
   images: string[];
   user: mongoose.Schema.Types.ObjectId;
+  userName: string;
   location: {
     type: string;
     coordinates: [number, number];
@@ -104,6 +105,7 @@ const postSchema = new mongoose.Schema<PostDocument>(
       ref: 'User',
       required: [true, 'All posts must belong to a user'],
     },
+    userName: String,
     location: {
       type: {
         type: String,
@@ -126,11 +128,13 @@ postSchema.index({ location: '2dsphere' });
 // TODO: KEEP!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Adds location data to post
 // Comment out when using import dev data
+// Don't need if getting user from req
 postSchema.pre('save', async function (next) {
   const user = await User.findById(this.user);
   if (!user) {
     return next(new AppError('there was a problem saving your post.', 400));
   }
+  this.userName = user.name;
   this.location = user.location;
 
   next();

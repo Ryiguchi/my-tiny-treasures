@@ -6,6 +6,7 @@ import { imgUrls } from '../../../utils/urls/imgUrls';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../store/features/user/user.selectors';
 import { useMsgData } from '../../../utils/hooks/reactQueryHooks';
+import { Outlet } from 'react-router-dom';
 
 const NavBar: FC = () => {
   const user = useSelector(selectUser);
@@ -13,55 +14,58 @@ const NavBar: FC = () => {
   const newMessages = data?.data.msgData.newMessages;
 
   return (
-    <S.StyledNav>
-      <S.NavItemBox>
-        <a href="/home">
-          <Box width="2.8rem">
-            <img src={imgUrls.icons.logoSmall} alt="Logo" />
-          </Box>
-          <p>Home</p>
-        </a>
-      </S.NavItemBox>
-      <S.NavItemBox>
-        <a href="/search">
-          <FaSearch size={21} color="323232" />
-          <p>Search</p>
-        </a>
-      </S.NavItemBox>
-      <S.NavItemBox>
-        <a href="/give">
-          <FaGift size={21} color="323232" />
-          <p>Give Away</p>
-        </a>
-      </S.NavItemBox>
-      <S.NavItemBox>
-        <a href="messages">
-          {data && newMessages && newMessages > 0 ? (
-            <S.Badge>{newMessages}</S.Badge>
-          ) : (
-            ''
-          )}
-          <div></div>
-          <FaComment size={21} color="323232" />
-          <p>Messages</p>
-        </a>
-      </S.NavItemBox>
-      {user ? (
+    <>
+      <Outlet />
+      <S.StyledNav>
         <S.NavItemBox>
-          <a href="account">
-            <FaUserAlt size={21} color="323232" />
-            <p>Account</p>
+          <a href="/home">
+            <Box width="2.8rem">
+              <img src={imgUrls.icons.logoSmall} alt="Logo" />
+            </Box>
+            <p>Home</p>
           </a>
         </S.NavItemBox>
-      ) : (
         <S.NavItemBox>
-          <a href="signin">
-            <FaUserAlt size={21} color="323232" />
-            <p>Sign In</p>
+          <a href="/search">
+            <FaSearch size={21} color="323232" />
+            <p>Search</p>
           </a>
         </S.NavItemBox>
-      )}
-    </S.StyledNav>
+        <S.NavItemBox>
+          <a href="/give">
+            <FaGift size={21} color="323232" />
+            <p>Give Away</p>
+          </a>
+        </S.NavItemBox>
+        <S.NavItemBox>
+          <a href="messages">
+            {data && newMessages && newMessages > 0 ? (
+              <S.Badge>{newMessages}</S.Badge>
+            ) : (
+              ''
+            )}
+            <div></div>
+            <FaComment size={21} color="323232" />
+            <p>Messages</p>
+          </a>
+        </S.NavItemBox>
+        {user ? (
+          <S.NavItemBox>
+            <a href="account">
+              <FaUserAlt size={21} color="323232" />
+              <p>Account</p>
+            </a>
+          </S.NavItemBox>
+        ) : (
+          <S.NavItemBox>
+            <a href="signin">
+              <FaUserAlt size={21} color="323232" />
+              <p>Sign In</p>
+            </a>
+          </S.NavItemBox>
+        )}
+      </S.StyledNav>
+    </>
   );
 };
 

@@ -23,7 +23,9 @@ body {
 
   font-family: 'Open Sans', sans-serif;
   font-size: 1.4rem;
-  background-color: ${theme.color.textGray}
+  background-color: ${theme.color.textGray};
+  margin-bottom: 8rem;
+
 }
 
 li {

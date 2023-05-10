@@ -52,6 +52,7 @@ interface DivProps {
   borderRadius?: string;
   boxShadow?: string;
   transform?: string;
+  gridColumn?: string;
 }
 
 export const Div = styled.div<DivProps>`
@@ -93,4 +94,5 @@ export const Div = styled.div<DivProps>`
   border-radius: ${({ borderRadius }) => borderRadius || 'none'};
   box-shadow: ${({ boxShadow }) => boxShadow || 'none'};
   transform: ${({ transform }) => transform || 'none'};
+  grid-column: ${({ gridColumn }) => gridColumn || ''};
 `;

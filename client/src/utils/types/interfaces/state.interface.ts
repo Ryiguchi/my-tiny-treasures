@@ -26,6 +26,7 @@ export interface Post {
   age: string;
   title: string;
   user: string;
+  userName: string;
   _id: string;
   distance?: number;
 }

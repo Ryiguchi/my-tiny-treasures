@@ -1,16 +1,18 @@
-import { FC } from 'react';
+import { forwardRef, Ref } from 'react';
 import Box from '../../../components/common/Box/Box.component';
 import { theme } from '../../../styles/themes';
 import Message from '../Message/Message.component';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../store/features/user/user.selectors';
 import { ChatMessage } from '../../../utils/types/interfaces/chat.interface';
+import { Wrapper } from './messageBox.styles';
 
 interface Messages {
   messages: ChatMessage[];
 }
 
-const MessagesBox: FC<Messages> = ({ messages }) => {
+const MessagesBox = forwardRef((props: Messages, ref: Ref<HTMLDivElement>) => {
+  const { messages } = props;
   const user = useSelector(selectUser);
 
   const isPrevSameSender = (id: string): boolean => {
@@ -24,29 +26,29 @@ const MessagesBox: FC<Messages> = ({ messages }) => {
   };
 
   return (
-    <Box
-      width="100%"
-      minHeight="10rem"
-      borderRadius={theme.radius.image}
-      boxShadow={theme.shadow}
-      padding="1rem"
-      backgroundColor="#fff"
-      justifyContent="flex-end"
-    >
-      {user &&
-        messages.map(message => {
-          return (
-            <Message
-              key={message._id}
-              id={message._id}
-              text={message.text}
-              sentByUser={user.id === message.user}
-              prevSameSender={isPrevSameSender(message._id)}
-            />
-          );
-        })}
-    </Box>
+    <Wrapper ref={ref}>
+      <Box
+        width="100%"
+        borderRadius={theme.radius.image}
+        marginBottom="6rem"
+        justifyContent="flex-end"
+        padding="0 3.2rem"
+      >
+        {user &&
+          messages.map(message => {
+            return (
+              <Message
+                key={message._id}
+                id={message._id}
+                text={message.text}
+                sentByUser={user.id === message.user}
+                prevSameSender={isPrevSameSender(message._id)}
+              />
+            );
+          })}
+      </Box>
+    </Wrapper>
   );
-};
+});
 
 export default MessagesBox;

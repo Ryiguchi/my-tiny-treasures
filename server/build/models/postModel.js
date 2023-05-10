@@ -88,6 +88,7 @@ const postSchema = new mongoose_1.default.Schema({
         ref: 'User',
         required: [true, 'All posts must belong to a user'],
     },
+    userName: String,
     location: {
         type: {
             type: String,
@@ -105,12 +106,14 @@ postSchema.index({ location: '2dsphere' });
 // TODO: KEEP!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Adds location data to post
 // Comment out when using import dev data
+// Don't need if getting user from req
 postSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = yield userModel_1.default.findById(this.user);
         if (!user) {
             return next(new appError_1.default('there was a problem saving your post.', 400));
         }
+        this.userName = user.name;
         this.location = user.location;
         next();
     });

@@ -16,6 +16,6 @@ export const Wrapper = styled(Box)`
     border: 0.5px solid #8b8b8b;
     box-shadow: ${theme.shadow};
     padding: 0 2rem;
-    font-size: 1.6rem;
+    font-size: 2rem;
   }
 `;

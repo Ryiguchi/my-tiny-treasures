@@ -54,6 +54,7 @@ export interface BoxProps {
   backgroundColor?: string;
   borderRadius?: string;
   boxShadow?: string;
+  gridColumn?: string;
   ref?: React.RefObject<HTMLDivElement>;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }

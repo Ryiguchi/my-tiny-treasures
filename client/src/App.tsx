@@ -9,7 +9,6 @@ import ChatPage from './Routes/Chat/Chat.route';
 import { useSelector } from 'react-redux';
 import { checkForLoggedInUser } from './store/features/user/userSlice';
 import { selectUser } from './store/features/user/user.selectors';
-import Header from './components/Header/Header.component';
 import Messages from './Routes/Messages/Messages.route';
 import { useAppDispatch } from './utils/hooks/reduxHooks';
 import Post from './Routes/Post/Post.route';
@@ -23,7 +22,8 @@ import {
   msgDataMutationOptions,
   useEnums,
 } from './utils/hooks/reactQueryHooks';
-import Layout from './Routes/Layout/Layout.route';
+import NavBar from './components/common/NavBar/NavBar.component';
+import Footer from './components/common/Footer/Footer.component';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -55,16 +55,18 @@ function App() {
       <GlobalStyles />
 
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="signin" element={<SignIn />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="home" element={<Home />} />
+        <Route element={<NavBar />}>
+          <Route element={<Footer />}>
+            <Route path="signin" element={<SignIn />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="home" element={<Home />} />
+            <Route path="posts/:postId" element={<Post />} />
+            <Route path="messages" element={<Messages />} />
+            <Route path="category/:category" element={<Category />} />
+            <Route path="account" element={<Account />} />
+            <Route path="give" element={<Give />} />
+          </Route>
           <Route path="chats/:chatId" element={<ChatPage />} />
-          <Route path="posts/:postId" element={<Post />} />
-          <Route path="category/:category" element={<Category />} />
-          <Route path="messages" element={<Messages />} />
-          <Route path="account" element={<Account />} />
-          <Route path="give" element={<Give />} />
         </Route>
       </Routes>
     </>

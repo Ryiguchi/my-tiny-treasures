@@ -3,7 +3,7 @@ import {} from '../../../utils/types/interfaces/general.interfaces';
 import { socket } from '../../../utils/socket/socket';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../store/features/user/user.selectors';
-import { FaPaperclip } from 'react-icons/fa';
+import { FaPaperclip, FaTelegramPlane } from 'react-icons/fa';
 import Box from '../../../components/common/Box/Box.component';
 import { Wrapper } from './messageForm.styles';
 import { Chat } from '../../../utils/types/interfaces/chat.interface';
@@ -12,9 +12,10 @@ import { imgUrls } from '../../../utils/urls/imgUrls';
 
 interface MessageFormProps {
   chat: Chat;
+  messageBoxRef: HTMLDivElement | null;
 }
 
-const MessageForm: FC<MessageFormProps> = ({ chat }) => {
+const MessageForm: FC<MessageFormProps> = ({ chat, messageBoxRef }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [currentMessage, setCurrentMessage] = useState('');
   const user = useSelector(selectUser);
@@ -47,7 +48,9 @@ const MessageForm: FC<MessageFormProps> = ({ chat }) => {
     if (!inputRef.current) return;
     inputRef.current.value = '';
     inputRef.current.focus();
-    window.scrollTo(0, document.body.scrollHeight);
+    if (!messageBoxRef) return;
+    messageBoxRef.scrollTop = messageBoxRef.scrollHeight + 300;
+    messageBoxRef.scrollBy(0, 200);
   };
 
   return (
@@ -57,22 +60,19 @@ const MessageForm: FC<MessageFormProps> = ({ chat }) => {
         gap="2rem"
         alignItems="center"
         justifyContent="space-between"
+        height="8rem"
+        padding="0 3.2rem"
       >
-        <FaPaperclip size={40} />
+        <FaPaperclip size={32} />
         <form onSubmit={sendMessage}>
           <input
             type="text"
             ref={inputRef}
             onChange={e => setCurrentMessage(e.target.value)}
+            placeholder="Write Something..."
           />
         </form>
-        <Box width="4rem" height="4rem">
-          <img
-            src={imgUrls.icons.sendMessage}
-            alt="Send Message"
-            onClick={sendMessage}
-          />
-        </Box>
+        <FaTelegramPlane size={40} />
       </Box>
     </Wrapper>
   );
