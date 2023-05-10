@@ -1,11 +1,7 @@
 import styled from 'styled-components';
+import Box from '../../components/common/Box/Box.component';
 
-export const MessagesContainer = styled.div`
-  max-width: 50rem;
-  width: fit-content;
-  margin: 0 auto;
-  padding: 4rem 2rem;
-
+export const Wrapper = styled(Box)`
   ul {
     display: flex;
     flex-direction: column;

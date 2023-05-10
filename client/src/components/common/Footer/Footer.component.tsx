@@ -7,7 +7,7 @@ const Footer: FC = () => {
   return (
     <>
       <Outlet />
-      <Box padding="0 3.2rem">
+      <Box padding="1.2rem 3.2rem">
         <StyledNav>
           <a href="#">Support</a>
           <a href="#">How it Works</a>

@@ -2,10 +2,11 @@ import { NextFunction, Response } from 'express';
 import { catchAsync } from '../utils/catchAsync';
 import { CustomRequest } from '../utils/expressInterfaces';
 import Chat, { ChatDocument } from '../models/chatModel';
-import { MsgData } from './socketsController';
-import User, { UserDocument } from '../models/userModel';
+import { MsgData, TradeData } from './socketsController';
 import AppError from '../utils/appError';
 import { ChatMessage, OnJoinData } from '../utils/interfaces';
+import { PostDocument } from '../models/postModel';
+import User from '../models/userModel';
 
 export interface ChatPreview {
   id: string;
@@ -36,82 +37,6 @@ export const getMyChat = catchAsync(
     });
   }
 );
-
-// export const createChat = catchAsync(
-//   async (req: CustomRequest, res: Response, next: NextFunction) => {
-//     const data = {
-//       messages: [],
-//       users: [req.params.myId, req.params.chatWithId],
-//     };
-
-//     const chat = await Chat.create(data);
-
-//     res.status(200).json({
-//       status: 'success',
-//       data: {
-//         data: chat,
-//       },
-//     });
-//   }
-// );
-
-// export const addMessage = catchAsync(
-//   async (req: CustomRequest, res: Response, next: NextFunction) => {
-//     const chatId = req.params.chatId;
-
-//     const updatedChat = await Chat.findByIdAndUpdate(
-//       chatId,
-//       {
-//         $push: { messages: req.body },
-//         $addToSet: { newMessage: req.body.user },
-//       },
-//       {
-//         new: true,
-//       }
-//     );
-
-//     res.status(200).json({
-//       status: 'success',
-//       data: {
-//         data: updatedChat,
-//       },
-//     });
-//   }
-// );
-
-// export const getPreviews = catchAsync(
-//   async (req: CustomRequest, res: Response, next: NextFunction) => {
-//     const userId = req.user._id.toString();
-//     const data: UserDocument | null = await User.findById(userId).populate(
-//       'chats'
-//     );
-
-//     if (!data) {
-//       return next(new AppError('No chats found!', 400));
-//     }
-
-//     let chats: ChatPreview[] = [];
-//     data.chats.forEach(chat => {
-//       const newMsgs = chat.messages.reduce((acc, cur) => {
-//         return cur.seen || cur.user.toString() === userId ? acc : acc + 1;
-//       }, 0);
-//       const previewData: ChatPreview = {
-//         id: chat._id.toString(),
-//         latestMsg: chat.messages[chat.messages.length - 1],
-//         unread: newMsgs,
-//       };
-//       chats.push(previewData);
-//     });
-
-//     res.status(200).json({
-//       status: 'success',
-//       results: chats.length,
-//       data: {
-//         data: chats,
-//       },
-//     });
-//   }
-// );
 
 // FROM SOCKET
 
@@ -161,5 +86,55 @@ export const markAsSeen = async (room: string) => {
     const updatedChat = await Chat.findByIdAndUpdate(room, update);
   } catch (error) {
     return new Error('Chat not found!');
+  }
+};
+
+export const updateChatAgreedUsers = async ({
+  room,
+  userId,
+  agree,
+}: TradeData) => {
+  const updateQuery = { agreedUsers: userId };
+  const update = agree ? { $addToSet: updateQuery } : { $pull: updateQuery };
+  const options = { new: true };
+
+  try {
+    const chat: ChatDocument | null = await Chat.findByIdAndUpdate(
+      room,
+      update,
+      options
+    );
+    if (!chat) throw new Error('There was a problem updating the Chat!');
+    if (chat.status === 'completed') {
+      await exchangeTokens(chat);
+      return 'completed';
+    }
+    return 'success';
+  } catch (error) {
+    throw new Error('There was a problem updating the Chat!');
+  }
+};
+
+const exchangeTokens = async (chat: ChatDocument) => {
+  const post = chat.post as PostDocument;
+
+  const sellerId = post.user;
+  const buyerId = chat.users.filter(user => user !== sellerId);
+
+  const buyer = await User.findByIdAndUpdate(
+    buyerId,
+    { $inc: { credits: -1 } },
+    { new: true }
+  );
+  if (!buyer) {
+    throw new Error('There was a problem updating the Chat!');
+  }
+  const seller = await User.findByIdAndUpdate(
+    sellerId,
+    { $inc: { credits: 1 } },
+    { new: true }
+  );
+  if (!seller) {
+    throw new Error('There was a problem updating the Chat!');
   }
 };

@@ -16,12 +16,11 @@ import { imgUrls } from '../../../utils/urls/imgUrls';
 
 interface CategorySliderProps {
   category: string;
-  lastElement: boolean;
 }
 
 const ages = ['0-3', '4-7', '8-11'];
 
-const CategorySlider: FC<CategorySliderProps> = ({ category, lastElement }) => {
+const CategorySlider: FC<CategorySliderProps> = ({ category }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -42,28 +41,24 @@ const CategorySlider: FC<CategorySliderProps> = ({ category, lastElement }) => {
   };
 
   return (
-    <S.Wrapper lastElement={lastElement}>
-      <Box gap="4rem">
+    <S.Wrapper>
+      <Box gap="2.4rem" alignItems="center">
         <S.CategoryTitle>{capitalize(category)}</S.CategoryTitle>
-        <Box gap="3rem" alignItems="center">
-          <p>Choose an age group</p>
-          <Box gap="1rem" flexDirection="row">
-            {ages.map((age, i) => (
-              <CategoryCard
-                key={age}
-                image={imgUrls.categories[category][i]}
-                age={age}
-                onClick={handleGoToCategoryAndAge}
-              />
-            ))}
-          </Box>
-          <p>or</p>
+        <p>Choose an age group</p>
+        <Box gap="1rem" flexDirection="row">
+          {ages.map((age, i) => (
+            <CategoryCard
+              key={age}
+              image={imgUrls.categories[category][i]}
+              age={age}
+              onClick={handleGoToCategoryAndAge}
+            />
+          ))}
         </Box>
-        <Box alignItems="center" justifyContent="center">
-          <Button onClick={handleGoToCategory} buttonType={ButtonType.Primary}>
-            Show All {capitalize(category)}
-          </Button>
-        </Box>
+        <p>or</p>
+        <Button onClick={handleGoToCategory} buttonType={ButtonType.Primary}>
+          Show All {capitalize(category)}
+        </Button>
       </Box>
     </S.Wrapper>
   );

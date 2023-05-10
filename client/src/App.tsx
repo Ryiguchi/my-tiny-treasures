@@ -61,11 +61,11 @@ function App() {
             <Route path="signup" element={<SignUp />} />
             <Route path="home" element={<Home />} />
             <Route path="posts/:postId" element={<Post />} />
-            <Route path="messages" element={<Messages />} />
             <Route path="category/:category" element={<Category />} />
             <Route path="account" element={<Account />} />
             <Route path="give" element={<Give />} />
           </Route>
+          <Route path="messages" element={<Messages />} />
           <Route path="chats/:chatId" element={<ChatPage />} />
         </Route>
       </Routes>

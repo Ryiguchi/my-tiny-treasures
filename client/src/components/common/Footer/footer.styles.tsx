@@ -8,7 +8,7 @@ export const StyledNav = styled.nav`
   align-items: center;
   border-top: 1px solid #aaa;
 
-  padding: 6rem 0 2.4rem 0;
+  padding: 2.4rem 0;
 
   a {
     color: ${theme.color.text};

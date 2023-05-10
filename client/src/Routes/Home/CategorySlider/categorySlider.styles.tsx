@@ -1,17 +1,8 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { theme } from '../../../styles/themes';
 
-interface WrapperProps {
-  lastElement: boolean;
-}
-
-const borderStyles = css`
-  border-bottom: 1px solid #aaa;
-`;
-
-export const Wrapper = styled.div<WrapperProps>`
-  padding-bottom: 6rem;
-  ${({ lastElement }) => !lastElement && borderStyles}
+export const Wrapper = styled.div`
+  padding-bottom: 2.4rem;
 
   p {
     font-size: 1.6rem;
@@ -20,7 +11,7 @@ export const Wrapper = styled.div<WrapperProps>`
 
 export const CategoryTitle = styled.h1`
   font-size: 3.5rem;
+  line-height: 52.5px;
   text-align: center;
   color: ${theme.color.primary};
-  margin-top: 4rem;
 `;

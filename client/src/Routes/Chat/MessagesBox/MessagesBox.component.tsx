@@ -1,36 +1,34 @@
-import { forwardRef, Ref } from 'react';
+import { forwardRef, Ref, useEffect, FC, useRef } from 'react';
 import Box from '../../../components/common/Box/Box.component';
 import { theme } from '../../../styles/themes';
 import Message from '../Message/Message.component';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../store/features/user/user.selectors';
 import { ChatMessage } from '../../../utils/types/interfaces/chat.interface';
-import { Wrapper } from './messageBox.styles';
+import * as S from './messageBox.styles';
 
 interface Messages {
   messages: ChatMessage[];
+  showIsWritingEl: boolean;
 }
 
-const MessagesBox = forwardRef((props: Messages, ref: Ref<HTMLDivElement>) => {
-  const { messages } = props;
+const MessagesBox: FC<Messages> = ({ messages, showIsWritingEl }) => {
   const user = useSelector(selectUser);
+  const messageBoxRef = useRef<HTMLDivElement | null>(null);
 
-  const isPrevSameSender = (id: string): boolean => {
-    const prevMessage = document.getElementById(id);
-    if (!prevMessage) return false;
+  useEffect(() => {
+    const messageBoxEl = messageBoxRef.current;
+    if (!messageBoxEl) return;
 
-    const style = window.getComputedStyle(prevMessage);
-    const color = style.getPropertyValue('color');
-
-    return color === 'rgb(255, 255, 255)';
-  };
+    messageBoxEl.scrollTop = messageBoxEl.scrollHeight;
+  }, [messageBoxRef.current, messages, showIsWritingEl]);
 
   return (
-    <Wrapper ref={ref}>
+    <S.Wrapper ref={messageBoxRef}>
       <Box
         width="100%"
         borderRadius={theme.radius.image}
-        marginBottom="6rem"
+        marginBottom="1rem"
         justifyContent="flex-end"
         padding="0 3.2rem"
       >
@@ -39,16 +37,19 @@ const MessagesBox = forwardRef((props: Messages, ref: Ref<HTMLDivElement>) => {
             return (
               <Message
                 key={message._id}
-                id={message._id}
                 text={message.text}
                 sentByUser={user.id === message.user}
-                prevSameSender={isPrevSameSender(message._id)}
               />
             );
           })}
+        <S.IsWritingBox showIsWritingEl={showIsWritingEl}>
+          <div></div>
+          <div></div>
+          <div></div>
+        </S.IsWritingBox>
       </Box>
-    </Wrapper>
+    </S.Wrapper>
   );
-});
+};
 
 export default MessagesBox;

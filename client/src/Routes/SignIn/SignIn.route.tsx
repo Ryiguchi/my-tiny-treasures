@@ -10,14 +10,14 @@ import { serverRoute } from '../../utils/urls/serverUrls';
 const SignIn: React.FC = () => {
   return (
     <S.Wrapper>
-      <Box padding="2.4rem 3.2rem">
-        <Box width="100%" objectFit="cover" marginBottom="3.2rem">
+      <Box padding="2.4rem  3.2rem" gap="2.4rem">
+        <Box width="100%" objectFit="cover">
           <img src={imgUrls.icons.logoBig} alt="Logo" />
         </Box>
-        <Box gap="2.4rem">
+        <Box padding="1.2rem 0" gap="2.4rem">
           <p>Log in or create an account to exchange items for free.</p>
           <SignInForm />
-          <Box margin="3.2rem 0 0 0" gap="3.2rem">
+          <Box gap="2.4rem">
             <span>Or</span>
             <a href={serverRoute.googleCallbackUrl}>
               <Button

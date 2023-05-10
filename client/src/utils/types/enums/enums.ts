@@ -88,3 +88,15 @@ export const sizes = [
 ];
 
 export const ages = ['0-3', '4-7', '8-11'];
+
+export enum ChatStatus {
+  Active = 'active',
+  Pending = 'pending',
+  Completed = 'completed',
+}
+
+export enum TradeStatus {
+  Success = 'success',
+  Completed = 'completed',
+  Failed = 'failed',
+}

@@ -27,7 +27,7 @@ export interface BoxProps {
   flexGrow?: number;
   flexShrink?: number;
   flexBasis?: number;
-  flex?: string;
+  flex?: string | number;
   padding?: string;
   margin?: string;
   marginTop?: string;
@@ -55,6 +55,7 @@ export interface BoxProps {
   borderRadius?: string;
   boxShadow?: string;
   gridColumn?: string;
+  alignSelf?: string;
   ref?: React.RefObject<HTMLDivElement>;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }

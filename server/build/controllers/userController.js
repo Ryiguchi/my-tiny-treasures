@@ -93,7 +93,6 @@ exports.getMsgData = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(
         return next(new appError_1.default('There was a problem fetching your data!', 400));
     }
     const msgData = (0, userModel_1.modifyMsgData)(userWithChats);
-    // console.log(msgData);
     res.status(200).json({
         status: 'success',
         data: {

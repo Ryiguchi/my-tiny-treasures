@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { socket } from '../../utils/socket/socket';
 import { useParams } from 'react-router-dom';
 import GoBackNav from '../../components/common/GoBackNav/GoBackNav.component';
@@ -12,17 +12,23 @@ import PostBox from './PostBox/PostBox.component';
 
 const ChatPage: React.FC = () => {
   const room = useParams().chatId;
-  const messageBoxRef = useRef<HTMLDivElement | null>(null);
+  const [showIsWritingEl, setShowIsWritingEl] = useState<boolean>(false);
 
   const { data: chatData } = useChat(room);
   const chat: Chat | undefined = chatData?.data.data;
 
   useEffect(() => {
+    socket.emit('join room', room);
+  }, [room]);
+
+  useEffect(() => {
+    socket.on('writing', (): void => {
+      setShowIsWritingEl(true);
+    });
+    socket.on('stop writing', (): void => setShowIsWritingEl(false));
     return () => {
-      // TODO: clear query
-      // dispatch(setChat(null));
-      socket.emit('leave');
       queryClient.removeQueries(['chat', room]);
+      chat && socket.emit('leave', room);
     };
   }, []);
 
@@ -30,11 +36,14 @@ const ChatPage: React.FC = () => {
     <>
       {chat && (
         <Box height="calc(100vh - 8rem)" justifyContent="space-between">
-          <GoBackNav title="messages" />
-          <PostBox post={chat.post} />
+          <GoBackNav title={chat.post.userName} />
+          <PostBox chat={chat} />
 
-          <MessagesBox messages={chat.messages} ref={messageBoxRef} />
-          <MessageForm chat={chat} messageBoxRef={messageBoxRef.current} />
+          <MessagesBox
+            messages={chat.messages}
+            showIsWritingEl={showIsWritingEl}
+          />
+          <MessageForm chat={chat} />
         </Box>
       )}
     </>

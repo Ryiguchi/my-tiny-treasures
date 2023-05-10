@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState, ChangeEvent } from 'react';
 import {} from '../../../utils/types/interfaces/general.interfaces';
 import { socket } from '../../../utils/socket/socket';
 import { useSelector } from 'react-redux';
@@ -12,10 +12,11 @@ import { imgUrls } from '../../../utils/urls/imgUrls';
 
 interface MessageFormProps {
   chat: Chat;
-  messageBoxRef: HTMLDivElement | null;
 }
 
-const MessageForm: FC<MessageFormProps> = ({ chat, messageBoxRef }) => {
+let timeout: NodeJS.Timeout | null;
+
+const MessageForm: FC<MessageFormProps> = ({ chat }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [currentMessage, setCurrentMessage] = useState('');
   const user = useSelector(selectUser);
@@ -48,19 +49,33 @@ const MessageForm: FC<MessageFormProps> = ({ chat, messageBoxRef }) => {
     if (!inputRef.current) return;
     inputRef.current.value = '';
     inputRef.current.focus();
-    if (!messageBoxRef) return;
-    messageBoxRef.scrollTop = messageBoxRef.scrollHeight + 300;
-    messageBoxRef.scrollBy(0, 200);
+  };
+
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setCurrentMessage(e.target.value);
+    const room = chat.id;
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        socket.emit('stop writing', room);
+        timeout = null;
+      }, 2000);
+    } else {
+      socket.emit('writing', room);
+      timeout = setTimeout(() => {
+        socket.emit('stop writing', room);
+        timeout = null;
+      }, 2000);
+    }
   };
 
   return (
-    <Wrapper>
+    <Wrapper padding=".5rem 0 2rem 0">
       <Box
         flexDirection="row"
         gap="2rem"
         alignItems="center"
         justifyContent="space-between"
-        height="8rem"
         padding="0 3.2rem"
       >
         <FaPaperclip size={32} />
@@ -68,7 +83,7 @@ const MessageForm: FC<MessageFormProps> = ({ chat, messageBoxRef }) => {
           <input
             type="text"
             ref={inputRef}
-            onChange={e => setCurrentMessage(e.target.value)}
+            onChange={handleOnChange}
             placeholder="Write Something..."
           />
         </form>

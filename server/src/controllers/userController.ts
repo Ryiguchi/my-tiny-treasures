@@ -92,7 +92,6 @@ export const getMsgData = catchAsync(
       return next(new AppError('There was a problem fetching your data!', 400));
     }
     const msgData = modifyMsgData(userWithChats);
-    // console.log(msgData);
 
     res.status(200).json({
       status: 'success',

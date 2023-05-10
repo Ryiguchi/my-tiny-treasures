@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../../store/features/user/user.selectors';
 import { useMsgData } from '../../../utils/hooks/reactQueryHooks';
 import { Outlet } from 'react-router-dom';
+import { clientUrls } from '../../../utils/urls/clientUrls';
 
 const NavBar: FC = () => {
   const user = useSelector(selectUser);
@@ -18,7 +19,7 @@ const NavBar: FC = () => {
       <Outlet />
       <S.StyledNav>
         <S.NavItemBox>
-          <a href="/home">
+          <a href={clientUrls.home}>
             <Box width="2.8rem">
               <img src={imgUrls.icons.logoSmall} alt="Logo" />
             </Box>
@@ -26,19 +27,19 @@ const NavBar: FC = () => {
           </a>
         </S.NavItemBox>
         <S.NavItemBox>
-          <a href="/search">
+          <a href={clientUrls.search}>
             <FaSearch size={21} color="323232" />
             <p>Search</p>
           </a>
         </S.NavItemBox>
         <S.NavItemBox>
-          <a href="/give">
+          <a href={clientUrls.give}>
             <FaGift size={21} color="323232" />
             <p>Give Away</p>
           </a>
         </S.NavItemBox>
         <S.NavItemBox>
-          <a href="messages">
+          <a href={clientUrls.messages}>
             {data && newMessages && newMessages > 0 ? (
               <S.Badge>{newMessages}</S.Badge>
             ) : (
@@ -51,14 +52,14 @@ const NavBar: FC = () => {
         </S.NavItemBox>
         {user ? (
           <S.NavItemBox>
-            <a href="account">
+            <a href={clientUrls.account}>
               <FaUserAlt size={21} color="323232" />
               <p>Account</p>
             </a>
           </S.NavItemBox>
         ) : (
           <S.NavItemBox>
-            <a href="signin">
+            <a href={clientUrls.signin}>
               <FaUserAlt size={21} color="323232" />
               <p>Sign In</p>
             </a>

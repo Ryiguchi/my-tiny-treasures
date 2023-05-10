@@ -19,7 +19,6 @@ const chatSchema = new mongoose_1.default.Schema({
     post: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'Post',
-        // required: true,
     },
     messages: [
         {
@@ -39,6 +38,7 @@ const chatSchema = new mongoose_1.default.Schema({
         type: [mongoose_1.default.Schema.Types.ObjectId],
         required: [true, 'A chat must have users'],
     },
+    agreedUsers: [mongoose_1.default.Schema.Types.ObjectId],
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
@@ -60,6 +60,21 @@ chatSchema.virtual('newMsg').get(function () {
     }
     const newMsg = [{ [user1Id]: new1, [user2Id]: new2 }];
     return newMsg;
+});
+chatSchema.virtual('status').get(function () {
+    if (this.agreedUsers.length === 0) {
+        return 'active';
+    }
+    else if (this.agreedUsers.length === 1) {
+        return 'pending';
+    }
+    else if (this.agreedUsers.length === 2) {
+        return 'completed';
+    }
+});
+chatSchema.pre(/^find/, function (next) {
+    this.populate('post');
+    next();
 });
 chatSchema.pre('save', function (next) {
     this.id = this._id.toString();

@@ -44,6 +44,10 @@ var Ages;
 })(Ages || (Ages = {}));
 const postSchema = new mongoose_1.default.Schema({
     id: String,
+    active: {
+        type: Boolean,
+        defauult: true,
+    },
     title: String,
     description: {
         type: String,

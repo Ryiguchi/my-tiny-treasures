@@ -12,6 +12,7 @@ import { User } from '../types/interfaces/state.interface';
 import { MsgData } from '../types/interfaces/message.interface';
 import { QueryClientResults } from '../types/interfaces/reactQuery.interface';
 import { Chat } from '../types/interfaces/chat.interface';
+import { TradeStatus } from '../types/enums/enums';
 
 type MutationType = UseMutationResult<
   void,
@@ -32,6 +33,12 @@ interface SocketArgs {
   mutation: MutationType;
 }
 
+interface TradeUpdateData {
+  status: TradeStatus;
+  error?: string;
+  room: string;
+}
+
 export const socket = io(baseUrl, {
   // autoConnect: false,
 });
@@ -43,6 +50,16 @@ export const onSocket = (args: SocketArgs) => {
     onMessageIn(msgData, args.mutation, args.user)
   );
   socket.on('room', (room: string) => onRoom(room, args.navigate));
+  socket.on('trade update', (tradeUpdateData: TradeUpdateData) => {
+    const { status, room } = tradeUpdateData;
+    if (status === 'completed') {
+      // send toast
+    }
+    if (status === 'failed') {
+      // send error toast
+    }
+    queryClient.refetchQueries(['chat', room]);
+  });
 };
 
 export const offSocket = (args: SocketArgs) => {

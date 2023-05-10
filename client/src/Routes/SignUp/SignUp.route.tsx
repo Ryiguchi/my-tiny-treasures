@@ -8,18 +8,11 @@ import { imgUrls } from '../../utils/urls/imgUrls';
 const SignUp: FC = () => {
   return (
     <S.Wrapper>
-      <Box padding="2.4rem 3.2rem">
-        <Box marginBottom="3.2rem" gap="3.2rem">
-          <Box width="100%" objectFit="cover" marginBottom="1.6rem">
-            <img src={imgUrls.icons.logoBig} alt="Logo" />
-          </Box>
-          <p>Create an account to exchange items for free.</p>
+      <Box padding="2.4rem 3.2rem" gap="2.4rem">
+        <Box width="100%" objectFit="cover">
+          <img src={imgUrls.icons.logoBig} alt="Logo" />
         </Box>
         <SignUpForm />
-
-        <Box margin="3.2rem 0 0 0" gap="3.2rem">
-          <Footer />
-        </Box>
       </Box>
     </S.Wrapper>
   );

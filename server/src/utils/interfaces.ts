@@ -15,6 +15,7 @@ export interface BasicUserData {
   email: string;
   location: LocationData;
   saved: PostDocument[];
+  credits: number;
 }
 
 export interface ChatMessage {
@@ -29,7 +30,7 @@ export interface ChatData {
   newMsgs: number;
   latestMsg: ChatMessage;
   users: string[];
-  post: string;
+  post: PostDocument;
 }
 
 export interface OnJoinData {

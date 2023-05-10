@@ -25,3 +25,11 @@ export const HeroTextBox = styled.div`
     width: 18rem;
   }
 `;
+
+export const Divider = styled.div`
+  content: '';
+  font-size: 1.6rem;
+  width: 100%;
+  margin-top: 2.4rem;
+  border-top: 1px solid #aaa;
+`;

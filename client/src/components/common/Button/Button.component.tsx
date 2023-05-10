@@ -4,7 +4,7 @@ import { ButtonType } from './button.types';
 import Box from '../Box/Box.component';
 
 interface ButtonProps {
-  buttonType: ButtonType;
+  buttonType: ButtonType | undefined;
   type?: 'button' | 'submit';
   children?: ReactNode;
   ref?: RefObject<HTMLButtonElement>;

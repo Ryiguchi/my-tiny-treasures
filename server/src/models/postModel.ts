@@ -31,6 +31,7 @@ enum Ages {
 
 export interface PostDocumentWithoutEnum extends mongoose.Document {
   id: string;
+  active: boolean;
   title: string;
   description: string;
   itemCount: number;
@@ -61,6 +62,10 @@ export interface PostDocumentWithEnums extends PostDocumentWithoutEnum {
 const postSchema = new mongoose.Schema<PostDocument>(
   {
     id: String,
+    active: {
+      type: Boolean,
+      defauult: true,
+    },
     title: String,
     description: {
       type: String,

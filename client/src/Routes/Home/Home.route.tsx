@@ -12,7 +12,7 @@ const Home: FC = () => {
     queryClient.getQueryData(['enums']);
 
   return (
-    <>
+    <Box gap="2.4rem">
       <Box width="100%" height="33rem" marginTop="5rem" position="relative">
         <S.HeroImg src={imgUrls.homeMain} alt="Kid on bike" />
         <S.HeroTextBox>
@@ -22,14 +22,13 @@ const Home: FC = () => {
       </Box>
       <Box padding="0 3.2rem">
         {enumsData?.data.data[0].main.map((category, i, arr) => (
-          <CategorySlider
-            lastElement={i === arr.length - 1}
-            key={category}
-            category={category}
-          />
+          <>
+            <CategorySlider key={category} category={category} />
+            {i < arr.length - 1 && <S.Divider>&nbsp;</S.Divider>}
+          </>
         ))}
       </Box>
-    </>
+    </Box>
   );
 };
 

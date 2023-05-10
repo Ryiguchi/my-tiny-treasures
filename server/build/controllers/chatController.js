@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.markAsSeen = exports.updateChatWithMsg = exports.getChatFromUserIds = exports.getMyChat = void 0;
+exports.updateChatAgreedUsers = exports.markAsSeen = exports.updateChatWithMsg = exports.getChatFromUserIds = exports.getMyChat = void 0;
 const catchAsync_1 = require("../utils/catchAsync");
 const chatModel_1 = __importDefault(require("../models/chatModel"));
 const appError_1 = __importDefault(require("../utils/appError"));
+const userModel_1 = __importDefault(require("../models/userModel"));
 exports.getMyChat = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const roomId = req.params.roomId;
     const chat = yield chatModel_1.default.findById(roomId).populate('post');
@@ -33,72 +34,6 @@ exports.getMyChat = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(v
         },
     });
 }));
-// export const createChat = catchAsync(
-//   async (req: CustomRequest, res: Response, next: NextFunction) => {
-//     const data = {
-//       messages: [],
-//       users: [req.params.myId, req.params.chatWithId],
-//     };
-//     const chat = await Chat.create(data);
-//     res.status(200).json({
-//       status: 'success',
-//       data: {
-//         data: chat,
-//       },
-//     });
-//   }
-// );
-// export const addMessage = catchAsync(
-//   async (req: CustomRequest, res: Response, next: NextFunction) => {
-//     const chatId = req.params.chatId;
-//     const updatedChat = await Chat.findByIdAndUpdate(
-//       chatId,
-//       {
-//         $push: { messages: req.body },
-//         $addToSet: { newMessage: req.body.user },
-//       },
-//       {
-//         new: true,
-//       }
-//     );
-//     res.status(200).json({
-//       status: 'success',
-//       data: {
-//         data: updatedChat,
-//       },
-//     });
-//   }
-// );
-// export const getPreviews = catchAsync(
-//   async (req: CustomRequest, res: Response, next: NextFunction) => {
-//     const userId = req.user._id.toString();
-//     const data: UserDocument | null = await User.findById(userId).populate(
-//       'chats'
-//     );
-//     if (!data) {
-//       return next(new AppError('No chats found!', 400));
-//     }
-//     let chats: ChatPreview[] = [];
-//     data.chats.forEach(chat => {
-//       const newMsgs = chat.messages.reduce((acc, cur) => {
-//         return cur.seen || cur.user.toString() === userId ? acc : acc + 1;
-//       }, 0);
-//       const previewData: ChatPreview = {
-//         id: chat._id.toString(),
-//         latestMsg: chat.messages[chat.messages.length - 1],
-//         unread: newMsgs,
-//       };
-//       chats.push(previewData);
-//     });
-//     res.status(200).json({
-//       status: 'success',
-//       results: chats.length,
-//       data: {
-//         data: chats,
-//       },
-//     });
-//   }
-// );
 // FROM SOCKET
 const getChatFromUserIds = (chatData) => __awaiter(void 0, void 0, void 0, function* () {
     let chat;
@@ -149,3 +84,35 @@ const markAsSeen = (room) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.markAsSeen = markAsSeen;
+const updateChatAgreedUsers = ({ room, userId, agree, }) => __awaiter(void 0, void 0, void 0, function* () {
+    const updateQuery = { agreedUsers: userId };
+    const update = agree ? { $addToSet: updateQuery } : { $pull: updateQuery };
+    const options = { new: true };
+    try {
+        const chat = yield chatModel_1.default.findByIdAndUpdate(room, update, options);
+        if (!chat)
+            throw new Error('There was a problem updating the Chat!');
+        if (chat.status === 'completed') {
+            yield exchangeTokens(chat);
+            return 'completed';
+        }
+        return 'success';
+    }
+    catch (error) {
+        throw new Error('There was a problem updating the Chat!');
+    }
+});
+exports.updateChatAgreedUsers = updateChatAgreedUsers;
+const exchangeTokens = (chat) => __awaiter(void 0, void 0, void 0, function* () {
+    const post = chat.post;
+    const sellerId = post.user;
+    const buyerId = chat.users.filter(user => user !== sellerId);
+    const buyer = yield userModel_1.default.findByIdAndUpdate(buyerId, { $inc: { credits: -1 } }, { new: true });
+    if (!buyer) {
+        throw new Error('There was a problem updating the Chat!');
+    }
+    const seller = yield userModel_1.default.findByIdAndUpdate(sellerId, { $inc: { credits: 1 } }, { new: true });
+    if (!seller) {
+        throw new Error('There was a problem updating the Chat!');
+    }
+});

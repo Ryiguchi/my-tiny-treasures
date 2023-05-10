@@ -12,11 +12,11 @@ const GoBackNav: FC<GoBackNavProps> = ({ title }) => {
     <Box position="relative" padding="3rem">
       <Box
         position="absolute"
-        left="1rem"
+        left="3rem"
         top="50%"
         transform="translateY(-50%)"
       >
-        <FaArrowLeft onClick={() => window.history.back()} size={36} />
+        <FaArrowLeft onClick={() => window.history.back()} size={26} />
       </Box>
       <Title>{title}</Title>
     </Box>

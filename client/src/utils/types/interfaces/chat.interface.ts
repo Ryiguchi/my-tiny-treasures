@@ -1,3 +1,4 @@
+import { ChatStatus } from '../enums/enums';
 import { Post } from './state.interface';
 
 interface NumberObject {
@@ -5,10 +6,12 @@ interface NumberObject {
 }
 
 export interface Chat {
+  status: ChatStatus;
   newMsg: [NumberObject, NumberObject];
   messages: ChatMessage[];
   post: Post;
   users: string[];
+  agreedUsers: string[];
   _id: string;
   id: string;
 }
@@ -25,7 +28,7 @@ export interface ChatData {
   newMsgs: number;
   latestMsg: ChatMessage;
   users: string[];
-  post: string;
+  post: Post;
 }
 
 export interface ChatDataEmitJoin {

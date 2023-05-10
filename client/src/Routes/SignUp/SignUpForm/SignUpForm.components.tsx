@@ -46,46 +46,36 @@ const SignUpForm: FC = () => {
   return (
     <Wrapper>
       <form onSubmit={signUp}>
-        <Box gap="6.4rem">
-          <Box gap="1.2rem">
-            <Box gap="4.8rem" alignItems="center">
-              <h2>Sign Up</h2>
-              <Input label="Name" onChange={e => setName(e.target.value)} />
-              <Box width="100%" gap="2.4rem">
-                <Input
-                  label="Email"
-                  type="email"
-                  onChange={e => setEmail(e.target.value)}
-                />
-                <Input
-                  label="Repeat Email"
-                  onChange={e => setEmailConfirm(e.target.value)}
-                  type="email"
-                />
-              </Box>
-              <Box width="100%" gap="2.4rem">
-                <Input
-                  label="Password"
-                  onChange={e => setPassword(e.target.value)}
-                  type="password"
-                />
-                <Input
-                  label="Repeat Password"
-                  onChange={e => setPasswordConfirm(e.target.value)}
-                  type="password"
-                />
-              </Box>
-            </Box>
-          </Box>
-          <Box>
-            <Button type="submit" buttonType={ButtonType.Primary}>
-              Sign Up
-            </Button>
-          </Box>
+        <Box gap="2.4rem" alignItems="center" padding="1.2rem 0">
+          <h2>Sign Up</h2>
+          <Input label="Name" onChange={e => setName(e.target.value)} />
+
+          <Input
+            label="Email"
+            type="email"
+            onChange={e => setEmail(e.target.value)}
+          />
+          <Input
+            label="Repeat Email"
+            onChange={e => setEmailConfirm(e.target.value)}
+            type="email"
+          />
+
+          <Input
+            label="Password"
+            onChange={e => setPassword(e.target.value)}
+            type="password"
+          />
+          <Input
+            label="Repeat Password"
+            onChange={e => setPasswordConfirm(e.target.value)}
+            type="password"
+          />
+
+          <Button type="submit" buttonType={ButtonType.Primary}>
+            Sign Up
+          </Button>
         </Box>
-        <a onClick={() => navigate('/signin')}>
-          Already have an account?&nbsp;<span>Sign In</span>
-        </a>
       </form>
     </Wrapper>
   );

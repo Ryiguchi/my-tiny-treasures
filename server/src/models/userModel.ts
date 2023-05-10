@@ -156,6 +156,7 @@ export const modifyBasicUserData = (userDoc: UserDocument): BasicUserData => {
     email: userDoc.email,
     location: userDoc.location,
     saved: userDoc.saved,
+    credits: userDoc.credits,
   };
 };
 
@@ -179,7 +180,7 @@ export const modifyMsgData = (userDoc: UserDocument): UserMsgData => {
       newMsgs,
       latestMsg: chat.messages[chat.messages.length - 1],
       users: chat.users.map(user => user.toString()),
-      post: chat.post.toString(),
+      post: chat.post as PostDocument,
     };
 
     chatData.push(data);

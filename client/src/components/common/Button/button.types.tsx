@@ -88,13 +88,16 @@ export const buttons: Buttons = {
     activeBackground: theme.gradient.pending,
   },
   completed: {
-    background: theme.gradient.completed,
-    hoverBackground: theme.gradient.completed,
-    activeBackground: theme.gradient.completed,
+    color: theme.color.primary,
+    background: '#fff',
+    border: `1px solid ${theme.color.text}`,
+    hoverBackground: '#fff',
+    activeBackground: '#fff',
   },
   filter: {
     background: '#fff',
     color: theme.color.text,
+
     hoverBackground: theme.color.grayDark,
     activeBackground: theme.color.grayLight1,
   },

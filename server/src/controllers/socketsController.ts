@@ -2,11 +2,11 @@ import { Server } from 'socket.io';
 import {
   getChatFromUserIds,
   markAsSeen,
+  updateChatAgreedUsers,
   updateChatWithMsg,
 } from './chatController';
-import { getUserById } from './userController';
-import { modifyMsgData } from '../models/userModel';
 import { OnJoinData } from '../utils/interfaces';
+import { TradeStatus } from '../utils/types/enums';
 
 export interface MsgData {
   room: string;
@@ -14,40 +14,43 @@ export interface MsgData {
   senderId: string;
   recipientId: string;
 }
+export interface TradeData {
+  room: string;
+  userId: string;
+  agree: boolean;
+}
 
 export const listen = (io: Server): void => {
   const connectedUsers: { [key: string]: string } = {};
 
   io.on('connection', socket => {
-    let room: string;
-    let userId: string;
-    let socketId: string;
-
     // SIGN IN AND REGISTER ID
     socket.on('sign in', async (id: string) => {
-      socketId = socket.id;
-      userId = id;
+      const socketId = socket.id;
+      const userId = id;
 
       connectedUsers[id] = socket.id;
     });
 
     // JOIN ROOM
-    socket.on('join', async (chatData: OnJoinData) => {
+    socket.on('get room', async (chatData: OnJoinData) => {
       const chat = await getChatFromUserIds(chatData);
       if (chat instanceof Error) {
         emitError(chat);
         return;
       }
 
-      room = chat.id.toString();
-      socket.join(room);
+      const room = chat.id.toString();
       socket.emit('room', room);
     });
 
+    socket.on('join room', room => {
+      socket.join(room);
+    });
+
     // LEAVE A ROOM
-    socket.on('leave', () => {
+    socket.on('leave', (room: string) => {
       socket.leave(room);
-      room = '';
     });
 
     // SEND MESSAGE
@@ -56,7 +59,7 @@ export const listen = (io: Server): void => {
 
       const chat = await updateChatWithMsg(msg);
 
-      io.to([recipientSocketId, socketId]).emit('message in', msg);
+      io.to([recipientSocketId, socket.id]).emit('message in', msg);
 
       if (chat instanceof Error) {
         emitError(chat);
@@ -65,6 +68,36 @@ export const listen = (io: Server): void => {
 
     socket.on('seen', async (room: string) => {
       await markAsSeen(room);
+    });
+
+    socket.on('writing', (room: string) => {
+      console.log(socket.rooms);
+      socket.to(room).emit('writing');
+    });
+
+    socket.on('stop writing', (room: string) => {
+      socket.to(room).emit('stop writing');
+    });
+
+    socket.on('trade', async (tradeData: TradeData) => {
+      const { room } = tradeData;
+      try {
+        const status = await updateChatAgreedUsers(tradeData);
+
+        if (status === TradeStatus.Completed) {
+          io.in(room).emit('trade update', { status, room });
+        } else if (status === TradeStatus.Success) {
+          io.in(room).emit('trade update', { status, room });
+        } else {
+          throw new Error('There was a problem with the trade');
+        }
+      } catch (error: any) {
+        io.in(room).emit('trade update', {
+          status: TradeStatus.Failed,
+          error: error.message,
+          room,
+        });
+      }
     });
 
     // RETRIEVE NEW MESSAGES

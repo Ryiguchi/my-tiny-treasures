@@ -1,16 +1,19 @@
 import mongoose from 'mongoose';
 import User from './userModel';
 import { ChatMessage } from '../utils/interfaces';
+import { PostDocument } from './postModel';
 
 interface NewMsg {
   [key: string]: number;
 }
 
 export interface ChatDocument extends mongoose.Document {
-  post: mongoose.Schema.Types.ObjectId;
+  post: mongoose.Schema.Types.ObjectId | PostDocument;
+  status: 'active' | 'pending' | 'completed';
   messages: ChatMessage[];
   id: string;
   users: [mongoose.Schema.Types.ObjectId, mongoose.Schema.Types.ObjectId];
+  agreedUsers: mongoose.Schema.Types.ObjectId[];
   newMsg: [NewMsg, NewMsg];
 }
 
@@ -20,7 +23,6 @@ const chatSchema = new mongoose.Schema<ChatDocument>(
     post: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Post',
-      // required: true,
     },
     messages: [
       {
@@ -40,6 +42,7 @@ const chatSchema = new mongoose.Schema<ChatDocument>(
       type: [mongoose.Schema.Types.ObjectId],
       required: [true, 'A chat must have users'],
     },
+    agreedUsers: [mongoose.Schema.Types.ObjectId],
   },
   {
     toJSON: { virtuals: true },
@@ -64,6 +67,21 @@ chatSchema.virtual('newMsg').get(function () {
   const newMsg = [{ [user1Id]: new1, [user2Id]: new2 }];
 
   return newMsg;
+});
+
+chatSchema.virtual('status').get(function () {
+  if (this.agreedUsers.length === 0) {
+    return 'active';
+  } else if (this.agreedUsers.length === 1) {
+    return 'pending';
+  } else if (this.agreedUsers.length === 2) {
+    return 'completed';
+  }
+});
+
+chatSchema.pre(/^find/, function (next) {
+  this.populate('post');
+  next();
 });
 
 chatSchema.pre('save', function (next) {

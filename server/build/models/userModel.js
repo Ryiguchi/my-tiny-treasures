@@ -159,6 +159,7 @@ const modifyBasicUserData = (userDoc) => {
         email: userDoc.email,
         location: userDoc.location,
         saved: userDoc.saved,
+        credits: userDoc.credits,
     };
 };
 exports.modifyBasicUserData = modifyBasicUserData;
@@ -179,7 +180,7 @@ const modifyMsgData = (userDoc) => {
             newMsgs,
             latestMsg: chat.messages[chat.messages.length - 1],
             users: chat.users.map(user => user.toString()),
-            post: chat.post.toString(),
+            post: chat.post,
         };
         chatData.push(data);
     });

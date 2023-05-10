@@ -6,6 +6,9 @@ import { socket } from '../../utils/socket/socket';
 import { queryClient } from '../../main';
 import { useMsgData } from '../../utils/hooks/reactQueryHooks';
 import { ChatData } from '../../utils/types/interfaces/chat.interface';
+import GoBackNav from '../../components/common/GoBackNav/GoBackNav.component';
+import Box from '../../components/common/Box/Box.component';
+import MessageCard from './MessageCard/MessageCard.component';
 
 const Messages: React.FC = () => {
   const navigate = useNavigate();
@@ -19,28 +22,27 @@ const Messages: React.FC = () => {
       users: chat.users,
       post: chat.post,
     };
-    socket.emit('join', chatData);
+    socket.emit('get room', chatData);
     await queryClient.refetchQueries(['msgData']);
   };
 
   return (
-    <S.MessagesContainer>
+    <S.Wrapper gap="2.4rem">
+      <GoBackNav title="Messages" />
       {chatData && (
         <ul>
-          {chatData.map((chat: any) => {
-            console.log(chat);
-            return (
-              <li key={chat.chatId} onClick={() => goToChat(chat)}>
-                <div>User: {chat.chatId}</div>
-                <div>LastMessage: {chat.latestMsg.text}</div>
-                <div>NewMessages: {chat.newMsgs}</div>
-              </li>
-            );
-          })}
+          <Box gap="2.4rem">
+            {chatData.map(chat => (
+              <MessageCard
+                chat={chat}
+                key={chat.chatId}
+                onClick={() => goToChat(chat)}
+              />
+            ))}
+          </Box>
         </ul>
       )}
-      <button onClick={() => navigate('/')}>Home</button>
-    </S.MessagesContainer>
+    </S.Wrapper>
   );
 };
 

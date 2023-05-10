@@ -7,6 +7,7 @@ export interface User {
   newMessages: number;
   location?: GeoLocation;
   saved: string[];
+  credits: number;
 }
 export interface Post {
   mainCategory: string;

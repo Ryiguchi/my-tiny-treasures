@@ -24,7 +24,7 @@ interface DivProps {
   flexGrow?: number;
   flexShrink?: number;
   flexBasis?: number;
-  flex?: string;
+  flex?: string | number;
   gridTemplateColumns?: string;
   padding?: string;
   margin?: string;
@@ -53,6 +53,7 @@ interface DivProps {
   boxShadow?: string;
   transform?: string;
   gridColumn?: string;
+  alignSelf?: string;
 }
 
 export const Div = styled.div<DivProps>`
@@ -64,7 +65,7 @@ export const Div = styled.div<DivProps>`
   flex-basis: ${({ flexBasis }) => flexBasis || 'auto'};
   flex-shrink: ${({ flexShrink }) => flexShrink || 1};
   flex-wrap: ${({ flexWrap }) => flexWrap || 'nowrap'};
-  flex: ${({ flex }) => flex || '0 1 auto'};
+  flex: ${({ flex }) => flex || ''};
   align-items: ${({ alignItems }) => alignItems || 'stretch'};
   grid-template-columns: ${({ gridTemplateColumns }) =>
     gridTemplateColumns || 'auto'};
@@ -95,4 +96,5 @@ export const Div = styled.div<DivProps>`
   box-shadow: ${({ boxShadow }) => boxShadow || 'none'};
   transform: ${({ transform }) => transform || 'none'};
   grid-column: ${({ gridColumn }) => gridColumn || ''};
+  align-self: ${({ alignSelf }) => alignSelf || ''};
 `;

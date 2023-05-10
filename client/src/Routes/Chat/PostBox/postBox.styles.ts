@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { theme } from '../../../styles/themes';
+import Box from '../../../components/common/Box/Box.component';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled(Box)`
   border-radius: 8px;
   box-shadow: ${theme.shadow};
   img {
@@ -12,10 +13,5 @@ export const Wrapper = styled.div`
   h2 {
     font-size: 1.8rem;
     font-weight: 400;
-    margin-bottom: 1.6rem;
-  }
-
-  p {
-    font-size: 1.3rem;
   }
 `;

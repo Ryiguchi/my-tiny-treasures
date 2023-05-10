@@ -41,7 +41,7 @@ const PostCardLarge: React.FC<PostCardLargeProps> = ({ post }) => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ): void => {
     const chatData = getChatData(e);
-    socket.emit('join', chatData);
+    socket.emit('get room', chatData);
   };
 
   // HELPERS

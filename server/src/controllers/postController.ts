@@ -146,7 +146,6 @@ export const createPost = catchAsync(
       : [];
 
     const itemCount = req.body.itemCount && parseInt(req.body.itemCount);
-    console.log(req.user);
 
     const postData = {
       title: req.body.title,
