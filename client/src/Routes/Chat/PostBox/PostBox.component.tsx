@@ -51,7 +51,7 @@ const PostBox: FC<PostBoxProps> = ({ chat }) => {
               !chat.agreedUsers.includes(user.id))) && (
             <Button
               onClick={() => handleTrade(true)}
-              buttonType={ButtonType.Trade}
+              buttonType={ButtonType.SmallGreen}
             >
               Trade
             </Button>
@@ -61,13 +61,13 @@ const PostBox: FC<PostBoxProps> = ({ chat }) => {
           chat.agreedUsers.includes(user.id) && (
             <Button
               onClick={() => handleTrade(false)}
-              buttonType={ButtonType.Pending}
+              buttonType={ButtonType.SmallYellow}
             >
               Pending
             </Button>
           )}
         {chat.status === ChatStatus.Completed && (
-          <Button buttonType={ButtonType.Completed}>Completed</Button>
+          <Button buttonType={ButtonType.SmallTransparent}>Completed</Button>
         )}
 
         <Box gridColumn="1 / -1">

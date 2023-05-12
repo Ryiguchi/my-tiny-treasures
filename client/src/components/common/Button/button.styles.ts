@@ -8,6 +8,8 @@ export const StyledButton = styled.button<{ buttonType: ButtonType }>`
   border: ${({ buttonType }) => buttons[buttonType].border || 'none'};
   font-size: ${({ buttonType }) => buttons[buttonType].fontSize || '2rem'};
   font-weight: ${({ buttonType }) => buttons[buttonType].fontWeight || 700};
+  font-family: ${({ buttonType }) =>
+    buttons[buttonType].fontFamily || 'Open Sans'};
 
   &:hover {
     color: ${({ buttonType }) => buttons[buttonType].hoverColor || '#fff'};

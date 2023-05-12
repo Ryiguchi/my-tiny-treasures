@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import PostCardMedium from '../../PostCardMedium/PostCardMedium.component';
-import { Post } from '../../../utils/types/interfaces/general.interfaces';
 import Box from '../Box/Box.component';
+import { Post } from '../../../utils/types/interfaces/state.interface';
 
 interface PostListProps {
   posts: Post[];

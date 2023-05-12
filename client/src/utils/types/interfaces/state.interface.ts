@@ -10,8 +10,8 @@ export interface User {
   credits: number;
 }
 export interface Post {
-  mainCategory: string;
-  subCategory: string;
+  group: string;
+  categories: string[];
   condition: string;
   createdAt: string;
   description: string;
@@ -19,15 +19,15 @@ export interface Post {
   images: string[];
   itemCount: number;
   location: {
-    coordinates: [number, number];
-    type: string;
+    coordinates?: [number, number];
+    type?: string;
     city?: string;
   };
-  size?: number;
+  sizes?: string[];
   age: string;
   title: string;
-  user: string;
+  user?: string;
   userName: string;
-  _id: string;
+  _id?: string;
   distance?: number;
 }

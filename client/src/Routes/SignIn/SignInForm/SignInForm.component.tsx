@@ -39,7 +39,7 @@ const SignInForm: FC = () => {
           />
           <span id="forgot-text">Forgot your password?</span>
 
-          <Button type="submit" buttonType={ButtonType.LogIn}>
+          <Button type="submit" buttonType={ButtonType.Secondary}>
             Log In
           </Button>
           <Button

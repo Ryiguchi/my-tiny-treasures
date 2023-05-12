@@ -27,7 +27,7 @@ const CategorySlider: FC<CategorySliderProps> = ({ category }) => {
   const handleGoToCategory = () => {
     const newQuery = `mainCategory=${category}`;
     dispatch(setQuery(newQuery));
-    dispatch(setQueryData(initialQueryData));
+    dispatch(setQueryData({ ...initialQueryData, MainCategories: [category] }));
 
     navigate(`/category/${category}`);
   };
@@ -35,7 +35,12 @@ const CategorySlider: FC<CategorySliderProps> = ({ category }) => {
   const handleGoToCategoryAndAge = (age: string): void => {
     const newQuery = `mainCategory=${category}&age=${age}`;
     dispatch(setQuery(newQuery));
-    dispatch(setQueryData({ ...initialQueryData, Age: [age] }));
+    dispatch(
+      setQueryData({
+        ...initialQueryData,
+        Age: [age],
+      })
+    );
 
     navigate(`/category/${category}`);
   };

@@ -1,37 +1,17 @@
 import styled from 'styled-components';
 import Box from '../Box/Box.component';
 import { theme } from '../../../styles/themes';
+import { StyledInput } from '../Input/input.styles';
+import { FaCaretDown } from 'react-icons/fa';
 
 interface InputProps {
   open: boolean;
 }
 
 export const BoxExtended = styled(Box)<InputProps>`
-  label {
-    height: 3rem;
-    color: ${theme.color.text};
-    padding: 0.4rem;
-  }
-
-  input {
-    width: 100%;
-    padding: 1.2rem;
-
-    background-color: #fff;
-    color: ${theme.color.text};
-
-    border: none;
-
-    border-radius: ${({ open }) => (open ? ' 10px 10px 0 0' : '10px')};
-
-    &:focus {
-      outline: 2px solid ${theme.color.primary};
-    }
-  }
-
   ul {
     position: absolute;
-    top: 8rem;
+    top: 5rem;
     z-index: 10;
 
     display: flex;
@@ -41,8 +21,7 @@ export const BoxExtended = styled(Box)<InputProps>`
     background-color: #fff;
     border-radius: 0 0 1rem 1rem;
     margin-top: -0.2rem;
-
-    /* border: 2px solid ${theme.color.primary}; */
+    font-size: 2rem;
 
     li {
       padding: 1.2rem;
@@ -52,6 +31,12 @@ export const BoxExtended = styled(Box)<InputProps>`
         color: #fff;
       }
     }
+  }
+
+  .hidden-input {
+    position: absolute;
+    opacity: 0;
+    z-index: -10;
   }
 `;
 
@@ -63,4 +48,12 @@ export const Modal = styled.div`
   width: 100vw;
   height: 100vh;
   z-index: 5;
+`;
+
+export const StyledSelect = styled(StyledInput)``;
+
+export const StyledCaretDown = styled(FaCaretDown)`
+  position: absolute;
+  right: 1.6rem;
+  top: 1rem;
 `;

@@ -6,6 +6,7 @@ import { Enum } from '../../utils/types/interfaces/enums.interface';
 import { ResponseWithData } from '../../utils/hooks/reactQueryHooks';
 import { imgUrls } from '../../utils/urls/imgUrls';
 import * as S from './home.styles';
+import Divider from '../../components/common/Divider/Divider.component';
 
 const Home: FC = () => {
   const enumsData: ResponseWithData<Enum[]> | undefined =
@@ -22,10 +23,10 @@ const Home: FC = () => {
       </Box>
       <Box padding="0 3.2rem">
         {enumsData?.data.data[0].main.map((category, i, arr) => (
-          <>
+          <Box key={category}>
             <CategorySlider key={category} category={category} />
-            {i < arr.length - 1 && <S.Divider>&nbsp;</S.Divider>}
-          </>
+            {i < arr.length - 1 && <Divider />}
+          </Box>
         ))}
       </Box>
     </Box>

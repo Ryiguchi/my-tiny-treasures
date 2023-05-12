@@ -67,10 +67,10 @@ const postSchema = new mongoose_1.default.Schema({
         ref: 'Enum',
         default: '6452654bfc9f011ef64dd9e1',
     },
-    mainCategory: String,
-    subCategory: String,
-    size: {
-        type: String,
+    group: String,
+    categories: [String],
+    sizes: {
+        type: [String],
         enum: Sizes,
     },
     age: {
@@ -105,7 +105,7 @@ const postSchema = new mongoose_1.default.Schema({
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
 });
-postSchema.index({ mainCategory: 1, age: 1 });
+postSchema.index({ group: 1, age: 1 });
 postSchema.index({ location: '2dsphere' });
 // TODO: KEEP!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Adds location data to post
@@ -126,39 +126,41 @@ postSchema.pre('save', function (next) {
     this.id = this._id.toString();
     next();
 });
-postSchema.pre('save', function (next) {
-    if (!this.isModified('size'))
-        // if (!this.isModified('size') || this.mainCategory !== 'Clothes')
-        return next();
-    switch (this.size) {
-        case Sizes.A:
-        case Sizes.B:
-        case Sizes.C:
-        case Sizes.D:
-        case Sizes.E:
-        case Sizes.F:
-            this.age = Ages.A;
-            break;
-        case Sizes.G:
-        case Sizes.H:
-            this.age = Ages.B;
-            break;
-        case Sizes.I:
-        case Sizes.J:
-            this.age = Ages.C;
-            break;
-        default:
-            break;
-    }
-    if (this.mainCategory !== 'Clothes')
-        this.size = null;
-    next();
-});
+// postSchema.pre('save', function (next) {
+//   if (!this.isModified('size'))
+//     // if (!this.isModified('size') || this.mainCategory !== 'Clothes')
+//     return next();
+//   switch (this.sizes) {
+//     case Sizes.A:
+//     case Sizes.B:
+//     case Sizes.C:
+//     case Sizes.D:
+//     case Sizes.E:
+//     case Sizes.F:
+//       this.age = Ages.A;
+//       break;
+//     case Sizes.G:
+//     case Sizes.H:
+//       this.age = Ages.B;
+//       break;
+//     case Sizes.I:
+//     case Sizes.J:
+//       this.age = Ages.C;
+//       break;
+//     default:
+//       break;
+//   }
+//   if (this.mainCategory !== 'Clothes') this.size = null;
+//   next();
+// });
 postSchema.methods.enumsAreValid = function (post) {
-    const { mainCategory, subCategory } = post;
+    const { group, categories } = post;
     const { main } = post.enums;
-    return (main.includes(mainCategory) &&
-        post.enums[mainCategory].includes(subCategory));
+    return (main.includes(group) &&
+        categories.reduce((acc, cur) => {
+            acc = post.enums[group].includes(cur) ? acc : false;
+            return acc;
+        }, true));
 };
 const Post = mongoose_1.default.model('Post', postSchema);
 exports.default = Post;

@@ -12,3 +12,8 @@ export const selectQueryData = createSelector(
   [querySlice],
   querySlice => querySlice.queryData
 );
+
+export const selectTempQueryData = createSelector(
+  [querySlice],
+  querySlice => querySlice.tempQueryData
+);

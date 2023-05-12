@@ -38,7 +38,7 @@ export enum Toys {
   D = 'Outdoor Toys',
   E = 'Educational',
   F = 'Creative',
-  G = 'Arts and Crafts',
+  G = 'Arts/Crafts',
   H = 'Sports',
   I = 'Games',
 }
@@ -50,7 +50,7 @@ export const toys = [
   'Outdoor Toys',
   'Educational',
   'Creative',
-  'Arts and Crafts',
+  'Arts/Crafts',
   'Sports',
   'Games',
 ];
@@ -88,6 +88,7 @@ export const sizes = [
 ];
 
 export const ages = ['0-3', '4-7', '8-11'];
+export const conditions = ['New', 'Good', 'Fair', 'Used'];
 
 export enum ChatStatus {
   Active = 'active',
@@ -99,4 +100,9 @@ export enum TradeStatus {
   Success = 'success',
   Completed = 'completed',
   Failed = 'failed',
+}
+
+export enum CheckboxSizes {
+  Small = 'small',
+  Large = 'large',
 }

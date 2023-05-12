@@ -35,10 +35,10 @@ export interface PostDocumentWithoutEnum extends mongoose.Document {
   title: string;
   description: string;
   itemCount: number;
-  size?: Sizes | null;
+  sizes?: Sizes[] | null;
   age: Ages;
-  mainCategory: string;
-  subCategory: string;
+  group: string;
+  categories: string[];
   condition: Condition;
   createdAt: Date;
   images: string[];
@@ -85,10 +85,10 @@ const postSchema = new mongoose.Schema<PostDocument>(
       ref: 'Enum',
       default: '6452654bfc9f011ef64dd9e1',
     },
-    mainCategory: String,
-    subCategory: String,
-    size: {
-      type: String,
+    group: String,
+    categories: [String],
+    sizes: {
+      type: [String],
       enum: Sizes,
     },
     age: {
@@ -126,7 +126,7 @@ const postSchema = new mongoose.Schema<PostDocument>(
   }
 );
 
-postSchema.index({ mainCategory: 1, age: 1 });
+postSchema.index({ group: 1, age: 1 });
 
 postSchema.index({ location: '2dsphere' });
 
@@ -150,44 +150,47 @@ postSchema.pre('save', function (next) {
   next();
 });
 
-postSchema.pre('save', function (next) {
-  if (!this.isModified('size'))
-    // if (!this.isModified('size') || this.mainCategory !== 'Clothes')
-    return next();
+// postSchema.pre('save', function (next) {
+//   if (!this.isModified('size'))
+//     // if (!this.isModified('size') || this.mainCategory !== 'Clothes')
+//     return next();
 
-  switch (this.size) {
-    case Sizes.A:
-    case Sizes.B:
-    case Sizes.C:
-    case Sizes.D:
-    case Sizes.E:
-    case Sizes.F:
-      this.age = Ages.A;
-      break;
-    case Sizes.G:
-    case Sizes.H:
-      this.age = Ages.B;
-      break;
-    case Sizes.I:
-    case Sizes.J:
-      this.age = Ages.C;
-      break;
-    default:
-      break;
-  }
+//   switch (this.sizes) {
+//     case Sizes.A:
+//     case Sizes.B:
+//     case Sizes.C:
+//     case Sizes.D:
+//     case Sizes.E:
+//     case Sizes.F:
+//       this.age = Ages.A;
+//       break;
+//     case Sizes.G:
+//     case Sizes.H:
+//       this.age = Ages.B;
+//       break;
+//     case Sizes.I:
+//     case Sizes.J:
+//       this.age = Ages.C;
+//       break;
+//     default:
+//       break;
+//   }
 
-  if (this.mainCategory !== 'Clothes') this.size = null;
+//   if (this.mainCategory !== 'Clothes') this.size = null;
 
-  next();
-});
+//   next();
+// });
 
 postSchema.methods.enumsAreValid = function (post: PostDocumentWithEnums) {
-  const { mainCategory, subCategory } = post;
+  const { group, categories } = post;
   const { main } = post.enums;
 
   return (
-    main.includes(mainCategory) &&
-    post.enums[mainCategory].includes(subCategory)
+    main.includes(group) &&
+    categories.reduce((acc, cur) => {
+      acc = post.enums[group].includes(cur) ? acc : false;
+      return acc;
+    }, true)
   );
 };
 

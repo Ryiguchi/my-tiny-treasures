@@ -1,11 +1,11 @@
-import { forwardRef, Ref, useEffect, FC, useRef } from 'react';
+import { useEffect, FC, useRef } from 'react';
 import Box from '../../../components/common/Box/Box.component';
 import { theme } from '../../../styles/themes';
 import Message from '../Message/Message.component';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../store/features/user/user.selectors';
 import { ChatMessage } from '../../../utils/types/interfaces/chat.interface';
-import * as S from './messageBox.styles';
+import * as S from './messagesBox.styles';
 
 interface Messages {
   messages: ChatMessage[];

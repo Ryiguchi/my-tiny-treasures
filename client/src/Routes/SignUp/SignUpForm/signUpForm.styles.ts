@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
     text-align: center;
 
     span {
-      color: ${theme.color.primary};
+      color: ${theme.color.primaryBlue};
     }
   }
   h2 {

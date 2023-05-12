@@ -41,9 +41,9 @@ const PostCardMedium: React.FC<PostCardMediumProps> = ({ post }) => {
             );
         })}
       </Box>
-      <h2>{post.mainCategory}</h2>
-      <p>{post.subCategory}</p>
-      <p>{post.size}</p>
+      <h2>{post.group}</h2>
+      <p>{post.categories}</p>
+      <p>{post.sizes}</p>
       <p>{post.age}</p>
       <p>{getDate(post.createdAt)}</p>
       <p>{post.distance}</p>

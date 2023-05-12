@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import Box from '../Box/Box.component';
 import * as S from './lightBox.styles';
-import { theme } from '../../../styles/themes';
 import { getIndex } from './lightBox.helpers';
 
 interface LightBoxProps {
@@ -19,22 +18,19 @@ const LightBox: FC<LightBoxProps> = ({ images }) => {
   return (
     <Box
       position="relative"
-      width="100%"
+      width="90%"
       maxWidth="40rem"
       height="30rem"
-      backgroundColor="#7B7777"
       margin="0 .4rem"
-      borderRadius={theme.radius.image}
-      boxShadow={theme.shadow}
+      alignItems="center"
+      justifyContent="center"
     >
-      <S.StyledArrowBack
-        onClick={() => setCurrentImg(getImgIndex('back'))}
-        size={48}
-      />
-      <S.StyledImg src={images[currentImg]} alt="Items for sale" />
+      <S.StyledArrowBack onClick={() => setCurrentImg(getImgIndex('back'))} />
+      <Box width="30rem">
+        <S.StyledImg src={images[currentImg]} alt="Items for sale" />
+      </Box>
       <S.StyledArrowForward
         onClick={() => setCurrentImg(getImgIndex('forward'))}
-        size={48}
       />
     </Box>
   );

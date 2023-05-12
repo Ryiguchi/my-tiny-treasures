@@ -32,7 +32,7 @@ export const listen = (io: Server): void => {
       connectedUsers[id] = socket.id;
     });
 
-    // JOIN ROOM
+    // GET A ROOM ID
     socket.on('get room', async (chatData: OnJoinData) => {
       const chat = await getChatFromUserIds(chatData);
       if (chat instanceof Error) {
@@ -44,6 +44,7 @@ export const listen = (io: Server): void => {
       socket.emit('room', room);
     });
 
+    // JOIN A ROOM WITH AN ID
     socket.on('join room', room => {
       socket.join(room);
     });
@@ -66,19 +67,23 @@ export const listen = (io: Server): void => {
       }
     });
 
+    // MARK MESSAGES AS SEEN
     socket.on('seen', async (room: string) => {
       await markAsSeen(room);
     });
 
+    // USER IS WRITING
     socket.on('writing', (room: string) => {
       console.log(socket.rooms);
       socket.to(room).emit('writing');
     });
 
+    // USER HAS STOPPED WRITING
     socket.on('stop writing', (room: string) => {
       socket.to(room).emit('stop writing');
     });
 
+    // USER MAKES A TRADE DECISION
     socket.on('trade', async (tradeData: TradeData) => {
       const { room } = tradeData;
       try {
@@ -99,18 +104,6 @@ export const listen = (io: Server): void => {
         });
       }
     });
-
-    // RETRIEVE NEW MESSAGES
-    // socket.on('get new messages', async (id: string) => {
-    //   const user = await getUserById(id, ['newMessages']);
-    //   if (user instanceof Error) {
-    //     emitError(user);
-    //     return;
-    //   }
-
-    //   const newMessages = user.newMessages;
-    //   socket.emit('new messages', newMessages);
-    // });
 
     // DISCONNECT
     socket.on('disconnect', () => {

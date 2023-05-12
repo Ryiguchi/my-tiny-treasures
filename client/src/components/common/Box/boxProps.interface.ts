@@ -7,6 +7,8 @@ export interface BoxProps {
   className?: string;
   flexDirection?: 'row';
   gap?: string;
+  columnGap?: string;
+  rowGap?: string;
   justifyContent?:
     | 'flex-start'
     | 'flex-end'

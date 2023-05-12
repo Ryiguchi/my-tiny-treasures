@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { theme } from '../../../styles/themes';
+import Box from '../../../components/common/Box/Box.component';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled(Box)`
   padding-bottom: 2.4rem;
 
   p {
@@ -13,5 +14,5 @@ export const CategoryTitle = styled.h1`
   font-size: 3.5rem;
   line-height: 52.5px;
   text-align: center;
-  color: ${theme.color.primary};
+  color: ${theme.color.primaryBlue};
 `;

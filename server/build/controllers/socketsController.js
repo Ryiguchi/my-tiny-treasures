@@ -21,7 +21,7 @@ const listen = (io) => {
             const userId = id;
             connectedUsers[id] = socket.id;
         }));
-        // JOIN ROOM
+        // GET A ROOM ID
         socket.on('get room', (chatData) => __awaiter(void 0, void 0, void 0, function* () {
             const chat = yield (0, chatController_1.getChatFromUserIds)(chatData);
             if (chat instanceof Error) {
@@ -31,6 +31,7 @@ const listen = (io) => {
             const room = chat.id.toString();
             socket.emit('room', room);
         }));
+        // JOIN A ROOM WITH AN ID
         socket.on('join room', room => {
             socket.join(room);
         });
@@ -47,16 +48,20 @@ const listen = (io) => {
                 emitError(chat);
             }
         }));
+        // MARK MESSAGES AS SEEN
         socket.on('seen', (room) => __awaiter(void 0, void 0, void 0, function* () {
             yield (0, chatController_1.markAsSeen)(room);
         }));
+        // USER IS WRITING
         socket.on('writing', (room) => {
             console.log(socket.rooms);
             socket.to(room).emit('writing');
         });
+        // USER HAS STOPPED WRITING
         socket.on('stop writing', (room) => {
             socket.to(room).emit('stop writing');
         });
+        // USER MAKES A TRADE DECISION
         socket.on('trade', (tradeData) => __awaiter(void 0, void 0, void 0, function* () {
             const { room } = tradeData;
             try {
@@ -79,16 +84,6 @@ const listen = (io) => {
                 });
             }
         }));
-        // RETRIEVE NEW MESSAGES
-        // socket.on('get new messages', async (id: string) => {
-        //   const user = await getUserById(id, ['newMessages']);
-        //   if (user instanceof Error) {
-        //     emitError(user);
-        //     return;
-        //   }
-        //   const newMessages = user.newMessages;
-        //   socket.emit('new messages', newMessages);
-        // });
         // DISCONNECT
         socket.on('disconnect', () => {
             for (let key in connectedUsers) {

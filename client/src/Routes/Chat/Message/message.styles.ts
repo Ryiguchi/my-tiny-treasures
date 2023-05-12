@@ -7,7 +7,7 @@ interface MessageBoxProps {
 }
 
 const sentStyle = css`
-  background: ${theme.gradient.message1Primary};
+  background: ${theme.gradient.primaryBlue};
   align-self: flex-end;
   color: #fff;
 `;

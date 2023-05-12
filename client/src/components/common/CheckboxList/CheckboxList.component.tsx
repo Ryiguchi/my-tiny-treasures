@@ -2,47 +2,67 @@ import { FC } from 'react';
 import Box from '../Box/Box.component';
 import { theme } from '../../../styles/themes';
 import { useSelector } from 'react-redux';
-import { selectQueryData } from '../../../store/features/query/query.selectors';
+import {
+  selectQueryData,
+  selectTempQueryData,
+} from '../../../store/features/query/query.selectors';
+import * as S from './checkboxList.styles';
+import { CheckboxSizes } from '../../../utils/types/enums/enums';
+import Divider from '../Divider/Divider.component';
 
 interface CheckboxListProps {
+  label?: string;
   name: string;
   items: string[];
-  checked?: boolean;
+  size: CheckboxSizes;
   setOptions: (name: string, item: string, isChecked: boolean) => void;
 }
 
 const CheckboxList: FC<CheckboxListProps> = ({
   name,
+  label = name,
   items,
   setOptions,
-  checked = true,
+  size,
 }) => {
-  const queryData = useSelector(selectQueryData);
+  const tempQueryData = useSelector(selectTempQueryData);
 
   return (
-    <Box
-      padding="2rem"
-      backgroundColor="#fff"
-      borderRadius={theme.radius.image}
-      boxShadow={theme.shadow}
-      gap="1rem"
+    <S.Wrapper
+      alignItems="center"
+      gap="3rem"
+      // padding="2rem"
     >
-      <h3>{name}:</h3>
-      <Box gap=".4rem" display="grid" gridTemplateColumns="1fr 1fr">
-        {items.map(item => (
-          <Box key={item} flexDirection="row" gap="2rem">
-            <input
-              onChange={e => setOptions(name, item, e.target.checked)}
+      <h2>{label}</h2>
+      <Box
+        display="grid"
+        gridTemplateColumns={
+          size === CheckboxSizes.Small ? 'repeat(3, 1fr)' : '1fr 1fr'
+        }
+        columnGap="2rem"
+        rowGap="2.4rem"
+        width="fit-content"
+      >
+        {items &&
+          items.map(item => (
+            <S.CheckboxContainer
+              size={size}
               key={item}
-              name={item}
-              type="checkbox"
-              checked={queryData[name].includes(item) && checked}
-            />
-            <label htmlFor={item}>{item}</label>
-          </Box>
-        ))}
+              selected={tempQueryData[name].includes(item)}
+            >
+              <input
+                onChange={e => setOptions(name, item, e.target.checked)}
+                key={item}
+                name={item}
+                type="checkbox"
+                checked={tempQueryData[name].includes(item)}
+              />
+
+              <p>{item}</p>
+            </S.CheckboxContainer>
+          ))}
       </Box>
-    </Box>
+    </S.Wrapper>
   );
 };
 

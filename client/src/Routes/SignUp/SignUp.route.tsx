@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import Footer from '../../components/common/Footer/Footer.component';
 import Box from '../../components/common/Box/Box.component';
 import SignUpForm from './SignUpForm/SignUpForm.components';
 import * as S from './signUp.styles';

@@ -63,8 +63,8 @@ function App() {
             <Route path="posts/:postId" element={<Post />} />
             <Route path="category/:category" element={<Category />} />
             <Route path="account" element={<Account />} />
-            <Route path="give" element={<Give />} />
           </Route>
+          <Route path="give" element={<Give />} />
           <Route path="messages" element={<Messages />} />
           <Route path="chats/:chatId" element={<ChatPage />} />
         </Route>

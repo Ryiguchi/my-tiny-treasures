@@ -5,23 +5,28 @@ export interface QueryData {
   Categories: string[];
   Sizes: string[];
   Age: string[];
+  Condition: string[];
   Sort: string[];
 }
 
 export const initialQueryData: QueryData = {
+  MainCategories: [],
   Categories: [],
   Sizes: [],
   Age: [],
+  Condition: [],
   Sort: [],
 };
 
 interface QueryState {
   query: string;
+  tempQueryData: QueryData;
   queryData: QueryData;
 }
 
 const initialState: QueryState = {
   query: '',
+  tempQueryData: initialQueryData,
   queryData: initialQueryData,
 };
 
@@ -35,9 +40,12 @@ const querySlice = createSlice({
     setQueryData: (state, { payload }: PayloadAction<QueryData>) => {
       state.queryData = payload;
     },
+    setTempQueryData: (state, { payload }: PayloadAction<QueryData>) => {
+      state.tempQueryData = payload;
+    },
   },
 });
 
-export const { setQuery, setQueryData } = querySlice.actions;
+export const { setQuery, setQueryData, setTempQueryData } = querySlice.actions;
 
 export default querySlice.reducer;

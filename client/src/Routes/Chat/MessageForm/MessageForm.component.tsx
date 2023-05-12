@@ -8,7 +8,6 @@ import Box from '../../../components/common/Box/Box.component';
 import { Wrapper } from './messageForm.styles';
 import { Chat } from '../../../utils/types/interfaces/chat.interface';
 import { MsgData } from '../../../utils/types/interfaces/message.interface';
-import { imgUrls } from '../../../utils/urls/imgUrls';
 
 interface MessageFormProps {
   chat: Chat;

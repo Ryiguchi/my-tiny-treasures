@@ -57,7 +57,7 @@ export const Badge = styled.span`
   font-weight: 700;
   font-size: 1.2rem;
   color: #fff;
-  background-color: ${theme.color.primary};
+  background-color: ${theme.color.primaryBlue};
 
   border-radius: 10px;
 `;

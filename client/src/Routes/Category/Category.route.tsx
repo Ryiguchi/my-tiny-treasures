@@ -15,20 +15,26 @@ import { queryClient } from '../../main';
 import {
   selectQuery,
   selectQueryData,
+  selectTempQueryData,
 } from '../../store/features/query/query.selectors';
-import { setQuery } from '../../store/features/query/querySlice';
+import {
+  initialQueryData,
+  setQuery,
+  setQueryData,
+  setTempQueryData,
+} from '../../store/features/query/querySlice';
 import { ResponseWithData, getPosts } from '../../utils/hooks/reactQueryHooks';
 import { Enum } from '../../utils/types/interfaces/enums.interface';
 import { imgUrls } from '../../utils/urls/imgUrls';
-import { PostQueryResult } from '../../utils/types/interfaces/post.interface';
 
 const Category: React.FC = () => {
-  const dispatch = useDispatch();
   const { category } = useParams();
+  const dispatch = useDispatch();
   const LoadMoreButton = useRef<HTMLDivElement>(null);
 
   const [isFitlerPopupOpen, setIsFilterPopupOpen] = useState<boolean>(false);
   const queryData = useSelector(selectQueryData);
+  const tempQueryData = useSelector(selectTempQueryData);
   const query = useSelector(selectQuery);
 
   const enumsData: ResponseWithData<Enum[]> | undefined =
@@ -56,10 +62,6 @@ const Category: React.FC = () => {
     enabled: !!query,
   });
 
-  // useEffect(() => {
-  //   getFilterResults();
-  // }, [category]);
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -78,13 +80,13 @@ const Category: React.FC = () => {
   }, [LoadMoreButton.current]);
 
   const getFilterResults = () => {
-    const categoriesString = queryData.Categories.join(',');
-    const sizesString = queryData.Sizes.join(',');
-    const ageString = queryData.Age.join(',');
+    const categoriesString = tempQueryData.Categories.join(',');
+    const sizesString = tempQueryData.Sizes.join(',');
+    const ageString = tempQueryData.Age.join(',');
     const sortString =
-      queryData.Sort[0] === 'Most Recent'
+      tempQueryData.Sort[0] === 'Most Recent'
         ? '-createdAt'
-        : queryData.Sort[0] === 'Distance'
+        : tempQueryData.Sort[0] === 'Distance'
         ? 'distance'
         : '';
 
@@ -106,74 +108,85 @@ const Category: React.FC = () => {
     }
 
     dispatch(setQuery(newQuery));
+    dispatch(setQueryData(tempQueryData));
+    dispatch(setTempQueryData(initialQueryData));
+    setIsFilterPopupOpen(false);
+  };
+
+  const handleCancelFiltering = () => {
+    dispatch(setTempQueryData(initialQueryData));
     setIsFilterPopupOpen(false);
   };
 
   const buttonType =
     isFetchingNextPage || isLoading
-      ? ButtonType.Pending
+      ? ButtonType.SmallYellow
       : !hasNextPage || isFetchingNextPage
-      ? ButtonType.Disabled
-      : ButtonType.Message;
+      ? ButtonType.SmallTransparent
+      : ButtonType.SmallGreen;
 
   return (
-    <Box
-      width="100%"
-      minHeight="100vh"
-      height="100%"
-      gap="2rem"
-      backgroundColor={theme.color.backgroundMain}
-    >
-      <Box
-        width="100%"
-        objectFit="contain"
-        maxHeight="30rem"
-        overflow="hidden"
-        justifyContent="center"
-      >
-        <S.MainImg src={imgUrls.clothesMain} alt="Clothes" />
-      </Box>
-      <Box
-        flexDirection="row"
-        gap="3rem"
-        justifyContent="center"
-        alignItems="center"
-        padding="0 2rem"
-      >
-        <Box width="100%" alignItems="flex-end">
-          <Button
-            onClick={() => setIsFilterPopupOpen(true)}
-            buttonType={ButtonType.Message}
+    <>
+      {category && enumsData && isFitlerPopupOpen ? (
+        <FilterPopup
+          onClick={handleCancelFiltering}
+          getFilterResults={getFilterResults}
+          categoryName={category}
+        />
+      ) : (
+        <Box
+          width="100%"
+          minHeight="100vh"
+          height="100%"
+          gap="2rem"
+          backgroundColor={theme.color.backgroundMain}
+        >
+          <Box
+            width="100%"
+            objectFit="contain"
+            maxHeight="30rem"
+            overflow="hidden"
+            justifyContent="center"
           >
-            Filter
-          </Button>
-        </Box>
-        {category && enumsData && isFitlerPopupOpen && (
-          <FilterPopup
-            categoryName={category}
-            subCategories={enumsData.data.data[0][category.toLowerCase()]}
-            onClick={() => setIsFilterPopupOpen(false)}
-            getFilterResults={getFilterResults}
-          />
-        )}
-      </Box>
-      {data &&
-        data.pages[0] &&
-        data.pages.map((data, i) => <PostList key={i} posts={data.posts} />)}
+            <S.MainImg src={imgUrls.clothesMain} alt="Clothes" />
+          </Box>
+          <Box
+            flexDirection="row"
+            gap="3rem"
+            justifyContent="center"
+            alignItems="center"
+            padding="0 2rem"
+          >
+            <Box width="100%" alignItems="center">
+              <Button
+                onClick={() => setIsFilterPopupOpen(true)}
+                buttonType={ButtonType.SmallGreen}
+              >
+                Filter
+              </Button>
+            </Box>
+          </Box>
+          {data &&
+            data.pages[0] &&
+            data.pages.map((data, i) => (
+              <PostList key={i} posts={data.posts} />
+            ))}
 
-      <Box alignItems="center">
-        <div ref={LoadMoreButton}>
-          <Button buttonType={buttonType} onClick={() => fetchNextPage()}>
-            {isFetchingNextPage || isLoading
-              ? 'Loading more...'
-              : isError
-              ? 'Error!'
-              : 'No more posts!'}
-          </Button>
-          {error instanceof Error && <p> error.message</p>}
-        </div>
-      </Box>
-    </Box>
+          <Box alignItems="center">
+            <div ref={LoadMoreButton}>
+              <Button buttonType={buttonType} onClick={() => fetchNextPage()}>
+                {isFetchingNextPage || isLoading
+                  ? 'Loading more...'
+                  : isError
+                  ? 'Error!'
+                  : 'No more posts!'}
+              </Button>
+              {error instanceof Error && <p> error.message</p>}
+            </div>
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 

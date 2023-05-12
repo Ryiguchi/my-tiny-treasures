@@ -52,10 +52,10 @@ export const onSocket = (args: SocketArgs) => {
   socket.on('room', (room: string) => onRoom(room, args.navigate));
   socket.on('trade update', (tradeUpdateData: TradeUpdateData) => {
     const { status, room } = tradeUpdateData;
-    if (status === 'completed') {
+    if (status === TradeStatus.Completed) {
       // send toast
     }
-    if (status === 'failed') {
+    if (status === TradeStatus.Failed) {
       // send error toast
     }
     queryClient.refetchQueries(['chat', room]);

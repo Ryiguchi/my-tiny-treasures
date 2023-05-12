@@ -64,7 +64,7 @@ const Account = () => {
       <button type="button" onClick={submitAddress}>
         Submit Your Address
       </button>
-      <Button onClick={signOutUser} buttonType={ButtonType.Trade}>
+      <Button onClick={signOutUser} buttonType={ButtonType.SmallGreen}>
         {' '}
         Sign Out
       </Button>

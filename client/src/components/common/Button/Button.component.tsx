@@ -9,6 +9,7 @@ interface ButtonProps {
   children?: ReactNode;
   ref?: RefObject<HTMLButtonElement>;
   iconLeft?: string | null;
+  disabled?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
@@ -25,7 +26,6 @@ const Button: FC<ButtonProps> = ({
       onClick={onClick}
       buttonType={buttonType}
       type={type}
-      disabled={buttonType === ButtonType.Disabled}
       {...otherProps}
     >
       <Box

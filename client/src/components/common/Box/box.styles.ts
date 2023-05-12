@@ -4,6 +4,8 @@ interface DivProps {
   display?: 'grid' | 'flex' | 'block' | 'inline-block' | 'none';
   flexDirection?: 'row';
   gap?: string;
+  columnGap?: string;
+  rowGap?: string;
   justifyContent?:
     | 'flex-start'
     | 'flex-end'
@@ -59,6 +61,8 @@ interface DivProps {
 export const Div = styled.div<DivProps>`
   display: ${({ display }) => display || 'flex'};
   gap: ${({ gap }) => gap || 'none'};
+  column-gap: ${({ columnGap }) => columnGap || 'none'};
+  row-gap: ${({ rowGap }) => rowGap || 'none'};
   justify-content: ${({ justifyContent }) => justifyContent || 'flex-start'};
   flex-direction: ${({ flexDirection }) => flexDirection || 'column'};
   flex-grow: ${({ flexGrow }) => flexGrow || 0};

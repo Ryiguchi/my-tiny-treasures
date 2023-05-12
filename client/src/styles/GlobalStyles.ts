@@ -23,9 +23,9 @@ body {
 
   font-family: 'Open Sans', sans-serif;
   font-size: 1.4rem;
-  background-color: ${theme.color.textGray};
+  color: ${theme.color.black};
+  background-color: ${theme.color.primaryOffWhite};
   margin-bottom: 8rem;
-
 }
 
 li {
@@ -42,9 +42,8 @@ button {
   border-radius: ${theme.radius.button};
   box-shadow: ${theme.shadow};
   transition: ${theme.button.transition};
-  width: fit-content;
-  height: ${theme.button.height1};
-  color: #fff;
-  padding: ${theme.button.padding};
+  height: ${theme.button.height};
+  color: ${theme.color.primaryOffWhite};
+  ${theme.type.buttons}
 }
 `;

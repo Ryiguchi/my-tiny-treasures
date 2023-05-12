@@ -1,30 +1,53 @@
 import { useEffect, useState, FC, useRef } from 'react';
 import * as S from './selectInput.styles';
+import { theme } from '../../../styles/themes';
+import {
+  ConvertedChangeData,
+  InitialChangeData,
+} from '../../../utils/types/interfaces/general.interfaces';
 
 interface SelectInputProps {
   optionsArray: string[];
   initialValue: string;
-  label: string;
-  handleSelect: (option: string) => void;
+  required: boolean;
+  disabled?: boolean;
+  name: string;
+  previousValue: string;
+  handleSelect: (data: ConvertedChangeData) => void;
 }
 
 const SelectInput: FC<SelectInputProps> = ({
   handleSelect,
   optionsArray,
   initialValue,
-  label,
+  previousValue,
+  name,
+  ...otherProps
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [value, setValue] = useState<string>(initialValue);
+  const hiddenInputRef = useRef<HTMLInputElement | null>(null);
+  const [value, setValue] = useState<string>('');
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
+    if (!previousValue || previousValue === '' || !inputRef.current) return;
+
+    setValue(previousValue);
+  }, [previousValue, inputRef.current]);
+
+  useEffect(() => {
+    if (!inputRef.current || !hiddenInputRef.current || value === '') return;
+    inputRef.current.value = value;
+    hiddenInputRef.current.value = value;
+  }, [value]);
 
   const handleOptionSelect = (option: string): void => {
+    const data = {
+      name,
+      value: option,
+    };
     setValue(option);
-    handleSelect(option);
+    handleSelect(data);
     setIsMenuOpen(false);
   };
 
@@ -37,17 +60,29 @@ const SelectInput: FC<SelectInputProps> = ({
 
   return (
     <>
-      <S.BoxExtended open={isMenuOpen} position="relative" gap="0.5rem">
-        <label htmlFor={label}>{label}</label>
-        <input
+      <S.BoxExtended
+        onClick={handleToggleMenu}
+        open={isMenuOpen}
+        position="relative"
+        gap="0.5rem"
+      >
+        <S.StyledSelect
           ref={inputRef}
           type="text"
-          onClick={handleToggleMenu}
-          id={label}
-          name={label}
-          value={value}
+          placeholder={initialValue}
           readOnly
+          {...otherProps}
         />
+        <S.StyledSelect
+          ref={hiddenInputRef}
+          type="text"
+          className="hidden-input"
+          placeholder={initialValue}
+          {...otherProps}
+        />
+
+        <S.StyledCaretDown size={24} color={theme.color.black} />
+
         {isMenuOpen && (
           <ul>
             {optionsArray.map(option => (
