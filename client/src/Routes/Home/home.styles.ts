@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { ThemeConsumer } from 'styled-components';
+import { theme } from '../../styles/themes';
 
 export const HeroImg = styled.img`
   object-fit: cover;
@@ -14,13 +15,12 @@ export const HeroTextBox = styled.div`
   color: #fff;
 
   h1 {
-    font-weight: 700;
-    font-size: 2.6rem;
+    ${theme.type.h5}
     line-height: 4rem;
     margin-bottom: 1.2rem;
   }
   p {
-    font-size: 1.6rem;
+    ${theme.type.body}
     line-height: 2.2rem;
     width: 18rem;
   }

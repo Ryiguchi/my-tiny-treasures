@@ -133,7 +133,7 @@ export const theme = {
       font-size: 1.6rem;
       font-weight: 700;
     `,
-    bodyText: css`
+    body: css`
       font-family: 'Open Sans';
       font-size: 1.6rem;
       font-weight: 400;

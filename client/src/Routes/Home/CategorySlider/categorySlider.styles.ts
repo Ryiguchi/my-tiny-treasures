@@ -6,12 +6,12 @@ export const Wrapper = styled(Box)`
   padding-bottom: 2.4rem;
 
   p {
-    font-size: 1.6rem;
+    ${theme.type.body}
   }
 `;
 
 export const CategoryTitle = styled.h1`
-  font-size: 3.5rem;
+  ${theme.type.h4}
   line-height: 52.5px;
   text-align: center;
   color: ${theme.color.primaryBlue};

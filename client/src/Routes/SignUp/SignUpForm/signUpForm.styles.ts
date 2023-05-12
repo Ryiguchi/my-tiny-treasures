@@ -12,7 +12,6 @@ export const Wrapper = styled.div`
     }
   }
   h2 {
-    font-weight: 700;
-    font-size: 1.6rem;
+    ${theme.type.h6}
   }
 `;

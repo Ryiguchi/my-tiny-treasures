@@ -1,9 +1,16 @@
 import styled from 'styled-components';
 import { theme } from '../../../../styles/themes';
+import Box from '../../../../components/common/Box/Box.component';
 
 interface ImageBoxProps {
   url: string;
 }
+
+export const Wrapper = styled(Box)`
+  p {
+    ${theme.type.body}
+  }
+`;
 
 export const ImageBox = styled.div<ImageBoxProps>`
   width: 100%;

@@ -11,6 +11,6 @@ export const StyledNav = styled.nav`
   padding: 2.4rem 0;
 
   a {
-    color: ${theme.color.text};
+    ${theme.type.body}
   }
 `;
