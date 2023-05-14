@@ -28,6 +28,7 @@ const chatSchema = new mongoose.Schema<ChatDocument>(
       {
         user: mongoose.Schema.Types.ObjectId,
         text: String,
+        image: String,
         createdAt: {
           type: Date,
           default: Date.now(),

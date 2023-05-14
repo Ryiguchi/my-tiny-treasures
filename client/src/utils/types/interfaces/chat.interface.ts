@@ -17,9 +17,10 @@ export interface Chat {
 }
 
 export interface ChatMessage {
-  createdAt: Date;
+  createdAt: string;
   seen: boolean;
   text: string;
+  image?: string;
   user: string;
   _id: string;
 }

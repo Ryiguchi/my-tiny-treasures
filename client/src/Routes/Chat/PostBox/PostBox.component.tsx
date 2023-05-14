@@ -8,12 +8,14 @@ import { ChatStatus } from '../../../utils/types/enums/enums';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../../store/features/user/user.selectors';
 import { socket } from '../../../utils/socket/socket';
+import { useNavigate } from 'react-router-dom';
 
 interface PostBoxProps {
   chat: Chat;
 }
 
 const PostBox: FC<PostBoxProps> = ({ chat }) => {
+  const navigate = useNavigate();
   const user = useSelector(selectUser);
 
   const handleTrade = (agree: boolean) => {
@@ -33,7 +35,6 @@ const PostBox: FC<PostBoxProps> = ({ chat }) => {
 
     socket.emit('trade', tradeData);
   };
-  console.log(chat);
   return (
     <Wrapper marginBottom=".5rem">
       <Box
@@ -43,7 +44,11 @@ const PostBox: FC<PostBoxProps> = ({ chat }) => {
         backgroundColor="#fff"
       >
         <Box width="6rem" height="6rem" borderRadius="8px" marginBottom="1rem">
-          <img src={chat.post.images[0]} alt="Kids Items" />
+          <img
+            onClick={() => navigate(`/posts/${chat.post._id}`)}
+            src={chat.post.images[0]}
+            alt="Kids Items"
+          />
         </Box>
         {user &&
           (chat.status === ChatStatus.Active ||

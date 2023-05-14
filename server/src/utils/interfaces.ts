@@ -23,6 +23,7 @@ export interface ChatMessage {
   text: string;
   createdAt: Date;
   seen: boolean;
+  image: string;
 }
 
 export interface ChatData {

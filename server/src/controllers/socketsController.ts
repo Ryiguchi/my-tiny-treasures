@@ -2,6 +2,7 @@ import { Server } from 'socket.io';
 import {
   getChatFromUserIds,
   markAsSeen,
+  saveImageAndGetUrl,
   updateChatAgreedUsers,
   updateChatWithMsg,
 } from './chatController';
@@ -13,6 +14,7 @@ export interface MsgData {
   text: string;
   senderId: string;
   recipientId: string;
+  image?: ArrayBuffer | string;
 }
 export interface TradeData {
   room: string;
@@ -57,10 +59,16 @@ export const listen = (io: Server): void => {
     // SEND MESSAGE
     socket.on('message out', async (msg: MsgData) => {
       const recipientSocketId = connectedUsers[msg.recipientId];
+      let msgData = msg;
 
-      const chat = await updateChatWithMsg(msg);
+      if (msgData.image) {
+        const imgUrl: string = await saveImageAndGetUrl(msgData);
+        msgData = { ...msgData, image: imgUrl };
+      }
 
-      io.to([recipientSocketId, socket.id]).emit('message in', msg);
+      const chat = await updateChatWithMsg(msgData);
+
+      io.to([recipientSocketId, socket.id]).emit('message in', msgData);
 
       if (chat instanceof Error) {
         emitError(chat);

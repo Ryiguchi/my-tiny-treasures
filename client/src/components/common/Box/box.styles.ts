@@ -56,6 +56,7 @@ interface DivProps {
   transform?: string;
   gridColumn?: string;
   alignSelf?: string;
+  border?: string;
 }
 
 export const Div = styled.div<DivProps>`
@@ -101,4 +102,5 @@ export const Div = styled.div<DivProps>`
   transform: ${({ transform }) => transform || 'none'};
   grid-column: ${({ gridColumn }) => gridColumn || ''};
   align-self: ${({ alignSelf }) => alignSelf || ''};
+  border: ${({ border }) => border || ''};
 `;

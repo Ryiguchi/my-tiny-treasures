@@ -5,4 +5,5 @@ export const Title = styled.h1`
   text-transform: uppercase;
   text-align: center;
   ${theme.type.h5}
+  color: ${theme.color.blackMedium}
 `;

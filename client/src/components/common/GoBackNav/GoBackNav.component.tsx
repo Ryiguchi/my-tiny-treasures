@@ -2,6 +2,7 @@ import { FC } from 'react';
 import Box from '../Box/Box.component';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Title } from './goBackNav.styles';
+import { theme } from '../../../styles/themes';
 
 interface GoBackNavProps {
   title: string;
@@ -21,7 +22,7 @@ const GoBackNav: FC<GoBackNavProps> = ({ title }) => {
         height="6rem"
         onClick={() => window.history.back()}
       >
-        <FaArrowLeft size={26} />
+        <FaArrowLeft size={26} color={theme.color.blackMedium} />
       </Box>
       <Title>{title}</Title>
     </Box>

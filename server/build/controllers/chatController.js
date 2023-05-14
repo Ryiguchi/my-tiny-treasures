@@ -12,11 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateChatAgreedUsers = exports.markAsSeen = exports.updateChatWithMsg = exports.getChatFromUserIds = exports.getMyChat = void 0;
+exports.saveImageAndGetUrl = exports.updateChatAgreedUsers = exports.markAsSeen = exports.updateChatWithMsg = exports.getChatFromUserIds = exports.getMyChat = void 0;
 const catchAsync_1 = require("../utils/catchAsync");
 const chatModel_1 = __importDefault(require("../models/chatModel"));
 const appError_1 = __importDefault(require("../utils/appError"));
 const userModel_1 = __importDefault(require("../models/userModel"));
+const sharp_1 = __importDefault(require("sharp"));
 exports.getMyChat = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const roomId = req.params.roomId;
     const chat = yield chatModel_1.default.findById(roomId).populate('post');
@@ -61,7 +62,7 @@ const getChatFromUserIds = (chatData) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.getChatFromUserIds = getChatFromUserIds;
 const updateChatWithMsg = (msg) => __awaiter(void 0, void 0, void 0, function* () {
-    const message = { user: msg.senderId, text: msg.text };
+    const message = { user: msg.senderId, text: msg.text, image: msg.image };
     const query = { $push: { messages: message } };
     const options = { new: true };
     try {
@@ -74,7 +75,6 @@ const updateChatWithMsg = (msg) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.updateChatWithMsg = updateChatWithMsg;
 const markAsSeen = (room) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('MARKING');
     const update = { $set: { 'messages.$[].seen': true } };
     try {
         const updatedChat = yield chatModel_1.default.findByIdAndUpdate(room, update);
@@ -116,3 +116,14 @@ const exchangeTokens = (chat) => __awaiter(void 0, void 0, void 0, function* () 
         throw new Error('There was a problem updating the Chat!');
     }
 });
+const saveImageAndGetUrl = (msgData) => __awaiter(void 0, void 0, void 0, function* () {
+    const imgUrl = `photos/chats/${msgData.senderId}-${Date.now()}.jpeg`;
+    const writePath = `public/${imgUrl}`;
+    yield (0, sharp_1.default)(msgData.image)
+        .resize({ width: 1000 })
+        .toFormat('jpeg')
+        .jpeg({ quality: 80 })
+        .toFile(writePath);
+    return `http://localhost:8000/${imgUrl}`;
+});
+exports.saveImageAndGetUrl = saveImageAndGetUrl;

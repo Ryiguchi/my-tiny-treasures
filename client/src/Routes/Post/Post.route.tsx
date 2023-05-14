@@ -36,27 +36,29 @@ const Post: React.FC = () => {
   };
 
   return (
-    <Box padding="2.4rem" gap="3rem" backgroundColor="##F3F0E6">
+    <>
       <GoBackNav title="item" />
-      {isLoading || !data ? (
-        <p>loading spinner</p>
-      ) : isError ? (
-        <p>error message: ${error instanceof Error && error.message}</p>
-      ) : (
-        <>
-          <PostCardLarge post={data.data.post[0]} />
-          <Box alignItems="center">
-            <Button
-              onClick={goToChat}
-              data-user={data.data.post[0].user}
-              buttonType={ButtonType.Primary}
-            >
-              Message Seller
-            </Button>
-          </Box>
-        </>
-      )}
-    </Box>
+      <Box padding="2.4rem" gap="3rem" backgroundColor="##F3F0E6">
+        {isLoading || !data ? (
+          <p>loading spinner</p>
+        ) : isError ? (
+          <p>error message: ${error instanceof Error && error.message}</p>
+        ) : (
+          <>
+            <PostCardLarge post={data.data.post[0]} />
+            <Box alignItems="center">
+              <Button
+                onClick={goToChat}
+                data-user={data.data.post[0].user}
+                buttonType={ButtonType.Primary}
+              >
+                Message Seller
+              </Button>
+            </Box>
+          </>
+        )}
+      </Box>
+    </>
   );
 };
 

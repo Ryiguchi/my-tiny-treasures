@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPost = exports.getPost = exports.getAllPosts = exports.resizePhoto = exports.uploadPhotos = void 0;
+exports.createPost = exports.getPost = exports.getAllPosts = exports.resizePhoto = exports.uploadPhotos = exports.upload = void 0;
 const postModel_1 = __importDefault(require("../models/postModel"));
 const catchAsync_1 = require("../utils/catchAsync");
 const apiFeatures_1 = require("../utils/apiFeatures");
@@ -50,12 +50,12 @@ const multerLimits = {
     parts: 15,
     headerPairs: 100,
 };
-const upload = (0, multer_1.default)({
+exports.upload = (0, multer_1.default)({
     storage: multerStorage,
     fileFilter: multerFilter,
     limits: multerLimits,
 });
-exports.uploadPhotos = upload.array('photos', 5);
+exports.uploadPhotos = exports.upload.array('photos', 5);
 exports.resizePhoto = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.files)
         return next();

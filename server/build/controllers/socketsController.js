@@ -42,8 +42,13 @@ const listen = (io) => {
         // SEND MESSAGE
         socket.on('message out', (msg) => __awaiter(void 0, void 0, void 0, function* () {
             const recipientSocketId = connectedUsers[msg.recipientId];
-            const chat = yield (0, chatController_1.updateChatWithMsg)(msg);
-            io.to([recipientSocketId, socket.id]).emit('message in', msg);
+            let msgData = msg;
+            if (msgData.image) {
+                const imgUrl = yield (0, chatController_1.saveImageAndGetUrl)(msgData);
+                msgData = Object.assign(Object.assign({}, msgData), { image: imgUrl });
+            }
+            const chat = yield (0, chatController_1.updateChatWithMsg)(msgData);
+            io.to([recipientSocketId, socket.id]).emit('message in', msgData);
             if (chat instanceof Error) {
                 emitError(chat);
             }

@@ -24,6 +24,7 @@ const chatSchema = new mongoose_1.default.Schema({
         {
             user: mongoose_1.default.Schema.Types.ObjectId,
             text: String,
+            image: String,
             createdAt: {
                 type: Date,
                 default: Date.now(),

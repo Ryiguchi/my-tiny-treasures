@@ -5,6 +5,7 @@ export interface MsgData {
   text: string;
   senderId: string;
   recipientId: string;
+  image?: ArrayBuffer | string;
 }
 
 export interface UserMsgData {

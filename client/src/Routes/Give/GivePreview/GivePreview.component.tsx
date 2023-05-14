@@ -98,11 +98,11 @@ const GivePreview: FC<GivePreviewProps> = ({ formData, setShowPreview }) => {
       <Box flexDirection="row" justifyContent="center" gap="3rem">
         <Button
           onClick={() => setShowPreview(false)}
-          buttonType={ButtonType.Message}
+          buttonType={ButtonType.SmallYellow}
         >
           Edit
         </Button>
-        <Button buttonType={ButtonType.Trade}>Publish</Button>
+        <Button buttonType={ButtonType.SmallGreen}>Publish</Button>
       </Box>
     </S.Wrapper>
   );

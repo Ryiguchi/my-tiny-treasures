@@ -43,3 +43,9 @@ export const IsWritingBox = styled(CommonMessageStyles)<IsWritingBoxProps>`
     }
   }
 `;
+
+export const StyledDate = styled.p`
+  align-self: center;
+  font-size: 1.8rem;
+  padding: 2rem;
+`;

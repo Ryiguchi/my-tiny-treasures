@@ -45,7 +45,7 @@ const multerLimits: NumberObject = {
   headerPairs: 100,
 };
 
-const upload = multer({
+export const upload = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
   limits: multerLimits,

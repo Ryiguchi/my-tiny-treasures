@@ -1,4 +1,6 @@
 import { NextFunction, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
 import { catchAsync } from '../utils/catchAsync';
 import { CustomRequest } from '../utils/expressInterfaces';
 import Chat, { ChatDocument } from '../models/chatModel';
@@ -7,6 +9,8 @@ import AppError from '../utils/appError';
 import { ChatMessage, OnJoinData } from '../utils/interfaces';
 import { PostDocument } from '../models/postModel';
 import User from '../models/userModel';
+import sharp from 'sharp';
+import { promisify } from 'util';
 
 export interface ChatPreview {
   id: string;
@@ -67,7 +71,7 @@ export const getChatFromUserIds = async (chatData: OnJoinData) => {
 };
 
 export const updateChatWithMsg = async (msg: MsgData) => {
-  const message = { user: msg.senderId, text: msg.text };
+  const message = { user: msg.senderId, text: msg.text, image: msg.image };
   const query = { $push: { messages: message } };
   const options = { new: true };
 
@@ -80,7 +84,6 @@ export const updateChatWithMsg = async (msg: MsgData) => {
 };
 
 export const markAsSeen = async (room: string) => {
-  console.log('MARKING');
   const update = { $set: { 'messages.$[].seen': true } };
   try {
     const updatedChat = await Chat.findByIdAndUpdate(room, update);
@@ -137,4 +140,17 @@ const exchangeTokens = async (chat: ChatDocument) => {
   if (!seller) {
     throw new Error('There was a problem updating the Chat!');
   }
+};
+
+export const saveImageAndGetUrl = async (msgData: MsgData): Promise<string> => {
+  const imgUrl = `photos/chats/${msgData.senderId}-${Date.now()}.jpeg`;
+  const writePath = `public/${imgUrl}`;
+
+  await sharp(msgData.image)
+    .resize({ width: 1000 })
+    .toFormat('jpeg')
+    .jpeg({ quality: 80 })
+    .toFile(writePath);
+
+  return `http://localhost:8000/${imgUrl}`;
 };
